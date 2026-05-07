@@ -1,48 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ManyGames – Carreiras</title>
-  <link rel="stylesheet" href="shared.css"/>
-  <style>
-    .step { display:flex; gap:20px; margin-bottom:32px; align-items:flex-start; }
-    .step-num {
-      flex-shrink:0; width:48px; height:48px;
-      background:rgba(230,57,70,0.12); border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--accent);
-    }
-    .step-content h3 { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:2px; color:#fff; margin-bottom:4px; }
-    .job-card {
-      background:var(--card); border:1px solid var(--border);
-      padding:28px; position:relative;
-      transition: border-color .3s;
-    }
-    .job-card:hover { border-color:var(--accent); }
-    .job-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2),transparent); }
-    .job-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; color:#fff; margin-bottom:6px; }
-    .job-dept { font-family:'Share Tech Mono',monospace; font-size:0.72rem; color:var(--cyan); letter-spacing:2px; margin-bottom:14px; }
-    .benefit { display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; }
-    .benefit-icon { font-size:1.4rem; flex-shrink:0; margin-top:2px; }
-    .benefit-title { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:1px; color:var(--text); }
-    .benefit-desc { font-size:0.85rem; color:var(--muted); }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManyGames – Loja</title>
 
-    /* FIX: Garante que .reveal fica visível mesmo se o IntersectionObserver falhar */
-    .reveal { opacity: 1 !important; transform: none !important; }
+  <link rel="stylesheet" href="shared.css" />
+
+  <style>
+    .shop-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:24px;
+      margin-top:40px;
+    }
+
+    .product-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      transition:.3s;
+    }
+
+    .product-card:hover{
+      transform:translateY(-4px);
+      border-color:var(--accent);
+    }
+
+    .product-card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2),transparent);
+    }
+
+    .product-image{
+      height:240px;
+      background:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .product-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .product-content{
+      padding:24px;
+    }
+
+    .product-title{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:1.5rem;
+      letter-spacing:2px;
+      color:#fff;
+      margin-bottom:8px;
+    }
+
+    .product-desc{
+      font-size:.9rem;
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+
+    .product-price{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:2rem;
+      color:var(--cyan);
+      margin-bottom:18px;
+      letter-spacing:2px;
+    }
+
+    .buy-btn{
+      display:inline-block;
+      padding:12px 24px;
+      background:var(--accent);
+      color:#fff;
+      text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;
+      letter-spacing:2px;
+      transition:.3s;
+    }
+
+    .buy-btn:hover{
+      opacity:.85;
+    }
+
+    .reveal{
+      opacity:1 !important;
+      transform:none !important;
+    }
   </style>
 </head>
+
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="ManyGames logo"/>
+    <span class="nav-logo-text">MANY<span>GAMES</span></span>
+  </a>
+
   <button class="nav-mobile-toggle">☰</button>
+
   <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
-    <li><a href="rh.html" class="active">Carreiras</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
+    <li><a href="loja.html" class="active">Loja</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
@@ -51,158 +127,113 @@
 <div class="page-hero">
   <div class="page-hero-bg"></div>
   <div class="page-hero-glow"></div>
-  <div class="page-hero-content">    <h1 class="page-title">TRABALHA<br><span>CONNOSCO</span></h1>
-    <p class="page-subtitle">Junta-te a uma equipa de 500 apaixonados por videojogos. Vem construir o futuro dos jogos connosco.</p>
+
+  <div class="page-hero-content">
+    <h1 class="page-title">
+      MANYGAMES<br>
+      <span>STORE</span>
+    </h1>
+
+    <p class="page-subtitle">
+      Produtos oficiais do universo Kill of Reason.
+    </p>
   </div>
 </div>
 
-<!-- OFERTA EMPREGO -->
 <section>
-  <div class="reveal"><div class="section-tag">// Oportunidades</div><h2>VAGAS ABERTAS</h2><div class="section-line"></div></div>
-  <div class="grid-2">
-    <div class="job-card reveal">
-      <div class="job-title">Responsável de Produção e Aprovisionamento</div>
-      <div class="job-dept">// DIREÇÃO DE PRODUÇÃO · VALONGO</div>
-      <p style="font-size:0.9rem;margin-bottom:16px;">Assumirá, reportando ao Diretor de Produção, a responsabilidade por todo o processo de organização e produção de conteúdo para os videojogos.</p>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px;"><strong style="color:var(--text);">Perfil:</strong> Formação superior em programação, forte capacidade de decisão ou liderança.</p>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;"><strong style="color:var(--text);">Salário base:</strong> €1.500/mês + benefícios</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-        <span class="tag">Programação</span><span class="tag">Liderança</span><span class="tag">Full-time</span>
-      </div>
-      <a href="contacto.html" class="btn-primary" style="font-size:0.85rem;padding:10px 24px;">Candidatar-me</a>
-    </div>
-    <div class="job-card reveal">
-      <div class="job-title">Designer de Jogos</div>
-      <div class="job-dept">// DESIGN · VALONGO</div>
-      <p style="font-size:0.9rem;margin-bottom:16px;">Responsável pela criação visual dos heróis, mapas e interface do Kill of Reason. Colaboração próxima com a equipa de desenvolvimento.</p>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px;"><strong style="color:var(--text);">Perfil:</strong> Portfólio em design de jogos, domínio de ferramentas como Adobe Photoshop e Illustrator.</p>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;"><strong style="color:var(--text);">Regime:</strong> Presencial / Híbrido</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
-        <span class="tag">Design</span><span class="tag">Adobe CC</span><span class="tag">Criatividade</span>
-      </div>
-      <a href="contacto.html" class="btn-primary" style="font-size:0.85rem;padding:10px 24px;">Candidatar-me</a>
-    </div>
+  <div class="reveal">
+    <div class="section-tag">// Loja Oficial</div>
+    <h2>PRODUTOS EM DESTAQUE</h2>
+    <div class="section-line"></div>
   </div>
-  <div style="margin-top:20px;padding:20px;background:var(--panel);border:1px solid var(--border-dim);" class="reveal">
-    <p style="margin:0;font-size:0.9rem;">Não encontras a vaga ideal? Envia-nos a tua candidatura espontânea para <span style="color:var(--cyan);">rh@manygames.pt</span> com o teu CV e carta de motivação.</p>
-  </div>
-</section>
 
-<!-- PROCESSO RECRUTAMENTO -->
-<section class="alt">
-  <div class="reveal"><div class="section-tag">// Como funciona</div><h2>PROCESSO DE RECRUTAMENTO</h2><div class="section-line"></div></div>
-  <div class="grid-2">
-    <div class="reveal">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3>Candidatura</h3>
-          <p style="font-size:0.9rem;margin:0;">Envia o teu Curriculum Vitae e carta de motivação para o departamento de RH. Analisamos todas as candidaturas com atenção.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3>Seleção</h3>
-          <p style="font-size:0.9rem;margin:0;">Entrevista tradicional e situacional, teste de simulação de grupo, provas de conhecimento ou capacidade, testes psicométricos e provas psicológicas.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3>Integração</h3>
-          <p style="font-size:0.9rem;margin:0;">Visita guiada pelas instalações e formação específica sobre a função a representar durante 3 dias. Apresentação aprofundada dos colegas e do espaço de trabalho.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <h3>Início de Funções</h3>
-          <p style="font-size:0.9rem;margin:0;">A empresa fornece todo o equipamento necessário. Contamos com o teu talento e dedicação para crescermos juntos.</p>
-        </div>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="info-card">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--cyan);margin-bottom:16px;">Análise e Descrição de Funções</div>
-        <div class="info-row"><span class="info-key">Função Exemplo</span><span class="info-val">Dir. de Produção</span></div>
-        <div class="info-row"><span class="info-key">Nível Superior</span><span class="info-val">Administração</span></div>
-        <div class="info-row"><span class="info-key">Nível Inferior</span><span class="info-val">Op. do Estúdio</span></div>
-        <div class="info-row"><span class="info-key">Salário Base</span><span class="info-val">€1.500/mês</span></div>
-        <div class="info-row"><span class="info-key">Comp. Técnicas</span><span class="info-val">Organização, Planeamento</span></div>
-        <div class="info-row"><span class="info-key">Comp. Comportamentais</span><span class="info-val">Trabalho em Equipa</span></div>
-        <div class="info-row"><span class="info-key">Horário</span><span class="info-val">9h–18h30 (1h30 almoço)</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+  <div class="shop-grid">
 
-<!-- BENEFÍCIOS -->
-<section>
-  <div class="reveal"><div class="section-tag">// O que oferecemos</div><h2>BENEFÍCIOS</h2><div class="section-line"></div></div>
-  <div class="grid-auto">
-    <div class="benefit reveal">
-      <div class="benefit-icon">💰</div>
-      <div><div class="benefit-title">Bónus de Desempenho</div><div class="benefit-desc">Bónus no salário ou mais tempo de férias para quem atinge os objetivos definidos.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">✈️</div>
-      <div><div class="benefit-title">Viagens Pagas</div><div class="benefit-desc">Viagens pagas, almoços de equipa e pagamento de despesas profissionais.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🏖️</div>
-      <div><div class="benefit-title">Férias Flexíveis</div><div class="benefit-desc">15 dias úteis em Agosto + 15 dias à escolha. Aviso com 3 meses de antecedência.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🎮</div>
-      <div><div class="benefit-title">Acesso ao Jogo</div><div class="benefit-desc">Regalias exclusivas dentro do Kill of Reason para todos os colaboradores.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🏥</div>
-      <div><div class="benefit-title">Saúde no Trabalho</div><div class="benefit-desc">Parceria com a Medimarco — medicina do trabalho, segurança e acompanhamento preventivo.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🏠</div>
-      <div><div class="benefit-title">Trabalho em Casa</div><div class="benefit-desc">Objetivo de possibilitar trabalho remoto a todos os colaboradores no futuro próximo.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🛋️</div>
-      <div><div class="benefit-title">Espaço de Convívio</div><div class="benefit-desc">Sala de convívio disponível para os colaboradores usarem em tempo de lazer.</div></div>
-    </div>
-    <div class="benefit reveal">
-      <div class="benefit-icon">🎓</div>
-      <div><div class="benefit-title">Formação Contínua</div><div class="benefit-desc">Formação técnica e integração estruturada. Investimos no crescimento de cada colaborador.</div></div>
-    </div>
-  </div>
-</section>
+    <div class="product-card reveal">
+      <div class="product-image">
+        <img src="shirt.jpg" alt="T-shirt ManyGames">
+      </div>
 
-<!-- HORÁRIOS -->
-<section class="alt">
-  <div class="reveal"><div class="section-tag">// Condições</div><h2>HORÁRIO E CONDIÇÕES</h2><div class="section-line"></div></div>
-  <div class="grid-3">
-    <div class="card reveal">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--accent);margin-bottom:8px;">⏰ Horário</div>
-      <p style="font-size:0.9rem;margin:0;">Entrada às <strong>9h00</strong>. Pausa de almoço das 13h00 às 14h30. Saída às <strong>18h30</strong>.</p>
+      <div class="product-content">
+        <div class="product-title">T-SHIRT MANYGAMES</div>
+
+        <div class="product-desc">
+          T-shirt oficial da ManyGames com design exclusivo Kill of Reason.
+        </div>
+
+        <div class="product-price">€24.99</div>
+
+        <a href="contacto.html" class="buy-btn">
+          Comprar
+        </a>
+      </div>
     </div>
-    <div class="card reveal">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--accent);margin-bottom:8px;">👔 Dress Code</div>
-      <p style="font-size:0.9rem;margin:0;">Não existe código de vestuário. Os colaboradores podem trabalhar com o que usam no dia a dia — valorizamos o conforto e a autenticidade.</p>
+
+    <div class="product-card reveal">
+      <div class="product-image">
+        <img src="mousepad.jpg" alt="Mousepad">
+      </div>
+
+      <div class="product-content">
+        <div class="product-title">MOUSEPAD PRO</div>
+
+        <div class="product-desc">
+          Mousepad gaming XL otimizado para precisão e velocidade.
+        </div>
+
+        <div class="product-price">€19.99</div>
+
+        <a href="contacto.html" class="buy-btn">
+          Comprar
+        </a>
+      </div>
     </div>
-    <div class="card reveal">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--accent);margin-bottom:8px;">📍 Localização</div>
-      <p style="font-size:0.9rem;margin:0;">Sede em <strong>Valongo, Porto</strong>. Edifício moderno com salas de desenvolvimento, secretaria equipada, sala de convívio e vestiário.</p>
+
+    <div class="product-card reveal">
+      <div class="product-image">
+        <img src="hoodie.jpg" alt="Hoodie">
+      </div>
+
+      <div class="product-content">
+        <div class="product-title">HOODIE KILL OF REASON</div>
+
+        <div class="product-desc">
+          Hoodie premium com estampagem oficial do jogo.
+        </div>
+
+        <div class="product-price">€49.99</div>
+
+        <a href="contacto.html" class="buy-btn">
+          Comprar
+        </a>
+      </div>
     </div>
+
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+  <div class="footer-logo">
+    <img src="logo.png" alt=""/>
+    <span class="footer-logo-text">MANY<span>GAMES</span></span>
+  </div>
+
   <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a>
-    <a href="equipa.html">Equipa</a><a href="rh.html" class="active">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+    <a href="index.html">Início</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="jogo.html">Jogo</a>
+    <a href="equipa.html">Equipa</a>
+    <a href="rh.html">Carreiras</a>
+    <a href="regulamento.html">Regulamento</a>
+    <a href="loja.html" class="active">Loja</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contacto.html">Contacto</a>
   </nav>
+
   <p>© 2015 · ManyGames · Todos os direitos reservados</p>
 </footer>
+
 <script src="shared.js"></script>
+
 </body>
 </html>
