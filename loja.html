@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames Store – Loja Oficial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050508;
+      --panel: #0d0d14;
+      --card: #111120;
+      --accent: #e63946;
+      --accent2: #ff9f1c;
+      --cyan: #00e676;
+      --text: #f0f0f8;
+      --muted: #b0b0cc;
+      --border: rgba(230,57,70,0.25);
+      --border-dim: rgba(255,255,255,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 68px;
+      background: rgba(5,5,8,0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 44px; height: 44px; object-fit: contain; }
+    .nav-logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 3px; color: #fff; line-height: 1; }
+    .nav-logo-text span { color: var(--accent); }
+    .nav-badge { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; letter-spacing: 2px; color: var(--accent2); border: 1px solid rgba(255,159,28,0.4); padding: 3px 10px; margin-left: 12px; }
+    .nav-links { display: flex; gap: 0; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-weight: 700; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; padding: 8px 13px; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+    .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 100px 5vw 60px; position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(230,57,70,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(230,57,70,0.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPan 30s linear infinite;
+    }
+    @keyframes gridPan { from{background-position:0 0} to{background-position:60px 60px} }
+    .hero-glow {
+      position: absolute; width: 900px; height: 900px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(230,57,70,0.18) 0%, transparent 70%);
+      top: -300px; right: -200px; pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,230,118,0.07) 0%, transparent 70%);
+      bottom: -100px; left: -100px; pointer-events: none;
+    }
+    .hero-content { position: relative; max-width: 720px; }
+    .hero-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem; color: var(--accent); letter-spacing: 3px;
+      border: 1px solid var(--accent); padding: 5px 16px;
+      display: inline-block; margin-bottom: 24px; text-transform: uppercase;
+      animation: fadeDown .8s ease both;
+    }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:none} }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.88; letter-spacing: 4px; margin-bottom: 24px;
+      animation: fadeUp .9s ease .1s both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+    .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 540px; margin-bottom: 40px; animation: fadeUp .9s ease .2s both; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp .9s ease .3s both; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: inline-block; padding: 13px 32px;
+      background: var(--accent); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px;
+      text-decoration: none; cursor: pointer; border: none;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      transition: background .2s, transform .1s;
+    }
+    .btn-primary:hover { background: #c0303c; transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-block; padding: 12px 32px;
+      border: 1px solid rgba(255,255,255,0.3); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px;
+      text-decoration: none; cursor: pointer; background: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* SECTIONS */
+    section { padding: 90px 5vw; }
+    section.alt { background: var(--panel); }
+    .section-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+    h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: 3px; margin-bottom: 12px; }
+    .section-line { width: 60px; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); margin-bottom: 40px; }
+
+    /* PRODUCTS */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s;
+      cursor: pointer;
+    }
+    .product-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    }
+    .product-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .product-img-wrapper {
+      overflow: hidden; background: rgba(255,255,255,0.02);
+      height: 280px; display: flex; align-items: center; justify-content: center;
+    }
+    .product-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .4s ease;
+    }
+    .product-badge {
+      position: absolute; top: 16px; right: 16px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 2px;
+      padding: 4px 10px; text-transform: uppercase;
+    }
+    .badge-new { background: var(--accent); color: #fff; }
+    .badge-hot { background: var(--accent2); color: #000; }
+    .badge-limited { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
+    .product-info { padding: 20px 22px 24px; }
+    .product-category { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--text); margin-bottom: 8px; line-height: 1; }
+    .product-desc { font-size: 0.88rem; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .product-price { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--accent2); letter-spacing: 1px; }
+    .product-price span { font-size: 0.9rem; color: var(--muted); font-family: 'Rajdhani', sans-serif; font-weight: 600; }
+    .btn-cart {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 20px;
+      background: var(--accent); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 2px;
+      border: none; cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+      transition: background .2s, transform .1s;
+    }
+    .btn-cart:hover { background: #c0303c; transform: translateY(-1px); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(5,5,8,0.9); z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+      position: relative; animation: modalIn .3s ease;
+    }
+    @keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(20px)} to{opacity:1;transform:none} }
+    .modal::before { content: ''; position: absolute; top:0;left:0;right:0;height:3px; background: linear-gradient(90deg, var(--accent), var(--accent2), transparent); }
+    .modal-header {
+      padding: 28px 28px 0;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; }
+    .modal-close {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      width: 36px; height: 36px; cursor: pointer; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s; flex-shrink: 0;
+    }
+    .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+    .modal-product-info { padding: 12px 28px 20px; border-bottom: 1px solid var(--border-dim); }
+    .modal-product-name { color: var(--accent2); font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
+    .modal-body { padding: 24px 28px 28px; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+    }
+    .form-group label .req { color: var(--accent); }
+    .form-group input, .form-group select, .form-group textarea {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+      padding: 10px 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--accent);
+      background: rgba(230,57,70,0.04);
+    }
+    .form-group select option { background: var(--card); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-submit {
+      margin-top: 22px;
+      width: 100%;
+      padding: 14px;
+      background: var(--accent); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 3px;
+      border: none; cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      transition: background .2s, transform .1s;
+    }
+    .form-submit:hover { background: #c0303c; }
+    .form-submit:active { transform: scale(.98); }
+    .form-success {
+      display: none; text-align: center; padding: 30px 0;
+    }
+    .form-success .icon { font-size: 3rem; margin-bottom: 12px; }
+    .form-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; }
+    .form-success p { color: var(--muted); font-size: 0.95rem; }
+
+    /* STANDALONE ORDER SECTION */
+    #encomenda { scroll-margin-top: 80px; }
+    .order-form-wrapper {
+      max-width: 700px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 40px; position: relative;
+    }
+    .order-form-wrapper::before {
+      content: ''; position: absolute; top:0;left:0;right:0;height:3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--cyan));
+    }
+    .order-form-wrapper .section-tag { margin-bottom: 6px; }
+    .order-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 3px; margin-bottom: 6px; }
+    .order-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 28px; }
+
+    /* INFO STRIP */
+    .info-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0; border: 1px solid var(--border);
+    }
+    .info-strip-item {
+      padding: 22px 24px; border-right: 1px solid var(--border-dim);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .info-strip-item:last-child { border-right: none; }
+    .info-strip-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .info-strip-text .t { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 2px; }
+    .info-strip-text .s { font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* FOOTER */
+    footer { padding: 44px 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { display: flex; align-items: center; gap: 10px; }
+    .footer-logo img { width: 36px; height: 36px; object-fit: contain; }
+    .footer-logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; color: #fff; }
+    .footer-logo-text span { color: var(--accent); }
+    .footer-nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    .footer-nav a { color: var(--muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; transition: color .2s; }
+    .footer-nav a:hover { color: #fff; }
+    footer p { color: var(--muted); font-size: 0.78rem; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 32px; right: 32px; z-index: 2000;
+      background: var(--card); border: 1px solid var(--cyan);
+      padding: 14px 24px; font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem; letter-spacing: 2px; color: var(--cyan);
+      display: none; animation: slideIn .3s ease;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:none} }
+
+    @media (max-width: 900px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .info-strip { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .info-strip { grid-template-columns: 1fr; }
+      .info-strip-item { border-right: none; border-bottom: 1px solid var(--border-dim); }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 68px; left: 0; right: 0; background: rgba(5,5,8,0.98); padding: 20px; gap: 4px; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .nav-mobile-toggle { display: block; }
+      .order-form-wrapper { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="ManyGames logo"/>
+    <span class="nav-logo-text">MANY<span>GAMES</span></span>
+  </a>
+  <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="#produtos" class="active">Loja</a></li>
+    <li><a href="#encomenda">Encomendar</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <!-- 🔥 ESTE É O FIX PRINCIPAL -->
+  <div class="hero-content" style="display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap;">
+
+    <!-- TEXTO (ESQUERDA) -->
+    <div style="flex:1; min-width:280px;">
+      <div class="hero-tag">// Loja Oficial ManyGames</div>
+
+      <h1 class="hero-title">
+        <span style="color:#fff;">MANY</span><br>
+        <span style="color:var(--accent);">STORE</span>
+      </h1>
+
+      <p class="hero-sub">
+        Produtos exclusivos para os verdadeiros jogadores. Equipamento gaming, garrafas de edição limitada e muito mais — tudo com o selo ManyGames.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#produtos" class="btn-primary">Ver Produtos</a>
+        <a href="#encomenda" class="btn-outline">Encomendar Agora</a>
+      </div>
+    </div>
+
+    <!-- PRODUTO (DIREITA) -->
+    <div style="flex:1; min-width:280px; display:flex; justify-content:flex-end;">
+
+      <div style="margin-top:20px; padding:16px;
+                  background:rgba(255,255,255,0.03);
+                  border:1px solid rgba(230,57,70,0.3);
+                  max-width:320px;">
+
+        <div style="font-family:'Share Tech Mono', monospace; font-size:0.65rem; color:#ff9f1c; letter-spacing:2px; margin-bottom:10px;">
+          🔥 PROMOÇÃO ESPECIAL
+        </div>
+
+        <img src="cadeira 1.png" alt="Produto em desconto"
+             style="width:100%; height:220px; object-fit:cover; border:1px solid rgba(255,255,255,0.1); margin-bottom:12px;">
+
+        <div style="font-family:'Bebas Neue', sans-serif; font-size:1.4rem; color:#fff; margin-bottom:6px;">
+          Cadeira Gaming Pro
+        </div>
+
+        <div style="font-size:0.95rem; color:#b0b0cc; margin-bottom:12px;">
+          <span style="text-decoration:line-through; opacity:0.6;">499.99€</span>
+          <span style="color:#00e676; font-weight:bold;"> → 229.99€</span>
+        </div>
+
+        <a href="#encomenda" style="
+          display:block;
+          text-align:center;
+          padding:10px;
+          background:var(--accent);
+          color:#fff;
+          text-decoration:none;
+          font-family:'Bebas Neue', sans-serif;
+          letter-spacing:2px;">
+          COMPRAR AGORA
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- INFO STRIP -->
+<div class="info-strip reveal" style="margin:0 5vw;">
+  <div class="info-strip-item">
+    <div class="info-strip-icon">🚚</div>
+    <div class="info-strip-text">
+      <div class="t">Envio Nacional</div>
+      <div class="s">Entrega em 3–5 dias úteis</div>
+    </div>
+  </div>
+  <div class="info-strip-item">
+    <div class="info-strip-icon">🔒</div>
+    <div class="info-strip-text">
+      <div class="t">Pagamento Seguro</div>
+      <div class="s">MB, MBWay, Transferência</div>
+    </div>
+  </div>
+  <div class="info-strip-item">
+    <div class="info-strip-icon">🎮</div>
+    <div class="info-strip-text">
+      <div class="t">Edição Limitada</div>
+      <div class="s">Produto exclusivo ManyGames</div>
+    </div>
+  </div>
+  <div class="info-strip-item">
+    <div class="info-strip-icon">↩️</div>
+    <div class="info-strip-text">
+      <div class="t">30 Dias de Retorno</div>
+      <div class="s">Satisfação garantida</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUTOS -->
+<section id="produtos">
+  <div class="reveal">
+    <div class="section-tag">// Coleção Oficial</div>
+    <h2>OS NOSSOS PRODUTOS</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="products-grid">
+
+    <!-- Cadeira 1 -->
+    <div class="product-card reveal" onclick="openModal('cadeira1')">
+      <span class="product-badge badge-hot">BESTSELLER</span>
+      <div class="product-img-wrapper">
+        <img src="cadeira 1.png" alt="Cadeira Gaming Pro ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Gaming · Mobiliário</div>
+        <div class="product-name">Cadeira Gaming Pro</div>
+        <p class="product-desc">Cadeira ergonómica de alta performance com suporte lombar ajustável e cobertura em tecido respirável. Design ManyGames exclusivo.</p>
+        <div class="product-footer">
+          <div class="product-price">299<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira1')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cadeira 2 -->
+    <div class="product-card reveal" onclick="openModal('cadeira2')">
+      <span class="product-badge badge-limited">EDIÇÃO LIMITADA</span>
+      <div class="product-img-wrapper">
+        <img src="cadeira 2.png" alt="Cadeira Gaming Elite ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Gaming · Mobiliário</div>
+        <div class="product-name">Cadeira Gaming Elite</div>
+        <p class="product-desc">Versão premium com apoios de braços 4D, couro sintético de alta qualidade e rodas de poliuretano. Para os que não cedem em conforto.</p>
+        <div class="product-footer">
+          <div class="product-price">449<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira2')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garrafa Amoriel -->
+    <div class="product-card reveal" onclick="openModal('amoriel')">
+      <span class="product-badge badge-new">NOVO</span>
+      <div class="product-img-wrapper">
+        <img src="garrafa amoriel.png" alt="Garrafa Amoriel ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Lifestyle · Acessórios</div>
+        <div class="product-name">Garrafa Amoriel</div>
+        <p class="product-desc">Garrafa de 750ml em aço inoxidável com logotipo Amoriel gravado. Mantém bebidas frias 24h e quentes 12h. Ideal para gamers.</p>
+        <div class="product-footer">
+          <div class="product-price">34<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('amoriel')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garrafa Aqualis -->
+    <div class="product-card reveal" onclick="openModal('aqualis')">
+      <span class="product-badge badge-new">NOVO</span>
+      <div class="product-img-wrapper">
+        <img src="garrafa aqualis.png" alt="Garrafa Aqualis ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Lifestyle · Acessórios</div>
+        <div class="product-name">Garrafa Aqualis</div>
+        <p class="product-desc">Garrafa de 600ml ultra-leve com design Aqualis exclusivo e tampa de fecho rápido. Perfeita para treinos e sessões de gaming prolongadas.</p>
+        <div class="product-footer">
+          <div class="product-price">29<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('aqualis')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ENCOMENDA SECTION -->
+<section id="encomenda" class="alt">
+  <div class="reveal" style="text-align:center;margin-bottom:48px;">
+    <div class="section-tag" style="text-align:center;">// Fazer Pedido</div>
+    <h2>ENCOMENDA ONLINE</h2>
+    <div class="section-line" style="margin:12px auto 0;"></div>
+    <p style="color:var(--muted);margin-top:16px;font-size:0.95rem;">Preenche o formulário abaixo e entraremos em contacto para confirmar a encomenda.</p>
+  </div>
+
+  <div class="order-form-wrapper reveal">
+    <div class="section-tag">// Formulário de Encomenda</div>
+    <div class="order-title">NOVA ENCOMENDA</div>
+    <p class="order-sub">Campos marcados com <span style="color:var(--accent);">*</span> são obrigatórios.</p>
+
+    <div id="orderFormFields">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome Completo <span class="req">*</span></label>
+          <input type="text" id="o_nome" placeholder="João Silva" required/>
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="o_email" placeholder="joao@email.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Telefone <span class="req">*</span></label>
+          <input type="tel" id="o_telefone" placeholder="912 345 678" required/>
+        </div>
+        <div class="form-group">
+          <label>Produto <span class="req">*</span></label>
+          <select id="o_produto" required>
+            <option value="">Selecionar produto...</option>
+            <option value="Cadeira Gaming Pro – 299.99€">Cadeira Gaming Pro – 299.99€</option>
+            <option value="Cadeira Gaming Elite – 449.99€">Cadeira Gaming Elite – 449.99€</option>
+            <option value="Garrafa Amoriel – 34.99€">Garrafa Amoriel – 34.99€</option>
+            <option value="Garrafa Aqualis – 29.99€">Garrafa Aqualis – 29.99€</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantidade <span class="req">*</span></label>
+          <input type="number" id="o_quantidade" min="1" max="99" value="1" required/>
+        </div>
+        <div class="form-group">
+          <label>Tamanho / Cor</label>
+          <input type="text" id="o_variante" placeholder="Ex: Preto, L, Vermelho..."/>
+        </div>
+        <div class="form-group full">
+          <label>Morada Completa <span class="req">*</span></label>
+          <input type="text" id="o_morada" placeholder="Rua das Flores, Nº 123" required/>
+        </div>
+        <div class="form-group">
+          <label>Código Postal <span class="req">*</span></label>
+          <input type="text" id="o_cp" placeholder="4000-123" required/>
+        </div>
+        <div class="form-group">
+          <label>Cidade <span class="req">*</span></label>
+          <input type="text" id="o_cidade" placeholder="Porto" required/>
+        </div>
+        <div class="form-group full">
+          <label>Mensagem / Observações</label>
+          <textarea id="o_msg" placeholder="Alguma informação adicional sobre a encomenda..."></textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding:16px;background:rgba(230,57,70,0.06);border:1px solid rgba(230,57,70,0.2);">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">// RESUMO DA ENCOMENDA</div>
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span id="summary_product" style="color:var(--text);font-weight:700;">—</span>
+          <span id="summary_total" style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--accent2);">0.00€</span>
+        </div>
+      </div>
+
+      <button class="form-submit" onclick="submitOrder()">⚡ CONFIRMAR ENCOMENDA</button>
+      <p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:12px;">Os dados são guardados localmente para processamento. Receberá confirmação por email.</p>
+    </div>
+
+    <div id="orderSuccess" class="form-success">
+      <div class="icon">✅</div>
+      <h3>ENCOMENDA RECEBIDA!</h3>
+      <p>Obrigado pela tua encomenda.<br>Entraremos em contacto em breve para confirmar os detalhes.</p>
+      <button class="btn-primary" style="margin-top:24px;" onclick="resetOrder()">NOVA ENCOMENDA</button>
+    </div>
+  </div>
+</section>
+<!-- NEWSLETTER -->
+<section id="newsletter" class="alt">
+  <div class="reveal" style="text-align:center; max-width:700px; margin:0 auto;">
+
+    <div class="section-tag">// Newsletter</div>
+    <h2>SUBSCREVE A NOSSA NEWSLETTER</h2>
+    <div class="section-line" style="margin:12px auto 24px;"></div>
+
+    <p style="color:var(--muted); margin-bottom:28px;">
+      Recebe novidades, promoções exclusivas e lançamentos da ManyGames.
+    </p>
+
+    <!-- FORMULÁRIO SEM JS -->
+    <form action="mailto:teuemail@exemplo.com" method="post" enctype="text/plain"
+          style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+
+      <input
+        type="email"
+        name="email"
+        placeholder="O teu email"
+        required
+        style="padding:12px 16px; min-width:260px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; outline:none;"
+      />
+
+      <button class="btn-primary" type="submit">
+        SUBSCREVER
+      </button>
+
+    </form>
+
+    <p style="font-size:0.75rem; color:var(--muted); margin-top:14px;">
+      Ao submeteres, vais enviar o teu email para contacto.
+    </p>
+
+  </div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="logo.png" alt=""/>
+    <span class="footer-logo-text">MANY<span>GAMES</span></span>
+  </div>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="jogo.html">Jogo</a>
+    <a href="#produtos">Loja</a>
+    <a href="contacto.html">Contacto</a>
+  </nav>
+  <p>© 2015–2026 ManyGames · Porto, Portugal</p>
+</footer>
+
+<!-- TOAST -->
+<div id="toast">✓ ADICIONADO AO CARRINHO</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">ENCOMENDAR</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-product-info">
+      <div class="modal-product-name" id="modalProduct">—</div>
+    </div>
+    <div class="modal-body">
+      <div id="modalFormFields">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nome Completo <span class="req">*</span></label>
+            <input type="text" id="m_nome" placeholder="João Silva"/>
+          </div>
+          <div class="form-group">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" id="m_email" placeholder="joao@email.com"/>
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="m_telefone" placeholder="912 345 678"/>
+          </div>
+          <div class="form-group">
+            <label>Quantidade</label>
+            <input type="number" id="m_quantidade" min="1" max="99" value="1"/>
+          </div>
+          <div class="form-group full">
+            <label>Tamanho / Cor</label>
+            <input type="text" id="m_variante" placeholder="Ex: Preto, L..."/>
+          </div>
+          <div class="form-group full">
+            <label>Morada <span class="req">*</span></label>
+            <input type="text" id="m_morada" placeholder="Rua das Flores, Nº 123"/>
+          </div>
+          <div class="form-group">
+            <label>Código Postal <span class="req">*</span></label>
+            <input type="text" id="m_cp" placeholder="4000-123"/>
+          </div>
+          <div class="form-group">
+            <label>Cidade <span class="req">*</span></label>
+            <input type="text" id="m_cidade" placeholder="Porto"/>
+          </div>
+          <div class="form-group full">
+            <label>Mensagem</label>
+            <textarea id="m_msg" placeholder="Observações..."></textarea>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitModal()">⚡ CONFIRMAR ENCOMENDA</button>
+      </div>
+      <div id="modalSuccess" class="form-success">
+        <div class="icon">✅</div>
+        <h3>ENCOMENDA ENVIADA!</h3>
+        <p>Obrigado! Entraremos em contacto em breve.</p>
+        <button class="btn-outline" style="margin-top:20px;" onclick="closeModal()">FECHAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── PRODUCTS DATA ───────────────────────────────────────────────────────────
+const PRODUCTS = {
+  cadeira1: { name: 'Cadeira Gaming Pro', price: 299.99, category: 'Mobiliário Gaming' },
+  cadeira2: { name: 'Cadeira Gaming Elite', price: 449.99, category: 'Mobiliário Gaming' },
+  amoriel:  { name: 'Garrafa Amoriel', price: 34.99, category: 'Lifestyle / Acessórios' },
+  aqualis:  { name: 'Garrafa Aqualis', price: 29.99, category: 'Lifestyle / Acessórios' }
+};
+
+let currentProduct = null;
+
+// ─── ORDER STORAGE ────────────────────────────────────────────────────────────
+function getOrders() {
+  try { return JSON.parse(localStorage.getItem('mg_orders') || '[]'); } catch { return []; }
+}
+
+function saveOrder(order) {
+  const orders = getOrders();
+  order.id = String(orders.length + 1).padStart(3, '0');
+  order.data = new Date().toLocaleDateString('pt-PT');
+  order.estado = 'Pendente';
+  orders.push(order);
+  localStorage.setItem('mg_orders', JSON.stringify(orders));
+  // Also trigger CSV download
+  downloadCSVRow(order);
+}
+
+function downloadCSVRow(order) {
+  // Append to a cumulative CSV in sessionStorage for user to export
+  const row = [
+    order.id, order.data, order.nome, order.email, order.telefone,
+    order.produto, order.quantidade, order.variante, order.morada,
+    order.cp, order.cidade, `"${order.msg.replace(/"/g,'""')}"`,
+    order.total, order.estado
+  ].join(',');
+
+  let csv = sessionStorage.getItem('mg_csv') || 'ID,Data,Nome,Email,Telefone,Produto,Quantidade,Tamanho/Cor,Morada,Código Postal,Cidade,Mensagem,Total (€),Estado\n';
+  csv += row + '\n';
+  sessionStorage.setItem('mg_csv', csv);
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(productKey) {
+  currentProduct = productKey;
+  const p = PRODUCTS[productKey];
+  document.getElementById('modalTitle').textContent = 'ENCOMENDAR';
+  document.getElementById('modalProduct').textContent = `${p.name} · ${p.price.toFixed(2)}€`;
+  document.getElementById('modalFormFields').style.display = 'block';
+  document.getElementById('modalSuccess').style.display = 'none';
+  // Pre-fill product in main form too
+  document.getElementById('o_produto').value = `${p.name} – ${p.price.toFixed(2)}€`;
+  updateSummary();
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentProduct = null;
+}
+
+function submitModal() {
+  const nome = document.getElementById('m_nome').value.trim();
+  const email = document.getElementById('m_email').value.trim();
+  const morada = document.getElementById('m_morada').value.trim();
+  const cp = document.getElementById('m_cp').value.trim();
+  const cidade = document.getElementById('m_cidade').value.trim();
+
+  if (!nome || !email || !morada || !cp || !cidade) {
+    flashRequired(['m_nome','m_email','m_morada','m_cp','m_cidade']);
+    return;
+  }
+
+  const p = PRODUCTS[currentProduct];
+  const qty = parseInt(document.getElementById('m_quantidade').value) || 1;
+
+  saveOrder({
+    nome, email,
+    telefone: document.getElementById('m_telefone').value.trim(),
+    produto: p.name,
+    quantidade: qty,
+    variante: document.getElementById('m_variante').value.trim(),
+    morada,
+    cp, cidade,
+    msg: document.getElementById('m_msg').value.trim(),
+    total: (p.price * qty).toFixed(2)
+  });
+
+  document.getElementById('modalFormFields').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
+  showToast('✓ ENCOMENDA GUARDADA!');
+}
+
+// ─── MAIN ORDER FORM ─────────────────────────────────────────────────────────
+function updateSummary() {
+  const sel = document.getElementById('o_produto').value;
+  const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
+  const prodSummary = document.getElementById('summary_product');
+  const totalSummary = document.getElementById('summary_total');
+
+  if (!sel) { prodSummary.textContent = '—'; totalSummary.textContent = '0.00€'; return; }
+
+  // Extract price from option label
+  const match = sel.match(/(\d+\.\d+)€/);
+  const price = match ? parseFloat(match[1]) : 0;
+  const total = price * qty;
+  prodSummary.textContent = sel.split(' – ')[0];
+  totalSummary.textContent = total.toFixed(2) + '€';
+}
+
+document.getElementById('o_produto').addEventListener('change', updateSummary);
+document.getElementById('o_quantidade').addEventListener('input', updateSummary);
+
+function submitOrder() {
+  const nome = document.getElementById('o_nome').value.trim();
+  const email = document.getElementById('o_email').value.trim();
+  const produto = document.getElementById('o_produto').value;
+  const morada = document.getElementById('o_morada').value.trim();
+  const cp = document.getElementById('o_cp').value.trim();
+  const cidade = document.getElementById('o_cidade').value.trim();
+  const telefone = document.getElementById('o_telefone').value.trim();
+
+  if (!nome || !email || !telefone || !produto || !morada || !cp || !cidade) {
+    flashRequired(['o_nome','o_email','o_telefone','o_produto','o_morada','o_cp','o_cidade']);
+    return;
+  }
+
+  const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
+  const match = produto.match(/(\d+\.\d+)€/);
+  const price = match ? parseFloat(match[1]) : 0;
+
+  saveOrder({
+    nome, email, telefone,
+    produto: produto.split(' – ')[0],
+    quantidade: qty,
+    variante: document.getElementById('o_variante').value.trim(),
+    morada, cp, cidade,
+    msg: document.getElementById('o_msg').value.trim(),
+    total: (price * qty).toFixed(2)
+  });
+
+  document.getElementById('orderFormFields').style.display = 'none';
+  document.getElementById('orderSuccess').style.display = 'block';
+  showToast('✓ ENCOMENDA REGISTADA!');
+}
+
+function resetOrder() {
+  document.getElementById('orderFormFields').style.display = 'block';
+  document.getElementById('orderSuccess').style.display = 'none';
+  ['o_nome','o_email','o_telefone','o_morada','o_cp','o_cidade','o_variante','o_msg'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('o_produto').value = '';
+  document.getElementById('o_quantidade').value = '1';
+  updateSummary();
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function flashRequired(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.style.borderColor = 'var(--accent)';
+      el.style.background = 'rgba(230,57,70,0.08)';
+      el.addEventListener('input', () => {
+        el.style.borderColor = '';
+        el.style.background = '';
+      }, { once: true });
+    }
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// ─── EXPORT CSV ──────────────────────────────────────────────────────────────
+function exportCSV() {
+  const csv = sessionStorage.getItem('mg_csv');
+  if (!csv) { alert('Sem encomendas nesta sessão ainda.'); return; }
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'encomendas_manygames.csv';
+  a.click();
+}
+
+// ─── REVEAL ON SCROLL ─────────────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => obs.observe(el));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
