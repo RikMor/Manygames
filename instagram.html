@@ -50,6 +50,8 @@
     .modal-caption { font-size:0.9rem; color:var(--text); line-height:1.6; flex:1; }
     .modal-likes { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#fff; margin-top:16px; border-top:1px solid var(--border-dim); padding-top:12px; }
     .modal-close { position:absolute; top:16px; right:16px; font-size:1.5rem; color:#fff; cursor:pointer; z-index:201; background:none; border:none; }
+    .modal-subscribe { display:none; margin-top:14px; }
+    .modal-subscribe a { display:block; text-align:center; background:var(--accent); color:#fff; padding:10px 20px; text-decoration:none; font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:2px; }
     @media(max-width:600px){ .modal-box{grid-template-columns:1fr;} .modal-img{display:none;} }
   </style>
 </head>
@@ -78,7 +80,7 @@
         <button class="ig-btn secondary">▼</button>
       </div>
       <div class="ig-stats">
-        <div class="ig-stat"><strong>148</strong> <span>publicações</span></div>
+        <div class="ig-stat"><strong>149</strong> <span>publicações</span></div>
         <div class="ig-stat"><strong>2.4M</strong> <span>seguidores</span></div>
         <div class="ig-stat"><strong>312</strong> <span>a seguir</span></div>
       </div>
@@ -100,52 +102,57 @@
 
   <!-- GRID -->
   <div class="ig-grid">
-    <!-- Post 1 — Entrada -->
+    <!-- Post 0 — Newsletter (NOVO, em primeiro) -->
     <div class="ig-post" onclick="openModal(0)">
+      <div class="ig-post-bg" style="background:#0d0d1a;"><img src="newsletter_post1.png" style="width:100%;height:100%;object-fit:cover;"/></div>
+      <div class="ig-post-overlay">❤️ 58K &nbsp; 💬 2.3K</div>
+    </div>
+    <!-- Post 1 — Entrada -->
+    <div class="ig-post" onclick="openModal(1)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_entrada.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 42K &nbsp; 💬 1.2K</div>
     </div>
     <!-- Post 2 — Season 5 -->
-    <div class="ig-post" onclick="openModal(1)">
+    <div class="ig-post" onclick="openModal(2)">
       <div class="ig-post-bg" style="background:linear-gradient(135deg,#1a0005 0%,#e63946 100%);display:flex;align-items:center;justify-content:center;">
         <div style="text-align:center;"><div style="font-size:3rem;">🎮</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:#fff;">SEASON 5</div></div>
       </div>
       <div class="ig-post-overlay">❤️ 38K &nbsp; 💬 987</div>
     </div>
     <!-- Post 3 — Diversidade -->
-    <div class="ig-post" onclick="openModal(2)">
+    <div class="ig-post" onclick="openModal(3)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_diversidade.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 71K &nbsp; 💬 3.1K</div>
     </div>
     <!-- Post 4 — Corredor salas -->
-    <div class="ig-post" onclick="openModal(3)">
+    <div class="ig-post" onclick="openModal(4)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_corredor.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 29K &nbsp; 💬 654</div>
     </div>
     <!-- Post 5 — Educação -->
-    <div class="ig-post" onclick="openModal(4)">
+    <div class="ig-post" onclick="openModal(5)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_educacao.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 15K &nbsp; 💬 892</div>
     </div>
     <!-- Post 6 — 8M jogadores -->
-    <div class="ig-post" onclick="openModal(5)">
+    <div class="ig-post" onclick="openModal(6)">
       <div class="ig-post-bg" style="background:linear-gradient(135deg,#e63946,#ff9f1c);display:flex;align-items:center;justify-content:center;">
         <div style="text-align:center;padding:16px;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;color:#fff;">8 MILHÕES<br>DE JOGADORES</div><div style="font-size:2rem;margin-top:8px;">🎉</div></div>
       </div>
       <div class="ig-post-overlay">❤️ 95K &nbsp; 💬 4.8K</div>
     </div>
     <!-- Post 7 — Cultura rebelde -->
-    <div class="ig-post" onclick="openModal(6)">
+    <div class="ig-post" onclick="openModal(7)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_cultura.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 33K &nbsp; 💬 1.1K</div>
     </div>
     <!-- Post 8 — Vestuário -->
-    <div class="ig-post" onclick="openModal(7)">
+    <div class="ig-post" onclick="openModal(8)">
       <div class="ig-post-bg" style="background:#111;"><img src="img_vestuario.png" style="width:100%;height:100%;object-fit:cover;"/></div>
       <div class="ig-post-overlay">❤️ 22K &nbsp; 💬 567</div>
     </div>
     <!-- Post 9 — Planta -->
-    <div class="ig-post" onclick="openModal(8)">
+    <div class="ig-post" onclick="openModal(9)">
       <div class="ig-post-bg" style="background:#fff;"><img src="img_planta.png" style="width:100%;height:100%;object-fit:contain;"/></div>
       <div class="ig-post-overlay">❤️ 18K &nbsp; 💬 734</div>
     </div>
@@ -168,6 +175,9 @@
       </div>
       <div class="modal-caption" id="modal-caption"></div>
       <div class="modal-likes" id="modal-likes"></div>
+      <div class="modal-subscribe" id="modal-subscribe">
+        <a href="contacto.html">✉️ Inscrever-se na Newsletter</a>
+      </div>
       <div style="margin-top:12px;display:flex;gap:12px;">
         <span style="font-size:1.3rem;cursor:pointer;" id="modal-heart" onclick="likePost(this)">🤍</span>
         <span style="font-size:1.3rem;cursor:pointer;">💬</span>
@@ -188,6 +198,7 @@
 <script src="shared.js"></script>
 <script>
 const posts = [
+  { caption:'📩 Fique por dentro de tudo sobre Kill of Reason! Receba novidades, atualizações, eventos e conteúdos exclusivos só para inscritos. Junte-se à comunidade e faça parte da batalha! ⚔️ #KillOfReason #Newsletter #ManyGames #MOBA', likes:'❤️ 58.0K gostos', img:'newsletter_post1.png', newsletter:true },
   { caption:'🏢 Bem-vindos à nossa sede em Valongo, Porto! É aqui que o Kill of Reason ganha vida todos os dias. #ManyGames #GameDev #Porto', likes:'❤️ 42.3K gostos', img:'img_entrada.png' },
   { caption:'🎮 Season 5 está a chegar! Novos heróis, novo mapa, novas mecânicas. Prepara-te para o maior update de sempre. #KillOfReason #Season5', likes:'❤️ 38.1K gostos', bg:'linear-gradient(135deg,#1a0005 0%,#e63946 100%)', icon:'🎮' },
   { caption:'🤝 Diversidade e Inclusão — os pilares da nossa cultura. Equipas diversas, clima inclusivo. #Diversidade #Inclusão #ManyGames', likes:'❤️ 71.4K gostos', img:'img_diversidade.png' },
@@ -214,6 +225,7 @@ function openModal(i) {
   document.getElementById('modal-caption').textContent = p.caption;
   document.getElementById('modal-likes').textContent = p.likes;
   document.getElementById('modal-heart').textContent = '🤍';
+  document.getElementById('modal-subscribe').style.display = p.newsletter ? 'block' : 'none';
   document.getElementById('modal').classList.add('open');
 }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }

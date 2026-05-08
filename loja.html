@@ -308,6 +308,76 @@
     }
     @keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:none} }
 
+
+    /* NAV DEAL PILL */
+    .nav-deal {
+      display: flex; align-items: center; gap: 12px;
+      padding: 6px 14px 6px 8px;
+      background: rgba(255,159,28,0.08);
+      border: 1px solid rgba(255,159,28,0.35);
+      text-decoration: none;
+      transition: background .2s, border-color .2s;
+      flex-shrink: 0;
+    }
+    .nav-deal:hover { background: rgba(255,159,28,0.15); border-color: var(--accent2); }
+    .nav-deal-img {
+      width: 38px; height: 38px; object-fit: cover;
+      border: 1px solid rgba(255,159,28,0.3);
+    }
+    .nav-deal-text { line-height: 1.2; }
+    .nav-deal-label { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 2px; color: var(--accent2); text-transform: uppercase; }
+    .nav-deal-name { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 2px; color: #fff; }
+    .nav-deal-prices { display: flex; align-items: baseline; gap: 7px; }
+    .nav-deal-old { font-size: 0.72rem; color: var(--muted); text-decoration: line-through; font-family: 'Rajdhani', sans-serif; }
+    .nav-deal-new { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--accent2); letter-spacing: 1px; }
+    .nav-deal-badge {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 1px; background: var(--accent); color: #fff;
+      padding: 2px 7px; margin-left: 4px;
+    }
+    @media (max-width: 900px) { .nav-deal { display: none; } }
+
+    /* NEWSLETTER */
+    #newsletter { scroll-margin-top: 80px; }
+    .newsletter-wrapper {
+      max-width: 660px; margin: 0 auto; text-align: center;
+    }
+    .newsletter-glow {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,230,118,0.09) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,230,118,0.3); border-right: none;
+      color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+      padding: 13px 18px; outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    .newsletter-input:focus { border-color: var(--cyan); background: rgba(0,230,118,0.05); }
+    .newsletter-input::placeholder { color: var(--muted); }
+    .newsletter-btn {
+      padding: 13px 28px;
+      background: var(--cyan); color: #000;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px;
+      border: none; cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+      transition: background .2s, transform .1s;
+      white-space: nowrap;
+    }
+    .newsletter-btn:hover { background: #00c853; transform: translateY(-1px); }
+    .newsletter-perks {
+      display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .newsletter-perk { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .newsletter-perk span { color: var(--cyan); }
+    .nl-success { display: none; }
+    .nl-success .nl-ok-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .nl-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; }
+    .nl-success p { color: var(--muted); font-size: 0.9rem; }
     @media (max-width: 900px) {
       .form-grid { grid-template-columns: 1fr; }
       .info-strip { grid-template-columns: 1fr 1fr; }
@@ -331,7 +401,19 @@
     <img src="logo.png" alt="ManyGames logo"/>
     <span class="nav-logo-text">MANY<span>GAMES</span></span>
   </a>
-  <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <a href="#produtos" class="nav-deal" onclick="openModal('amoriel')">
+    <img src="garrafa amoriel.png" alt="Garrafa Amoriel" class="nav-deal-img"/>
+    <div class="nav-deal-text">
+      <div class="nav-deal-label">🔥 Oferta do dia</div>
+      <div class="nav-deal-name">Garrafa Amoriel</div>
+      <div class="nav-deal-prices">
+        <span class="nav-deal-old">49.99€</span>
+        <span class="nav-deal-new">34.99€</span>
+        <span class="nav-deal-badge">-30%</span>
+      </div>
+    </div>
+  </a>
+    <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
   <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
@@ -346,69 +428,17 @@
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-
-  <!-- 🔥 ESTE É O FIX PRINCIPAL -->
-  <div class="hero-content" style="display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap;">
-
-    <!-- TEXTO (ESQUERDA) -->
-    <div style="flex:1; min-width:280px;">
-      <div class="hero-tag">// Loja Oficial ManyGames</div>
-
-      <h1 class="hero-title">
-        <span style="color:#fff;">MANY</span><br>
-        <span style="color:var(--accent);">STORE</span>
-      </h1>
-
-      <p class="hero-sub">
-        Produtos exclusivos para os verdadeiros jogadores. Equipamento gaming, garrafas de edição limitada e muito mais — tudo com o selo ManyGames.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#produtos" class="btn-primary">Ver Produtos</a>
-        <a href="#encomenda" class="btn-outline">Encomendar Agora</a>
-      </div>
+  <div class="hero-content">
+    <div class="hero-tag">// Loja Oficial ManyGames</div>
+    <h1 class="hero-title">
+      <span style="color:#fff;">MANY</span><br>
+      <span style="color:var(--accent);">STORE</span>
+    </h1>
+    <p class="hero-sub">Produtos exclusivos para os verdadeiros jogadores. Equipamento gaming, garrafas de edição limitada e muito mais — tudo com o selo ManyGames.</p>
+    <div class="hero-actions">
+      <a href="#produtos" class="btn-primary">Ver Produtos</a>
+      <a href="#encomenda" class="btn-outline">Encomendar Agora</a>
     </div>
-
-    <!-- PRODUTO (DIREITA) -->
-    <div style="flex:1; min-width:280px; display:flex; justify-content:flex-end;">
-
-      <div style="margin-top:20px; padding:16px;
-                  background:rgba(255,255,255,0.03);
-                  border:1px solid rgba(230,57,70,0.3);
-                  max-width:320px;">
-
-        <div style="font-family:'Share Tech Mono', monospace; font-size:0.65rem; color:#ff9f1c; letter-spacing:2px; margin-bottom:10px;">
-          🔥 PROMOÇÃO ESPECIAL
-        </div>
-
-        <img src="cadeira 1.png" alt="Produto em desconto"
-             style="width:100%; height:220px; object-fit:cover; border:1px solid rgba(255,255,255,0.1); margin-bottom:12px;">
-
-        <div style="font-family:'Bebas Neue', sans-serif; font-size:1.4rem; color:#fff; margin-bottom:6px;">
-          Cadeira Gaming Pro
-        </div>
-
-        <div style="font-size:0.95rem; color:#b0b0cc; margin-bottom:12px;">
-          <span style="text-decoration:line-through; opacity:0.6;">499.99€</span>
-          <span style="color:#00e676; font-weight:bold;"> → 229.99€</span>
-        </div>
-
-        <a href="#encomenda" style="
-          display:block;
-          text-align:center;
-          padding:10px;
-          background:var(--accent);
-          color:#fff;
-          text-decoration:none;
-          font-family:'Bebas Neue', sans-serif;
-          letter-spacing:2px;">
-          COMPRAR AGORA
-        </a>
-
-      </div>
-
-    </div>
-
   </div>
 </section>
 
@@ -609,42 +639,36 @@
     </div>
   </div>
 </section>
+
+
 <!-- NEWSLETTER -->
-<section id="newsletter" class="alt">
-  <div class="reveal" style="text-align:center; max-width:700px; margin:0 auto;">
+<section id="newsletter" style="position:relative;overflow:hidden;background:var(--panel);border-top:1px solid rgba(0,230,118,0.15);border-bottom:1px solid rgba(0,230,118,0.15);">
+  <div class="newsletter-glow"></div>
+  <div class="newsletter-wrapper reveal">
+    <div id="nlForm">
 
-    <div class="section-tag">// Newsletter</div>
-    <h2>SUBSCREVE A NOSSA NEWSLETTER</h2>
-    <div class="section-line" style="margin:12px auto 24px;"></div>
-
-    <p style="color:var(--muted); margin-bottom:28px;">
-      Recebe novidades, promoções exclusivas e lançamentos da ManyGames.
-    </p>
-
-    <!-- FORMULÁRIO SEM JS -->
-    <form action="mailto:teuemail@exemplo.com" method="post" enctype="text/plain"
-          style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-
-      <input
-        type="email"
-        name="email"
-        placeholder="O teu email"
-        required
-        style="padding:12px 16px; min-width:260px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; outline:none;"
-      />
-
-      <button class="btn-primary" type="submit">
-        SUBSCREVER
-      </button>
-
-    </form>
-
-    <p style="font-size:0.75rem; color:var(--muted); margin-top:14px;">
-      Ao submeteres, vais enviar o teu email para contacto.
-    </p>
-
+      <div class="section-tag" style="text-align:center;">// Comunidade ManyGames</div>
+      <h2 style="letter-spacing:4px;">JUNTA-TE À<br><span style="color:var(--cyan);">NEWSLETTER</span></h2>
+      <div class="section-line" style="margin:12px auto 16px;background:linear-gradient(90deg,var(--cyan),transparent);"></div>
+      <p style="color:var(--muted);font-size:0.95rem;margin-bottom:0;">Recebe em primeira mão as novidades de produtos, descontos exclusivos e atualizações do Kill of Reason. Sem spam — prometemos.</p>
+      <div class="newsletter-input-row">
+        <input type="email" id="nl_email" class="newsletter-input" placeholder="o.teu@email.com"/>
+        <button class="newsletter-btn" onclick="subscribeNewsletter()">SUBSCREVER</button>
+      </div>
+      <div class="newsletter-perks">
+        <div class="newsletter-perk"><span>✓</span> Desconto de boas-vindas 10%</div>
+        <div class="newsletter-perk"><span>✓</span> Acesso antecipado a lançamentos</div>
+        <div class="newsletter-perk"><span>✓</span> Conteúdo exclusivo KoR</div>
+      </div>
+    </div>
+    <div id="nlSuccess" class="nl-success">
+      <div class="nl-ok-icon">🎮</div>
+      <h3>BEM-VINDO À FAMÍLIA!</h3>
+      <p>Confirmação enviada para o teu email.<br>Prepara-te para receber o teu desconto de 10%.</p>
+    </div>
   </div>
 </section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
@@ -660,6 +684,25 @@
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
+
+<!-- EXPORT BUTTON (floating) -->
+<div id="exportBtn" style="
+  position:fixed; bottom:32px; left:32px; z-index:500;
+  display:none; flex-direction:column; gap:8px;
+">
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--muted);text-align:center;">ENCOMENDAS</div>
+  <button onclick="exportCSV()" style="
+    display:flex;align-items:center;gap:10px;
+    padding:12px 20px;
+    background:var(--card); border:1px solid var(--cyan);
+    color:var(--cyan); font-family:'Bebas Neue',sans-serif;
+    font-size:0.95rem; letter-spacing:2px; cursor:pointer;
+    transition:background .2s;
+  " onmouseover="this.style.background='rgba(0,230,118,0.1)'" onmouseout="this.style.background='var(--card)'">
+    📊 EXPORTAR EXCEL
+  </button>
+  <div id="orderCount" style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);text-align:center;">0 encomenda(s)</div>
+</div>
 
 <!-- TOAST -->
 <div id="toast">✓ ADICIONADO AO CARRINHO</div>
@@ -749,22 +792,33 @@ function saveOrder(order) {
   order.estado = 'Pendente';
   orders.push(order);
   localStorage.setItem('mg_orders', JSON.stringify(orders));
-  // Also trigger CSV download
-  downloadCSVRow(order);
+  appendCSVRow(order);
+  updateExportBtn();
 }
 
-function downloadCSVRow(order) {
-  // Append to a cumulative CSV in sessionStorage for user to export
+function appendCSVRow(order) {
+  const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
   const row = [
-    order.id, order.data, order.nome, order.email, order.telefone,
-    order.produto, order.quantidade, order.variante, order.morada,
-    order.cp, order.cidade, `"${order.msg.replace(/"/g,'""')}"`,
-    order.total, order.estado
+    order.id, order.data,
+    esc(order.nome), esc(order.email), esc(order.telefone),
+    esc(order.produto), order.quantidade, esc(order.variante),
+    esc(order.morada), esc(order.cp), esc(order.cidade),
+    esc(order.msg), order.total, order.estado
   ].join(',');
-
-  let csv = sessionStorage.getItem('mg_csv') || 'ID,Data,Nome,Email,Telefone,Produto,Quantidade,Tamanho/Cor,Morada,Código Postal,Cidade,Mensagem,Total (€),Estado\n';
+  let csv = sessionStorage.getItem('mg_csv') ||
+    'ID,Data,Nome,Email,Telefone,Produto,Quantidade,Tamanho/Cor,Morada,Código Postal,Cidade,Mensagem,Total (€),Estado\n';
   csv += row + '\n';
   sessionStorage.setItem('mg_csv', csv);
+}
+
+function updateExportBtn() {
+  const orders = getOrders();
+  const btn = document.getElementById('exportBtn');
+  const cnt = document.getElementById('orderCount');
+  if (orders.length > 0) {
+    btn.style.display = 'flex';
+    cnt.textContent = orders.length + ' encomenda(s)';
+  }
 }
 
 // ─── MODAL ────────────────────────────────────────────────────────────────────
@@ -927,6 +981,9 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 revealEls.forEach(el => obs.observe(el));
 
+// Restore export button state on load
+updateExportBtn();
+
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
@@ -935,6 +992,28 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
+
+// ─── NEWSLETTER ──────────────────────────────────────────────────────────────
+function subscribeNewsletter() {
+  const email = document.getElementById('nl_email').value.trim();
+  if (!email || !email.includes('@')) {
+    const inp = document.getElementById('nl_email');
+    inp.style.borderColor = 'var(--accent)';
+    inp.focus();
+    setTimeout(() => inp.style.borderColor = '', 1500);
+    return;
+  }
+  // Save to localStorage
+  const subs = JSON.parse(localStorage.getItem('mg_newsletter') || '[]');
+  if (!subs.includes(email)) { subs.push(email); localStorage.setItem('mg_newsletter', JSON.stringify(subs)); }
+  // Append to CSV
+  let csv = sessionStorage.getItem('mg_nl_csv') || 'Email,Data\n';
+  csv += email + ',' + new Date().toLocaleDateString('pt-PT') + '\n';
+  sessionStorage.setItem('mg_nl_csv', csv);
+  document.getElementById('nlForm').style.display = 'none';
+  document.getElementById('nlSuccess').style.display = 'block';
+  showToast('✓ SUBSCRITO COM SUCESSO!');
+}
 </script>
 </body>
 </html>
