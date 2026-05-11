@@ -424,7 +424,7 @@
 </nav>
 
 <!-- HERO -->
-<section id="hero">
+<section id="hero" style="display:flex;align-items:center;justify-content:center;gap:80px;flex-wrap:wrap;">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
@@ -438,6 +438,26 @@
     <div class="hero-actions">
       <a href="#produtos" class="btn-primary">Ver Produtos</a>
       <a href="#encomenda" class="btn-outline">Encomendar Agora</a>
+    </div>
+  </div>
+
+  <!-- Manual de Regras -->
+  <div style="position:relative;z-index:2;flex-shrink:0;text-align:center;animation:fadeUp .9s ease .4s both;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;color:var(--accent2);margin-bottom:12px;text-transform:uppercase;">// Destaque</div>
+    <div style="position:relative;display:inline-block;">
+      <img src="regras_wor.png" alt="Manual de Regras World of Reason"
+        style="width:220px;border:2px solid rgba(255,159,28,0.35);box-shadow:0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6);transition:transform .3s,box-shadow .3s;cursor:pointer;"
+        onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 60px rgba(255,159,28,0.3),0 20px 60px rgba(0,0,0,0.6)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6)'"
+        onclick="openModal('manual')"
+      />
+      <span style="position:absolute;top:10px;right:-10px;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:1px;padding:4px 8px;">NOVO</span>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--text);">Manual de Regras</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;">World of Reason</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;margin-bottom:12px;">0<span style="font-size:0.9rem;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;">.50&#8364;</span></div>
+      <button class="btn-cart" onclick="openModal('manual')" style="width:100%;justify-content:center;">&#128722; Comprar</button>
     </div>
   </div>
 </section>
@@ -484,35 +504,35 @@
 
   <div class="products-grid">
 
-    <!-- Cadeira 1 -->
+    <!-- Pack Amoriel -->
     <div class="product-card reveal" onclick="openModal('cadeira1')">
       <span class="product-badge badge-hot">BESTSELLER</span>
       <div class="product-img-wrapper">
-        <img src="cadeira 1.png" alt="Cadeira Gaming Pro ManyGames" class="product-img"/>
+        <img src="amoriel_pack.png" alt="Pack de Cartas Amoriel ManyGames" class="product-img"/>
       </div>
       <div class="product-info">
-        <div class="product-category">Gaming · Mobiliário</div>
-        <div class="product-name">Cadeira Gaming Pro</div>
-        <p class="product-desc">Cadeira ergonómica de alta performance com suporte lombar ajustável e cobertura em tecido respirável. Design ManyGames exclusivo.</p>
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Amoriel</div>
+        <p class="product-desc">Pack exclusivo de cartas da Amoriel, a Guardiã do Amor Verdadeiro. Edição especial Dia dos Namorados com arte única e acabamentos premium.</p>
         <div class="product-footer">
-          <div class="product-price">299<span>.99€</span></div>
+          <div class="product-price">4<span>.99€</span></div>
           <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira1')">🛒 Comprar</button>
         </div>
       </div>
     </div>
 
-    <!-- Cadeira 2 -->
+    <!-- Pack Aqualis -->
     <div class="product-card reveal" onclick="openModal('cadeira2')">
       <span class="product-badge badge-limited">EDIÇÃO LIMITADA</span>
       <div class="product-img-wrapper">
-        <img src="cadeira 2.png" alt="Cadeira Gaming Elite ManyGames" class="product-img"/>
+        <img src="aqualis_pack.png" alt="Pack de Cartas Aqualis ManyGames" class="product-img"/>
       </div>
       <div class="product-info">
-        <div class="product-category">Gaming · Mobiliário</div>
-        <div class="product-name">Cadeira Gaming Elite</div>
-        <p class="product-desc">Versão premium com apoios de braços 4D, couro sintético de alta qualidade e rodas de poliuretano. Para os que não cedem em conforto.</p>
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Aqualis</div>
+        <p class="product-desc">Pack exclusivo de cartas do Aqualis, o Guardião das Nascentes. Arte deslumbrante inspirada nas águas puras e montanhas sagradas.</p>
         <div class="product-footer">
-          <div class="product-price">449<span>.99€</span></div>
+          <div class="product-price">4<span>.99€</span></div>
           <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira2')">🛒 Comprar</button>
         </div>
       </div>
@@ -587,8 +607,9 @@
           <label>Produto <span class="req">*</span></label>
           <select id="o_produto" required>
             <option value="">Selecionar produto...</option>
-            <option value="Cadeira Gaming Pro – 299.99€">Cadeira Gaming Pro – 299.99€</option>
-            <option value="Cadeira Gaming Elite – 449.99€">Cadeira Gaming Elite – 449.99€</option>
+            <option value="Pack de Cartas Amoriel – 4.99€">Pack de Cartas Amoriel – 4.99€</option>
+            <option value="Pack de Cartas Aqualis – 4.99€">Pack de Cartas Aqualis – 4.99€</option>
+            <option value="Manual de Regras WoR – 0.50€">Manual de Regras WoR – 0.50€</option>
             <option value="Garrafa Amoriel – 34.99€">Garrafa Amoriel – 34.99€</option>
             <option value="Garrafa Aqualis – 29.99€">Garrafa Aqualis – 29.99€</option>
           </select>
@@ -772,8 +793,9 @@
 <script>
 // ─── PRODUCTS DATA ───────────────────────────────────────────────────────────
 const PRODUCTS = {
-  cadeira1: { name: 'Cadeira Gaming Pro', price: 299.99, category: 'Mobiliário Gaming' },
-  cadeira2: { name: 'Cadeira Gaming Elite', price: 449.99, category: 'Mobiliário Gaming' },
+  cadeira1: { name: 'Pack de Cartas Amoriel', price: 4.99, category: 'Cartas / Colecionável' },
+  cadeira2: { name: 'Pack de Cartas Aqualis', price: 4.99, category: 'Cartas / Colecionável' },
+  manual:   { name: 'Manual de Regras – World of Reason', price: 0.50, category: 'Livros / Regras' },
   amoriel:  { name: 'Garrafa Amoriel', price: 34.99, category: 'Lifestyle / Acessórios' },
   aqualis:  { name: 'Garrafa Aqualis', price: 29.99, category: 'Lifestyle / Acessórios' }
 };
