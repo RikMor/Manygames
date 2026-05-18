@@ -55,13 +55,14 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-      <ul class="nav-links">
+        <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html" class="active">Contacto</a></li>
@@ -202,8 +203,8 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-      <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html" class="active">Contacto</a>
+        <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html" class="active">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
@@ -217,6 +218,18 @@ function submitForm() {
     alert('Por favor preenche todos os campos obrigatórios.');
     return;
   }
+  // Save to localStorage
+  const entry = {
+    id: Date.now(),
+    data: new Date().toLocaleString('pt-PT'),
+    nome: nome,
+    email: email,
+    assunto: document.getElementById('f-assunto').value.trim(),
+    mensagem: msg
+  };
+  const existing = JSON.parse(localStorage.getItem('mg_contactos') || '[]');
+  existing.push(entry);
+  localStorage.setItem('mg_contactos', JSON.stringify(existing));
   document.getElementById('success-msg').style.display = 'block';
   document.getElementById('f-nome').value = '';
   document.getElementById('f-email').value = '';

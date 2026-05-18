@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames – Vídeos</title>
+  <link rel="stylesheet" href="shared.css?v=2"/>
+  <style>
+    /* GRID DE VÍDEOS */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .video-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color .3s, transform .2s;
+      position: relative;
+    }
+    .video-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .video-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+    }
+    .video-embed {
+      position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+      cursor: pointer;
+    }
+    .video-embed iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border: none;
+    }
+    .video-thumb {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .video-play-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 64px; height: 64px; background: rgba(230,57,70,0.9);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; transition: transform .2s, background .2s;
+      pointer-events: none;
+    }
+    .video-embed:hover .video-play-btn { transform: translate(-50%,-50%) scale(1.12); background: var(--accent); }
+    .video-info { padding: 16px 18px; }
+    .video-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 2px; color: #fff; margin-bottom: 6px; line-height: 1.3;
+    }
+    .video-meta {
+      display: flex; gap: 14px; align-items: center;
+    }
+    .video-cat {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); border: 1px solid rgba(230,57,70,0.3);
+      padding: 3px 10px;
+    }
+    .video-date { font-size: 0.78rem; color: var(--muted); }
+
+    /* FILTROS */
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .filter-btn {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 18px; border: 1px solid var(--border);
+      background: none; color: var(--muted); cursor: pointer; transition: all .2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent); color: var(--accent);
+      background: rgba(230,57,70,0.08);
+    }
+
+
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center; padding: 80px 20px; color: var(--muted);
+    }
+    .empty-state .empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.4; }
+    .empty-state h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; color: var(--muted); margin-bottom: 8px; }
+
+    @media (max-width: 900px) { .videos-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .videos-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <button class="nav-mobile-toggle">☰</button>
+    <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="videos.html" class="active">Vídeos</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+  </ul>
+</nav>
+
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-glow"></div>
+  <div class="page-hero-content">
+    <div class="page-tag">// Canal YouTube</div>
+    <h1 class="page-title">VÍDEOS<br><span>MANYGAMES</span></h1>
+    <p class="page-subtitle">Trailers, gameplays, bastidores e muito mais do universo ManyGames.</p>
+  </div>
+</div>
+
+<section>
+  <div class="reveal">
+    <div class="section-tag">// Conteúdo</div>
+    <h2>TODOS OS VÍDEOS</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" onclick="filterVideos('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="filterVideos('trailer', this)">Trailers</button>
+    <button class="filter-btn" onclick="filterVideos('gameplay', this)">Gameplay</button>
+    <button class="filter-btn" onclick="filterVideos('bastidores', this)">Bastidores</button>
+    <button class="filter-btn" onclick="filterVideos('evento', this)">Eventos</button>
+    <button class="filter-btn" onclick="filterVideos('outro', this)">Outros</button>
+  </div>
+
+  <div class="videos-grid" id="videos-grid"></div>
+  <div class="empty-state" id="empty-state" style="display:none">
+    <div class="empty-icon">🎬</div>
+    <h3>Sem vídeos nesta categoria</h3>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+    <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html" class="active">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  </nav>
+  <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
+</footer>
+
+<script src="shared.js"></script>
+<!-- 
+  ════════════════════════════════════════════════════════
+  PARA ADICIONAR VÍDEOS: edita o array VIDEOS abaixo.
+  
+  Cada vídeo tem:
+    id        → o código do vídeo no YouTube (parte final do URL)
+                ex: https://youtu.be/dQw4w9WgXcQ  →  id: "dQw4w9WgXcQ"
+    titulo    → título do vídeo
+    categoria → "trailer" | "gameplay" | "bastidores" | "evento" | "outro"
+    data      → data de publicação (texto livre)
+  ════════════════════════════════════════════════════════
+-->
+<script>
+const VIDEOS = [
+  {
+    id: "2RzZfwNEZnY",
+    titulo: "ManyGames — Novos Packs Amoriel & Aqualis",
+    categoria: "trailer",
+    data: "2026",
+    thumb: "Amoriel_Aqualispack_.png"
+  },
+];
+
+// ─── NÃO PRECISAS DE EDITAR ABAIXO DESTA LINHA ───
+
+let filtroAtual = 'todos';
+
+function renderVideos(filtro) {
+  const grid = document.getElementById('videos-grid');
+  const empty = document.getElementById('empty-state');
+  const lista = filtro === 'todos' ? VIDEOS : VIDEOS.filter(v => v.categoria === filtro);
+
+  if (lista.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+
+  grid.innerHTML = lista.map(v => {
+    const thumbSrc = v.thumb
+      ? v.thumb
+      : 'https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg';
+    return `
+    <div class="video-card" data-cat="${v.categoria}" onclick="openModal('${v.id}')">
+      <div class="video-embed">
+        <img class="video-thumb" src="${thumbSrc}" alt="${v.titulo}"/>
+        <div class="video-play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">${v.titulo}</div>
+        <div class="video-meta">
+          <span class="video-cat">${v.categoria}</span>
+          <span class="video-date">${v.data}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterVideos(cat, btn) {
+  filtroAtual = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVideos(cat);
+}
+
+function openModal(videoId) {
+  window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
+}
+
+renderVideos('todos');
+</script>
+</body>
+</html>
