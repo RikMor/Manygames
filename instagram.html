@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ManyGames – Instagram</title>
-  <link rel="stylesheet" href="shared.css?v=2"/>
+  <link rel="stylesheet" href="shared.css"/>
   <style>
     .ig-wrap { max-width: 940px; margin: 0 auto; padding: 90px 20px 40px; }
     .ig-profile { display: flex; gap: 48px; align-items: center; padding: 32px 0 40px; border-bottom: 1px solid var(--border-dim); flex-wrap: wrap; }
@@ -54,21 +54,15 @@
     .modal-subscribe a { display:block; text-align:center; background:var(--accent); color:#fff; padding:10px 20px; text-decoration:none; font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:2px; }
     @media(max-width:600px){ .modal-box{grid-template-columns:1fr;} .modal-img{display:none;} }
   </style>
-<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-        <ul class="nav-links">
-    <li><a href="index.html" class="active">Início</a></li>
-    <li><a href="sobre.html">Sobre</a></li>
-    <li><a href="jogo.html">Kill of Reason</a></li>
-    <li><a href="equipa.html">Equipa</a></li>
-    <li><a href="loja.html">Loja</a></li>
-    <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
-    <li><a href="regulamento.html">Regulamento</a></li>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li><li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li><li><a href="equipa.html">Equipa</a></li>
+    <li><a href="rh.html">Carreiras</a></li><li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
@@ -184,6 +178,9 @@
       <div class="modal-subscribe" id="modal-subscribe">
         <a href="contacto.html">✉️ Inscrever-se na Newsletter</a>
       </div>
+      <div id="modal-saber-mais" style="display:none;margin-top:14px;">
+        <a href="sobre.html" style="display:block;text-align:center;background:#e63946;color:#fff;padding:12px 20px;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;">Saber mais</a>
+      </div>
       <div style="margin-top:12px;display:flex;gap:12px;">
         <span style="font-size:1.3rem;cursor:pointer;" id="modal-heart" onclick="likePost(this)">🤍</span>
         <span style="font-size:1.3rem;cursor:pointer;">💬</span>
@@ -195,8 +192,9 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-        <nav class="footer-nav">
-    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a>
+    <a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
@@ -210,7 +208,7 @@ const posts = [
   { caption:'💻 As nossas salas de desenvolvimento — onde o Kill of Reason é criado linha a linha. #GameDev #BastidoresKoR', likes:'❤️ 29.0K gostos', img:'img_corredor.png' },
   { caption:'📚 Educação para todos. Promovemos soluções inovadoras para elevar os sistemas educacionais em todo o mundo. #Educação #ImpactoSocial', likes:'❤️ 15.2K gostos', img:'img_educacao.png' },
   { caption:'🎉 8 MILHÕES DE JOGADORES! Nunca imaginámos chegar aqui quando começámos em 2015 com €5.000 e um sonho. Obrigado! #8Milhões', likes:'❤️ 95.7K gostos', bg:'linear-gradient(135deg,#e63946,#ff9f1c)', icon:'🎉' },
-  { caption:'🔥 Cultura Rebelde — aprimoramos como trabalhamos, nos divertimos e colaboramos. Liderança forte, sistemas sólidos, educação contínua. #CulturaRebelde', likes:'❤️ 33.1K gostos', img:'img_cultura.png' },
+  { caption:'🔥 Descobre o mundo dos eSports na ManyGames!\n\nOs eSports estão a crescer cada vez mais e a ManyGames faz parte desta revolução com o jogo Kill of Reason.\n\nNeste artigo explicamos como funciona o cenário competitivo, os torneios, o desenvolvimento dos jogadores e o futuro dos eSports dentro da empresa.\n\n#CulturaRebelde #KillOfReason #ManyGames #eSports', likes:'❤️ 33.1K gostos', img:'img_cultura.png', saberMais: true },
   { caption:'🚿 O nosso vestiário — conforto e bem-estar para todos os colaboradores. Instalações modernas e pensadas para quem cria. #ManyGames #Instalações', likes:'❤️ 22.4K gostos', img:'img_vestuario.png' },
   { caption:'🗺️ A planta geral da nossa sede em Valongo. 4 salas de desenvolvimento, zona de convívio, secretaria e muito mais! #Sede #Porto #ManyGames', likes:'❤️ 18.9K gostos', img:'img_planta.png', bg:'#fff', dark:true },
 ];
@@ -227,10 +225,11 @@ function openModal(i) {
   imgEl.style.display = 'flex';
   imgEl.style.alignItems = 'center';
   imgEl.style.justifyContent = 'center';
-  document.getElementById('modal-caption').textContent = p.caption;
+  document.getElementById('modal-caption').innerHTML = p.caption.replace(/\n/g, '<br>');
   document.getElementById('modal-likes').textContent = p.likes;
   document.getElementById('modal-heart').textContent = '🤍';
   document.getElementById('modal-subscribe').style.display = p.newsletter ? 'block' : 'none';
+  document.getElementById('modal-saber-mais').style.display = p.saberMais ? 'block' : 'none';
   document.getElementById('modal').classList.add('open');
 }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
