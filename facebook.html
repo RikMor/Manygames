@@ -172,7 +172,7 @@
 <script src="shared.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
@@ -187,8 +187,10 @@ const db = getFirestore(app);
 
 async function loadFbPosts() {
   try {
-    const snap = await getDocs(query(collection(db, 'facebook'), orderBy('timestamp', 'asc')));
-    const posts = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
+    const snap = await getDocs(collection(db, 'facebook'));
+    const posts = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    posts.sort((a,b) => (a.timestamp?.seconds||0) - (b.timestamp?.seconds||0));
+    posts.reverse();
     renderFbPosts(posts);
   } catch(e) {
     console.error(e);
