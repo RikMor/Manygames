@@ -151,32 +151,34 @@
 </footer>
 
 <script src="shared.js"></script>
-<!-- 
-  ════════════════════════════════════════════════════════
-  PARA ADICIONAR VÍDEOS: edita o array VIDEOS abaixo.
-  
-  Cada vídeo tem:
-    id        → o código do vídeo no YouTube (parte final do URL)
-                ex: https://youtu.be/dQw4w9WgXcQ  →  id: "dQw4w9WgXcQ"
-    titulo    → título do vídeo
-    categoria → "trailer" | "gameplay" | "bastidores" | "evento" | "outro"
-    data      → data de publicação (texto livre)
-  ════════════════════════════════════════════════════════
--->
-<script>
-const VIDEOS = [
-  {
-    id: "2RzZfwNEZnY",
-    titulo: "ManyGames — Novos Packs Amoriel & Aqualis",
-    categoria: "trailer",
-    data: "2026",
-    thumb: "Amoriel_Aqualispack_.png"
-  },
-];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ─── NÃO PRECISAS DE EDITAR ABAIXO DESTA LINHA ───
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+let VIDEOS = [];
 let filtroAtual = 'todos';
+
+async function loadVideos() {
+  try {
+    const snap = await getDocs(query(collection(db, 'videos'), orderBy('timestamp', 'asc')));
+    VIDEOS = snap.docs.map(d => ({ ...d.data() }));
+  } catch(e) {
+    console.error('Erro ao carregar vídeos:', e);
+    VIDEOS = [];
+  }
+  renderVideos(filtroAtual);
+}
 
 function renderVideos(filtro) {
   const grid = document.getElementById('videos-grid');
@@ -197,16 +199,16 @@ function renderVideos(filtro) {
       ? v.thumb
       : 'https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg';
     return `
-    <div class="video-card" data-cat="${v.categoria}" onclick="openModal('${v.id}')">
+    <div class="video-card" data-cat="${v.categoria}" onclick="window.open('https://www.youtube.com/watch?v=${v.id}','_blank')">
       <div class="video-embed">
-        <img class="video-thumb" src="${thumbSrc}" alt="${v.titulo}"/>
+        <img class="video-thumb" src="${thumbSrc}" alt="${v.titulo}" onerror="this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg'"/>
         <div class="video-play-btn">▶</div>
       </div>
       <div class="video-info">
         <div class="video-title">${v.titulo}</div>
         <div class="video-meta">
           <span class="video-cat">${v.categoria}</span>
-          <span class="video-date">${v.data}</span>
+          <span class="video-date">${v.data||''}</span>
         </div>
       </div>
     </div>`;
@@ -219,12 +221,9 @@ function filterVideos(cat, btn) {
   btn.classList.add('active');
   renderVideos(cat);
 }
+window.filterVideos = filterVideos;
 
-function openModal(videoId) {
-  window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
-}
-
-renderVideos('todos');
+loadVideos();
 </script>
 </body>
 </html>

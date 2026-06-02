@@ -166,6 +166,33 @@
   .recent-sub { font-size:0.78rem; color:var(--muted); margin-top:2px; }
   .section-title { font-size:0.75rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:14px; margin-top:28px; padding-bottom:8px; border-bottom:1px solid var(--border); }
 
+  /* FORM ADMIN */
+  .admin-form { background: var(--card); border: 1px solid var(--border); padding: 28px; position: relative; margin-bottom: 28px; }
+  .admin-form::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2),transparent); }
+  .admin-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .admin-form-group { display:flex; flex-direction:column; gap:6px; }
+  .admin-form-group.full { grid-column:1/-1; }
+  .admin-form-group label { font-size:0.65rem; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .admin-form-group input, .admin-form-group select, .admin-form-group textarea {
+    background:var(--panel); border:1px solid var(--border); color:var(--text);
+    font-size:0.92rem; padding:10px 14px; outline:none; transition:border-color .2s;
+  }
+  .admin-form-group input:focus, .admin-form-group select:focus, .admin-form-group textarea:focus { border-color:var(--accent); }
+  .admin-form-group textarea { resize:vertical; min-height:80px; }
+  .btn-add { background:rgba(0,230,118,0.12); color:var(--green); border:1px solid rgba(0,230,118,0.3); padding:10px 22px; font-size:0.78rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+  .btn-add:hover { background:rgba(0,230,118,0.22); }
+  .btn-del { background:rgba(230,57,70,0.1); color:var(--accent); border:1px solid rgba(230,57,70,0.3); padding:6px 14px; font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+  .btn-del:hover { background:rgba(230,57,70,0.2); }
+  .btn-edit { background:rgba(79,195,247,0.1); color:var(--blue); border:1px solid rgba(79,195,247,0.3); padding:6px 14px; font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+  .btn-edit:hover { background:rgba(79,195,247,0.2); }
+  .items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-top:24px; }
+  .item-card { background:var(--panel); border:1px solid var(--border); padding:16px; position:relative; }
+  .item-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,var(--accent),transparent); }
+  .item-card-title { font-family:'Arial Black',sans-serif; font-size:1rem; letter-spacing:1px; margin-bottom:4px; }
+  .item-card-sub { font-size:0.78rem; color:var(--muted); margin-bottom:12px; }
+  .item-card-actions { display:flex; gap:8px; }
+  .badge-inactive { background:rgba(122,122,154,0.15); color:var(--muted); }
+
   @media(max-width:800px){
     .sidebar{width:60px;}
     .sidebar-logo,.nav-item span,.sidebar-badge,.sidebar-logout span{display:none;}
@@ -206,6 +233,18 @@
     <div class="nav-item" onclick="showPage('contactos')">
       <span class="icon">✉️</span><span>Contactos</span>
       <span class="nav-badge-count" id="badge-cont">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('produtos')">
+      <span class="icon">🛍️</span><span>Produtos</span>
+    </div>
+    <div class="nav-item" onclick="showPage('videos')">
+      <span class="icon">🎬</span><span>Vídeos</span>
+    </div>
+    <div class="nav-item" onclick="showPage('instagram')">
+      <span class="icon">📸</span><span>Instagram</span>
+    </div>
+    <div class="nav-item" onclick="showPage('facebook')">
+      <span class="icon">📘</span><span>Facebook</span>
     </div>
     <div class="sidebar-logout" onclick="doLogout()">
       <span>🚪</span><span>Sair</span>
@@ -309,6 +348,201 @@
       </div>
     </div>
 
+
+    <!-- PRODUTOS -->
+    <div class="page" id="page-produtos">
+      <div class="page-header">
+        <h1>🛍️ Produtos</h1>
+        <p>Gerir os produtos da loja online</p>
+      </div>
+
+      <div class="admin-form">
+        <div class="section-title" style="margin-top:0;">Adicionar / Editar Produto</div>
+        <input type="hidden" id="prod-edit-id"/>
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label>Nome do Produto *</label>
+            <input type="text" id="prod-nome" placeholder="Ex: Pack de Cartas Amoriel"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Preço (€) *</label>
+            <input type="number" id="prod-preco" placeholder="4.99" step="0.01" min="0"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Categoria</label>
+            <input type="text" id="prod-categoria" placeholder="Ex: Cartas · Colecionável"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Badge</label>
+            <select id="prod-badge">
+              <option value="">Sem badge</option>
+              <option value="NOVO">NOVO</option>
+              <option value="BESTSELLER">BESTSELLER</option>
+              <option value="EDIÇÃO LIMITADA">EDIÇÃO LIMITADA</option>
+              <option value="DESTAQUE">DESTAQUE</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Imagem (nome do ficheiro)</label>
+            <input type="text" id="prod-imagem" placeholder="Ex: amoriel_pack.png"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Estado</label>
+            <select id="prod-ativo">
+              <option value="true">Ativo (visível na loja)</option>
+              <option value="false">Inativo (oculto)</option>
+            </select>
+          </div>
+          <div class="admin-form-group full">
+            <label>Descrição</label>
+            <textarea id="prod-desc" placeholder="Descrição do produto..."></textarea>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveProduto()">💾 GUARDAR PRODUTO</button>
+          <button class="btn-sm btn-clear" onclick="clearProdForm()">✕ LIMPAR</button>
+        </div>
+        <div id="prod-success" style="display:none;margin-top:12px;color:var(--green);font-size:0.82rem;letter-spacing:1px;">✓ Produto guardado com sucesso!</div>
+      </div>
+
+      <div class="section-title">Produtos Existentes</div>
+      <div class="items-grid" id="produtos-grid">
+        <div class="empty"><div class="empty-icon">🛍️</div>A carregar...</div>
+      </div>
+    </div>
+
+    <!-- VÍDEOS -->
+    <div class="page" id="page-videos">
+      <div class="page-header">
+        <h1>🎬 Vídeos</h1>
+        <p>Gerir os vídeos da página de vídeos</p>
+      </div>
+
+      <div class="admin-form">
+        <div class="section-title" style="margin-top:0;">Adicionar / Editar Vídeo</div>
+        <input type="hidden" id="vid-edit-id"/>
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label>Título *</label>
+            <input type="text" id="vid-titulo" placeholder="Ex: Kill of Reason — Trailer Oficial"/>
+          </div>
+          <div class="admin-form-group">
+            <label>ID do YouTube *</label>
+            <input type="text" id="vid-id" placeholder="Ex: dQw4w9WgXcQ"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Categoria</label>
+            <select id="vid-categoria">
+              <option value="trailer">Trailer</option>
+              <option value="gameplay">Gameplay</option>
+              <option value="bastidores">Bastidores</option>
+              <option value="evento">Evento</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Data (texto livre)</label>
+            <input type="text" id="vid-data" placeholder="Ex: 2026, Jan 2026"/>
+          </div>
+          <div class="admin-form-group full">
+            <label>Thumbnail (nome do ficheiro local — opcional)</label>
+            <input type="text" id="vid-thumb" placeholder="Ex: Amoriel_Aqualispack_.png (deixa vazio para usar YouTube)"/>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveVideo()">💾 GUARDAR VÍDEO</button>
+          <button class="btn-sm btn-clear" onclick="clearVidForm()">✕ LIMPAR</button>
+        </div>
+        <div id="vid-success" style="display:none;margin-top:12px;color:var(--green);font-size:0.82rem;letter-spacing:1px;">✓ Vídeo guardado com sucesso!</div>
+      </div>
+
+      <div class="section-title">Vídeos Existentes</div>
+      <div class="items-grid" id="videos-grid-admin">
+        <div class="empty"><div class="empty-icon">🎬</div>A carregar...</div>
+      </div>
+    </div>
+
+
+    <!-- INSTAGRAM -->
+    <div class="page" id="page-instagram">
+      <div class="page-header">
+        <h1>📸 Instagram</h1>
+        <p>Gerir os posts da página de Instagram</p>
+      </div>
+      <div class="admin-form">
+        <div class="section-title" style="margin-top:0;">Adicionar / Editar Post</div>
+        <input type="hidden" id="ig-edit-id"/>
+        <div class="admin-form-grid">
+          <div class="admin-form-group full">
+            <label>Link do Post do Instagram *</label>
+            <input type="url" id="ig-url" placeholder="https://www.instagram.com/p/XXXXXXX/"/>
+            <small style="color:var(--muted);font-size:0.7rem;">Vai ao post no Instagram → copiar link → colar aqui</small>
+          </div>
+          <div class="admin-form-group full">
+            <label>Legenda / Descrição *</label>
+            <textarea id="ig-caption" placeholder="Texto do post..."></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label>Imagem (ficheiro local — opcional)</label>
+            <input type="text" id="ig-img" placeholder="Ex: newsletter_post1.png"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Likes (texto livre)</label>
+            <input type="text" id="ig-likes" placeholder="Ex: ❤️ 12.5K gostos"/>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveIgPost()">💾 GUARDAR POST</button>
+          <button class="btn-sm btn-clear" onclick="clearIgForm()">✕ LIMPAR</button>
+        </div>
+        <div id="ig-success" style="display:none;margin-top:12px;color:var(--green);font-size:0.82rem;letter-spacing:1px;">✓ Post guardado com sucesso!</div>
+      </div>
+      <div class="section-title">Posts Existentes</div>
+      <div class="items-grid" id="ig-grid-admin">
+        <div class="empty"><div class="empty-icon">📸</div>A carregar...</div>
+      </div>
+    </div>
+
+    <!-- FACEBOOK -->
+    <div class="page" id="page-facebook">
+      <div class="page-header">
+        <h1>📘 Facebook</h1>
+        <p>Gerir os posts da página de Facebook</p>
+      </div>
+      <div class="admin-form">
+        <div class="section-title" style="margin-top:0;">Adicionar / Editar Post</div>
+        <input type="hidden" id="fb-edit-id"/>
+        <div class="admin-form-grid">
+          <div class="admin-form-group full">
+            <label>Link do Post do Facebook *</label>
+            <input type="url" id="fb-url" placeholder="https://www.facebook.com/manygames/posts/XXXXXXX"/>
+            <small style="color:var(--muted);font-size:0.7rem;">Vai ao post no Facebook → copiar link → colar aqui</small>
+          </div>
+          <div class="admin-form-group full">
+            <label>Texto do Post *</label>
+            <textarea id="fb-body" placeholder="Texto do post..."></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label>Imagem (ficheiro local — opcional)</label>
+            <input type="text" id="fb-img" placeholder="Ex: img_entrada.png"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Tempo (ex: há 1 hora)</label>
+            <input type="text" id="fb-tempo" placeholder="Ex: há 2 dias"/>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveFbPost()">💾 GUARDAR POST</button>
+          <button class="btn-sm btn-clear" onclick="clearFbForm()">✕ LIMPAR</button>
+        </div>
+        <div id="fb-success" style="display:none;margin-top:12px;color:var(--green);font-size:0.82rem;letter-spacing:1px;">✓ Post guardado com sucesso!</div>
+      </div>
+      <div class="section-title">Posts Existentes</div>
+      <div class="items-grid" id="fb-grid-admin">
+        <div class="empty"><div class="empty-icon">📘</div>A carregar...</div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
@@ -320,9 +554,23 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // ── AUTH ──────────────────────────────────────────────────────────
-const CREDENTIALS = { user: 'admin', pass: 'manygames2026' };
+const CREDENTIALS = { user: 'admin', pass: 'admin' };
 
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
@@ -335,6 +583,7 @@ function doLogin() {
     document.getElementById('login-error').style.display = 'block';
   }
 }
+window.doLogin = doLogin;
 
 function doLogout() {
   document.getElementById('login-screen').style.display = 'flex';
@@ -342,15 +591,32 @@ function doLogout() {
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
 }
+window.doLogout = doLogout;
 
 // ── DATA ──────────────────────────────────────────────────────────
-const getOrders = () => JSON.parse(localStorage.getItem('mg_orders') || '[]');
-const getCands  = () => JSON.parse(localStorage.getItem('mg_candidaturas') || '[]');
-const getConts  = () => JSON.parse(localStorage.getItem('mg_contactos') || '[]');
+let ordersCache = [];
+let candsCache  = [];
+let contsCache  = [];
+
+async function loadAll() {
+  try {
+    const [oSnap, cSnap, ctSnap] = await Promise.all([
+      getDocs(query(collection(db, 'encomendas'), orderBy('timestamp', 'asc'))),
+      getDocs(query(collection(db, 'candidaturas'), orderBy('timestamp', 'asc'))),
+      getDocs(query(collection(db, 'contactos'), orderBy('timestamp', 'asc')))
+    ]);
+    ordersCache = oSnap.docs.map((d,i) => ({ _id: d.id, id: String(i+1).padStart(3,'0'), ...d.data() }));
+    candsCache  = cSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    contsCache  = ctSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) {
+    console.error('Erro ao carregar dados:', e);
+  }
+}
 
 // ── INIT ──────────────────────────────────────────────────────────
-function initApp() {
+async function initApp() {
   document.getElementById('dash-date').textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  await loadAll();
   updateBadges();
   renderDashboard();
   renderEncomendas();
@@ -359,9 +625,9 @@ function initApp() {
 }
 
 function updateBadges() {
-  document.getElementById('badge-enc').textContent  = getOrders().length;
-  document.getElementById('badge-cand').textContent = getCands().length;
-  document.getElementById('badge-cont').textContent = getConts().length;
+  document.getElementById('badge-enc').textContent  = ordersCache.length;
+  document.getElementById('badge-cand').textContent = candsCache.length;
+  document.getElementById('badge-cont').textContent = contsCache.length;
 }
 
 // ── NAV ───────────────────────────────────────────────────────────
@@ -370,13 +636,18 @@ function showPage(id) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   event.currentTarget.classList.add('active');
+  if (id === 'produtos') loadProdutos();
+  if (id === 'videos') loadVideosAdmin();
+  if (id === 'instagram') loadIgAdmin();
+  if (id === 'facebook') loadFbAdmin();
 }
+window.showPage = showPage;
 
 // ── DASHBOARD ─────────────────────────────────────────────────────
 function renderDashboard() {
-  const orders = getOrders();
-  const cands  = getCands();
-  const conts  = getConts();
+  const orders = ordersCache;
+  const cands  = candsCache;
+  const conts  = contsCache;
   const receita = orders.reduce((s,o) => s + parseFloat(o.total || 0), 0);
 
   document.getElementById('ds-enc').textContent     = orders.length;
@@ -408,18 +679,18 @@ function renderDashboard() {
 
 // ── ENCOMENDAS ────────────────────────────────────────────────────
 function renderEncomendas() {
-  let orders = getOrders();
+  let orders = ordersCache.slice();
   const q = document.getElementById('search-enc').value.toLowerCase();
   const estado = document.getElementById('filter-enc-estado').value;
-  if (q) orders = orders.filter(o => `${o.nome} ${o.email} ${o.produto}`.toLowerCase().includes(q));
+  if (q) orders = orders.filter(o => (o.nome+' '+o.email+' '+o.produto).toLowerCase().includes(q));
   if (estado) orders = orders.filter(o => (o.estado||'Pendente') === estado);
 
   const tbody = document.getElementById('tbody-enc');
   document.getElementById('empty-enc').style.display = orders.length ? 'none' : 'block';
 
-  tbody.innerHTML = orders.slice().reverse().map((o,i) => `
+  tbody.innerHTML = orders.slice().reverse().map(o => `
     <tr>
-      <td class="td-muted">#${o.id||i+1}</td>
+      <td class="td-muted">#${o.id}</td>
       <td class="td-muted">${o.data}</td>
       <td><strong>${esc(o.nome)}</strong></td>
       <td class="td-muted">${esc(o.email)}</td>
@@ -427,19 +698,20 @@ function renderEncomendas() {
       <td>${o.quantidade}</td>
       <td><strong>${o.total}€</strong></td>
       <td>
-        <select class="status-sel" onchange="updateEstado('mg_orders',${o.id||i},this.value,'encomendas')">
+        <select class="status-sel" onchange="updateEstado('${o._id}',this.value)">
           ${['Pendente','Enviado','Entregue','Cancelado'].map(s=>`<option${s===(o.estado||'Pendente')?' selected':''}>${s}</option>`).join('')}
         </select>
       </td>
-      <td><button class="btn-sm btn-export" onclick="showDetail('enc',${JSON.stringify(o).replace(/'/g,"&#39;")})">Ver</button></td>
+      <td><button class="btn-sm btn-export" onclick='showDetail("enc",${JSON.stringify(o).replace(/'/g,"&#39;")})'>Ver</button></td>
     </tr>`).join('');
 }
+window.renderEncomendas = renderEncomendas;
 
 // ── CANDIDATURAS ──────────────────────────────────────────────────
 function renderCandidaturas() {
-  let cands = getCands();
+  let cands = candsCache.slice();
   const q = document.getElementById('search-cand').value.toLowerCase();
-  if (q) cands = cands.filter(c => `${c.nome} ${c.email} ${c.vaga}`.toLowerCase().includes(q));
+  if (q) cands = cands.filter(c => (c.nome+' '+c.email+' '+c.vaga).toLowerCase().includes(q));
 
   const tbody = document.getElementById('tbody-cand');
   document.getElementById('empty-cand').style.display = cands.length ? 'none' : 'block';
@@ -455,12 +727,13 @@ function renderCandidaturas() {
       <td><button class="btn-sm btn-export" onclick='showDetail("cand",${JSON.stringify(c)})'>Ver</button></td>
     </tr>`).join('');
 }
+window.renderCandidaturas = renderCandidaturas;
 
 // ── CONTACTOS ─────────────────────────────────────────────────────
 function renderContactos() {
-  let conts = getConts();
+  let conts = contsCache.slice();
   const q = document.getElementById('search-cont').value.toLowerCase();
-  if (q) conts = conts.filter(c => `${c.nome} ${c.email} ${c.assunto} ${c.mensagem}`.toLowerCase().includes(q));
+  if (q) conts = conts.filter(c => (c.nome+' '+c.email+' '+(c.assunto||'')+' '+(c.mensagem||'')).toLowerCase().includes(q));
 
   const tbody = document.getElementById('tbody-cont');
   document.getElementById('empty-cont').style.display = conts.length ? 'none' : 'block';
@@ -475,6 +748,7 @@ function renderContactos() {
       <td><button class="btn-sm btn-export" onclick='showDetail("cont",${JSON.stringify(c)})'>Ver</button></td>
     </tr>`).join('');
 }
+window.renderContactos = renderContactos;
 
 // ── DETAIL MODAL ──────────────────────────────────────────────────
 function showDetail(type, data) {
@@ -486,7 +760,7 @@ function showDetail(type, data) {
     <div class="detail-grid">
       <div class="detail-item"><label>Nome</label><p>${esc(o.nome)}</p></div>
       <div class="detail-item"><label>Email</label><p>${esc(o.email)}</p></div>
-      <div class="detail-item"><label>Telefone</label><p>${esc(o.telefone)}</p></div>
+      <div class="detail-item"><label>Telefone</label><p>${esc(o.telefone||'—')}</p></div>
       <div class="detail-item"><label>Estado</label><p><span class="badge badge-${(o.estado||'Pendente').toLowerCase()}">${o.estado||'Pendente'}</span></p></div>
       <div class="detail-item"><label>Produto</label><p>${esc(o.produto)}</p></div>
       <div class="detail-item"><label>Quantidade</label><p>${o.quantidade}</p></div>
@@ -519,58 +793,374 @@ function showDetail(type, data) {
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('modal-bg').classList.add('open');
 }
+window.showDetail = showDetail;
 
 function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+window.closeModal = closeModal;
 document.getElementById('modal-bg').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
 // ── ESTADO ────────────────────────────────────────────────────────
-function updateEstado(key, id, estado, page) {
-  const items = JSON.parse(localStorage.getItem(key) || '[]');
-  const item = items.find(o => String(o.id) === String(id));
-  if (item) { item.estado = estado; localStorage.setItem(key, JSON.stringify(items)); }
-  if (page === 'encomendas') renderDashboard();
+async function updateEstado(docId, estado) {
+  try {
+    await updateDoc(doc(db, 'encomendas', docId), { estado });
+    const order = ordersCache.find(o => o._id === docId);
+    if (order) order.estado = estado;
+    renderDashboard();
+    renderEncomendas();
+  } catch(e) { console.error('Erro ao atualizar estado:', e); }
 }
+window.updateEstado = updateEstado;
 
 // ── EXPORT CSV ────────────────────────────────────────────────────
 function exportCSV(type) {
   let data, headers, rows;
   if (type === 'encomendas') {
-    data = getOrders();
+    data = ordersCache;
     headers = ['ID','Data','Nome','Email','Telefone','Produto','Quantidade','Variante','Morada','CP','Cidade','Nota','Total','Estado'];
     rows = data.map(o => [o.id,o.data,o.nome,o.email,o.telefone,o.produto,o.quantidade,o.variante,o.morada,o.cp,o.cidade,o.msg,o.total,o.estado]);
   } else if (type === 'candidaturas') {
-    data = getCands();
+    data = candsCache;
     headers = ['Data','Nome','Email','Telefone','Vaga','LinkedIn','Motivação'];
     rows = data.map(c => [c.data,c.nome,c.email,c.telefone,c.vaga,c.linkedin,c.motivacao]);
   } else {
-    data = getConts();
+    data = contsCache;
     headers = ['Data','Nome','Email','Assunto','Mensagem'];
     rows = data.map(c => [c.data,c.nome,c.email,c.assunto,c.mensagem]);
   }
-  const esc = v => '"' + String(v||'').replace(/"/g,'""') + '"';
-  const csv = [headers.map(esc).join(','), ...rows.map(r => r.map(esc).join(','))].join('\n');
+  const escCSV = v => '"' + String(v||'').replace(/"/g,'""') + '"';
+  const csv = [headers.map(escCSV).join(','), ...rows.map(r => r.map(escCSV).join(','))].join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
   a.download = `manygames_${type}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 }
+window.exportCSV = exportCSV;
 
 // ── CLEAR DATA ────────────────────────────────────────────────────
-function clearData(key, page) {
-  if (!confirm(`Tens a certeza que queres apagar TODOS os dados de "${page}"? Esta ação é irreversível.`)) return;
-  localStorage.removeItem(key);
-  updateBadges();
-  renderDashboard();
-  if (page==='encomendas') renderEncomendas();
-  if (page==='candidaturas') renderCandidaturas();
-  if (page==='contactos') renderContactos();
+function clearData(col, page) {
+  alert('Para limpar dados vai diretamente ao Firebase Console → Firestore → coleção "' + col + '".');
 }
+window.clearData = clearData;
 
 // ── UTILS ─────────────────────────────────────────────────────────
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// Login on Enter
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ── INSTAGRAM ────────────────────────────────────────────────────
+let igCache = [];
+
+async function loadIgAdmin() {
+  try {
+    const snap = await getDocs(query(collection(db, 'instagram'), orderBy('timestamp', 'asc')));
+    igCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
+  renderIgAdmin();
+}
+
+function renderIgAdmin() {
+  const grid = document.getElementById('ig-grid-admin');
+  if (!igCache.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📸</div>Sem posts ainda. Adiciona o primeiro acima.</div>';
+    return;
+  }
+  grid.innerHTML = igCache.slice().reverse().map(p => `
+    <div class="item-card">
+      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;">${esc(p.caption||'').substring(0,80)}${(p.caption||'').length>80?'…':''}</div>
+      <div class="item-card-sub">${p.img ? '🖼 '+esc(p.img) : '🔗 link externo'} · ${esc(p.likes||'')}</div>
+      <div class="item-card-actions">
+        <button class="btn-edit" onclick='editIgPost(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Editar</button>
+        <button class="btn-del" onclick="deleteIgPost('${p._id}')">🗑 Apagar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveIgPost() {
+  const url     = document.getElementById('ig-url').value.trim();
+  const caption = document.getElementById('ig-caption').value.trim();
+  if (!url || !caption) { alert('Link e legenda são obrigatórios.'); return; }
+  const editId = document.getElementById('ig-edit-id').value;
+  const data = {
+    url, caption,
+    img:   document.getElementById('ig-img').value.trim(),
+    likes: document.getElementById('ig-likes').value.trim(),
+    timestamp: serverTimestamp()
+  };
+  try {
+    if (editId) { await setDoc(doc(db, 'instagram', editId), data); }
+    else { await addDoc(collection(db, 'instagram'), data); }
+    document.getElementById('ig-success').style.display = 'block';
+    setTimeout(() => document.getElementById('ig-success').style.display = 'none', 2500);
+    clearIgForm();
+    await loadIgAdmin();
+  } catch(e) { console.error(e); alert('Erro ao guardar post.'); }
+}
+window.saveIgPost = saveIgPost;
+
+function editIgPost(p) {
+  document.getElementById('ig-edit-id').value = p._id;
+  document.getElementById('ig-url').value     = p.url || '';
+  document.getElementById('ig-caption').value = p.caption || '';
+  document.getElementById('ig-img').value     = p.img || '';
+  document.getElementById('ig-likes').value   = p.likes || '';
+  document.getElementById('ig-url').focus();
+}
+window.editIgPost = editIgPost;
+
+async function deleteIgPost(id) {
+  if (!confirm('Apagar este post?')) return;
+  try { await deleteDoc(doc(db, 'instagram', id)); await loadIgAdmin(); }
+  catch(e) { console.error(e); }
+}
+window.deleteIgPost = deleteIgPost;
+
+function clearIgForm() {
+  ['ig-edit-id','ig-url','ig-caption','ig-img','ig-likes'].forEach(id => document.getElementById(id).value = '');
+}
+window.clearIgForm = clearIgForm;
+
+// ── FACEBOOK ─────────────────────────────────────────────────────
+let fbCache = [];
+
+async function loadFbAdmin() {
+  try {
+    const snap = await getDocs(query(collection(db, 'facebook'), orderBy('timestamp', 'asc')));
+    fbCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
+  renderFbAdmin();
+}
+
+function renderFbAdmin() {
+  const grid = document.getElementById('fb-grid-admin');
+  if (!fbCache.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📘</div>Sem posts ainda. Adiciona o primeiro acima.</div>';
+    return;
+  }
+  grid.innerHTML = fbCache.slice().reverse().map(p => `
+    <div class="item-card">
+      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;">${esc(p.body||'').substring(0,80)}${(p.body||'').length>80?'…':''}</div>
+      <div class="item-card-sub">${p.img ? '🖼 '+esc(p.img) : '🔗 link externo'} · ${esc(p.tempo||'')}</div>
+      <div class="item-card-actions">
+        <button class="btn-edit" onclick='editFbPost(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Editar</button>
+        <button class="btn-del" onclick="deleteFbPost('${p._id}')">🗑 Apagar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveFbPost() {
+  const url  = document.getElementById('fb-url').value.trim();
+  const body = document.getElementById('fb-body').value.trim();
+  if (!url || !body) { alert('Link e texto são obrigatórios.'); return; }
+  const editId = document.getElementById('fb-edit-id').value;
+  const data = {
+    url, body,
+    img:   document.getElementById('fb-img').value.trim(),
+    tempo: document.getElementById('fb-tempo').value.trim(),
+    timestamp: serverTimestamp()
+  };
+  try {
+    if (editId) { await setDoc(doc(db, 'facebook', editId), data); }
+    else { await addDoc(collection(db, 'facebook'), data); }
+    document.getElementById('fb-success').style.display = 'block';
+    setTimeout(() => document.getElementById('fb-success').style.display = 'none', 2500);
+    clearFbForm();
+    await loadFbAdmin();
+  } catch(e) { console.error(e); alert('Erro ao guardar post.'); }
+}
+window.saveFbPost = saveFbPost;
+
+function editFbPost(p) {
+  document.getElementById('fb-edit-id').value = p._id;
+  document.getElementById('fb-url').value     = p.url || '';
+  document.getElementById('fb-body').value    = p.body || '';
+  document.getElementById('fb-img').value     = p.img || '';
+  document.getElementById('fb-tempo').value   = p.tempo || '';
+  document.getElementById('fb-url').focus();
+}
+window.editFbPost = editFbPost;
+
+async function deleteFbPost(id) {
+  if (!confirm('Apagar este post?')) return;
+  try { await deleteDoc(doc(db, 'facebook', id)); await loadFbAdmin(); }
+  catch(e) { console.error(e); }
+}
+window.deleteFbPost = deleteFbPost;
+
+function clearFbForm() {
+  ['fb-edit-id','fb-url','fb-body','fb-img','fb-tempo'].forEach(id => document.getElementById(id).value = '');
+}
+window.clearFbForm = clearFbForm;
+
+// ── PRODUTOS ──────────────────────────────────────────────────────
+let produtosCache = [];
+
+async function loadProdutos() {
+  try {
+    const snap = await getDocs(query(collection(db, 'produtos'), orderBy('timestamp', 'asc')));
+    produtosCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
+  renderProdutosAdmin();
+}
+
+function renderProdutosAdmin() {
+  const grid = document.getElementById('produtos-grid');
+  if (!produtosCache.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">🛍️</div>Sem produtos ainda. Adiciona o primeiro acima.</div>';
+    return;
+  }
+  grid.innerHTML = produtosCache.map(p => `
+    <div class="item-card">
+      <div class="item-card-title">${esc(p.nome)}</div>
+      <div class="item-card-sub">${esc(p.categoria||'—')} · <strong style="color:var(--accent2)">${parseFloat(p.preco||0).toFixed(2)}€</strong></div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">${p.badge?'<span class="badge badge-pendente">'+esc(p.badge)+'</span> ':''}<span class="badge ${p.ativo!==false?'badge-entregue':'badge-inactive'}">${p.ativo!==false?'ATIVO':'INATIVO'}</span></div>
+      <div class="item-card-actions">
+        <button class="btn-edit" onclick='editProduto(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Editar</button>
+        <button class="btn-del" onclick="deleteProduto('${p._id}')">🗑 Apagar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveProduto() {
+  const nome  = document.getElementById('prod-nome').value.trim();
+  const preco = document.getElementById('prod-preco').value.trim();
+  if (!nome || !preco) { alert('Nome e preço são obrigatórios.'); return; }
+  const editId = document.getElementById('prod-edit-id').value;
+  const data = {
+    nome, preco: parseFloat(preco),
+    categoria: document.getElementById('prod-categoria').value.trim(),
+    badge: document.getElementById('prod-badge').value,
+    imagem: document.getElementById('prod-imagem').value.trim(),
+    desc: document.getElementById('prod-desc').value.trim(),
+    ativo: document.getElementById('prod-ativo').value === 'true',
+    timestamp: serverTimestamp()
+  };
+  try {
+    if (editId) {
+      await setDoc(doc(db, 'produtos', editId), data);
+    } else {
+      await addDoc(collection(db, 'produtos'), data);
+    }
+    document.getElementById('prod-success').style.display = 'block';
+    setTimeout(() => document.getElementById('prod-success').style.display = 'none', 2500);
+    clearProdForm();
+    await loadProdutos();
+  } catch(e) { console.error(e); alert('Erro ao guardar produto.'); }
+}
+window.saveProduto = saveProduto;
+
+function editProduto(p) {
+  document.getElementById('prod-edit-id').value = p._id;
+  document.getElementById('prod-nome').value = p.nome || '';
+  document.getElementById('prod-preco').value = p.preco || '';
+  document.getElementById('prod-categoria').value = p.categoria || '';
+  document.getElementById('prod-badge').value = p.badge || '';
+  document.getElementById('prod-imagem').value = p.imagem || '';
+  document.getElementById('prod-desc').value = p.desc || '';
+  document.getElementById('prod-ativo').value = p.ativo !== false ? 'true' : 'false';
+  document.getElementById('prod-nome').focus();
+}
+window.editProduto = editProduto;
+
+async function deleteProduto(id) {
+  if (!confirm('Tens a certeza que queres apagar este produto?')) return;
+  try {
+    await deleteDoc(doc(db, 'produtos', id));
+    await loadProdutos();
+  } catch(e) { console.error(e); alert('Erro ao apagar produto.'); }
+}
+window.deleteProduto = deleteProduto;
+
+function clearProdForm() {
+  ['prod-edit-id','prod-nome','prod-preco','prod-categoria','prod-imagem','prod-desc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('prod-badge').value = '';
+  document.getElementById('prod-ativo').value = 'true';
+}
+window.clearProdForm = clearProdForm;
+
+// ── VÍDEOS ────────────────────────────────────────────────────────
+let videosAdminCache = [];
+
+async function loadVideosAdmin() {
+  try {
+    const snap = await getDocs(query(collection(db, 'videos'), orderBy('timestamp', 'asc')));
+    videosAdminCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
+  renderVideosAdmin();
+}
+
+function renderVideosAdmin() {
+  const grid = document.getElementById('videos-grid-admin');
+  if (!videosAdminCache.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">🎬</div>Sem vídeos ainda. Adiciona o primeiro acima.</div>';
+    return;
+  }
+  grid.innerHTML = videosAdminCache.map(v => `
+    <div class="item-card">
+      <div class="item-card-title">${esc(v.titulo)}</div>
+      <div class="item-card-sub">${esc(v.categoria||'—')} · ${esc(v.data||'—')}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:monospace;">ID: ${esc(v.id||'—')}</div>
+      <div class="item-card-actions">
+        <button class="btn-edit" onclick='editVideo(${JSON.stringify(v).replace(/'/g,"&#39;")})'>✏️ Editar</button>
+        <button class="btn-del" onclick="deleteVideo('${v._id}')">🗑 Apagar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveVideo() {
+  const titulo = document.getElementById('vid-titulo').value.trim();
+  const id     = document.getElementById('vid-id').value.trim();
+  if (!titulo || !id) { alert('Título e ID do YouTube são obrigatórios.'); return; }
+  const editId = document.getElementById('vid-edit-id').value;
+  const data = {
+    titulo, id,
+    categoria: document.getElementById('vid-categoria').value,
+    data: document.getElementById('vid-data').value.trim(),
+    thumb: document.getElementById('vid-thumb').value.trim(),
+    timestamp: serverTimestamp()
+  };
+  try {
+    if (editId) {
+      await setDoc(doc(db, 'videos', editId), data);
+    } else {
+      await addDoc(collection(db, 'videos'), data);
+    }
+    document.getElementById('vid-success').style.display = 'block';
+    setTimeout(() => document.getElementById('vid-success').style.display = 'none', 2500);
+    clearVidForm();
+    await loadVideosAdmin();
+  } catch(e) { console.error(e); alert('Erro ao guardar vídeo.'); }
+}
+window.saveVideo = saveVideo;
+
+function editVideo(v) {
+  document.getElementById('vid-edit-id').value = v._id;
+  document.getElementById('vid-titulo').value = v.titulo || '';
+  document.getElementById('vid-id').value = v.id || '';
+  document.getElementById('vid-categoria').value = v.categoria || 'trailer';
+  document.getElementById('vid-data').value = v.data || '';
+  document.getElementById('vid-thumb').value = v.thumb || '';
+  document.getElementById('vid-titulo').focus();
+}
+window.editVideo = editVideo;
+
+async function deleteVideo(id) {
+  if (!confirm('Tens a certeza que queres apagar este vídeo?')) return;
+  try {
+    await deleteDoc(doc(db, 'videos', id));
+    await loadVideosAdmin();
+  } catch(e) { console.error(e); alert('Erro ao apagar vídeo.'); }
+}
+window.deleteVideo = deleteVideo;
+
+function clearVidForm() {
+  ['vid-edit-id','vid-titulo','vid-id','vid-data','vid-thumb'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('vid-categoria').value = 'trailer';
+}
+window.clearVidForm = clearVidForm;
 </script>
 </body>
 </html>
