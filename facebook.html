@@ -165,72 +165,91 @@
   <div>
 
     <!-- Post 1 — Entrada da sede -->
-    <div id="fb-posts-container">
-      <div style="color:var(--muted);padding:40px;text-align:center;">A carregar posts...</div>
-    </div>
-
-<script src="shared.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
-  authDomain: "manygames-2f8a7.firebaseapp.com",
-  projectId: "manygames-2f8a7",
-  storageBucket: "manygames-2f8a7.firebasestorage.app",
-  messagingSenderId: "1053374536523",
-  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-async function loadFbPosts() {
-  try {
-    const snap = await getDocs(collection(db, 'facebook'));
-    const posts = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
-    posts.sort((a,b) => (a.timestamp?.seconds||0) - (b.timestamp?.seconds||0));
-    posts.reverse();
-    renderFbPosts(posts);
-  } catch(e) {
-    console.error(e);
-    document.getElementById('fb-posts-container').innerHTML =
-      '<div style="color:var(--muted);padding:40px;text-align:center;">Erro ao carregar posts.</div>';
-  }
-}
-
-function renderFbPosts(posts) {
-  const container = document.getElementById('fb-posts-container');
-  if (!posts.length) {
-    container.innerHTML = '<div style="color:var(--muted);padding:40px;text-align:center;">Sem posts ainda.</div>';
-    return;
-  }
-  container.innerHTML = posts.map(p => `
     <div class="fb-post reveal">
       <div class="fb-post-header">
         <div class="fb-post-avatar"><img src="logo.png" alt=""/></div>
-        <div>
-          <div class="fb-post-meta-name">ManyGames</div>
-          <div class="fb-post-meta-time">${p.tempo || ''} · 🌐</div>
-        </div>
+        <div><div class="fb-post-meta-name">ManyGames</div><div class="fb-post-meta-time">há 1 hora · 🌐</div></div>
       </div>
-      <div class="fb-post-body">${(p.body||'').replace(/
-/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
-      ${p.img ? `<img class="fb-post-photo" src="${p.img}" alt="" onerror="this.style.display='none'"/>` : ''}
-      <div class="fb-post-actions">
-        <button class="fb-action-btn" onclick="this.style.color=this.style.color==='#e63946'?'var(--muted)':'#e63946'">👍 Gosto</button>
-        <button class="fb-action-btn">💬 Comentar</button>
-        ${p.url ? `<a href="${p.url}" target="_blank" class="fb-action-btn" style="text-decoration:none;">↗ Ver no Facebook</a>` : ''}
+      <div class="fb-post-body">🏢 Bem-vindos à nossa sede em <strong>Valongo, Porto</strong>! Um espaço moderno, criativo e pensado para inspirar os melhores criadores de videojogos. É aqui que o <strong>Kill of Reason</strong> ganha vida todos os dias.</div>
+      <img class="fb-post-photo" src="img_entrada.png" alt="Entrada da Sede ManyGames"/>
+      <div class="fb-reactions-bar">
+        <span>❤️👍🔥 28.4K</span>
+        <span style="display:flex;gap:12px;"><span>1.1K comentários</span><span>2.3K partilhas</span></span>
       </div>
-    </div>`).join('');
+      <div style="display:flex;">
+        <button class="fb-reaction-btn" onclick="this.classList.toggle('liked');this.textContent=this.classList.contains('liked')?'❤️ Gosto':'👍 Gosto'">👍 Gosto</button>
+        <button class="fb-reaction-btn">💬 Comentar</button>
+        <button class="fb-reaction-btn">↗ Partilhar</button>
+      </div>
+    </div>
 
-  // re-trigger reveal animation
-  document.querySelectorAll('#fb-posts-container .reveal').forEach(el => {
-    setTimeout(() => el.classList.add('visible'), 100);
-  });
-}
+    <!-- Post 2 — Diversidade e inclusão -->
+    <div class="fb-post reveal">
+      <div class="fb-post-header">
+        <div class="fb-post-avatar"><img src="logo.png" alt=""/></div>
+        <div><div class="fb-post-meta-name">ManyGames</div><div class="fb-post-meta-time">há 2 dias · 🌐</div></div>
+      </div>
+      <div class="fb-post-body">🤝 <strong>Diversidade e Inclusão</strong> não são apenas palavras para nós — são os pilares da nossa cultura.<br><br>Na ManyGames promovemos um ambiente inclusivo com foco em:<br>✅ Equipas diversas<br>✅ Clima inclusivo<br><br>Acreditamos que equipas diferentes produzem jogos melhores para todos.</div>
+      <img class="fb-post-photo" src="img_diversidade.png" alt="Diversidade e Inclusão ManyGames"/>
+      <div class="fb-reactions-bar">
+        <span>❤️🤝😍 41.7K</span>
+        <span style="display:flex;gap:12px;"><span>3.2K comentários</span><span>8.1K partilhas</span></span>
+      </div>
+      <div style="display:flex;">
+        <button class="fb-reaction-btn liked">❤️ Gosto</button>
+        <button class="fb-reaction-btn">💬 Comentar</button>
+        <button class="fb-reaction-btn">↗ Partilhar</button>
+      </div>
+    </div>
 
-loadFbPosts();
-</script>
+    <!-- Post 3 — Cultura rebelde -->
+    <div class="fb-post reveal">
+      <div class="fb-post-header">
+        <div class="fb-post-avatar"><img src="logo.png" alt=""/></div>
+        <div><div class="fb-post-meta-name">ManyGames</div><div class="fb-post-meta-time">há 4 dias · 🌐</div></div>
+      </div>
+      <div class="fb-post-body">🔥 <strong>Cultura Rebelde</strong> — aprimoramos todos os aspetos de como trabalhamos, nos divertimos e colaboramos juntos.<br><br>Os nossos pilares:<br>🎯 Liderança forte<br>⚙️ Sistemas e Processos<br>📚 Educação e Reconhecimento<br><br>Começamos com novos valores e espalhamo-los por toda a empresa!</div>
+      <img class="fb-post-photo" src="img_cultura.png" alt="Cultura Rebelde ManyGames"/>
+      <div class="fb-reactions-bar">
+        <span>❤️🔥💡 19.3K</span>
+        <span style="display:flex;gap:12px;"><span>987 comentários</span><span>3.4K partilhas</span></span>
+      </div>
+      <div style="display:flex;">
+        <button class="fb-reaction-btn" onclick="this.classList.toggle('liked')">👍 Gosto</button>
+        <button class="fb-reaction-btn">💬 Comentar</button>
+        <button class="fb-reaction-btn">↗ Partilhar</button>
+      </div>
+    </div>
+
+    <!-- Post 4 — Educação -->
+    <div class="fb-post reveal">
+      <div class="fb-post-header">
+        <div class="fb-post-avatar"><img src="logo.png" alt=""/></div>
+        <div><div class="fb-post-meta-name">ManyGames</div><div class="fb-post-meta-time">há 6 dias · 🌐</div></div>
+      </div>
+      <div class="fb-post-body">📚 <strong>Educação para todos.</strong><br><br>A ManyGames promove soluções inovadoras para elevar o nível dos sistemas educacionais em todo o mundo. Porque acreditamos que qualquer pessoa com paixão e perseverança pode causar um impacto positivo.</div>
+      <img class="fb-post-photo" src="img_educacao.png" alt="Educação ManyGames"/>
+      <div class="fb-reactions-bar">
+        <span>❤️📚🌍 33.5K</span>
+        <span style="display:flex;gap:12px;"><span>2.1K comentários</span><span>9.7K partilhas</span></span>
+      </div>
+      <div style="display:flex;">
+        <button class="fb-reaction-btn" onclick="this.classList.toggle('liked')">👍 Gosto</button>
+        <button class="fb-reaction-btn">💬 Comentar</button>
+        <button class="fb-reaction-btn">↗ Partilhar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+        <nav class="footer-nav">
+    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  </nav>
+  <p>© 2015–2026 ManyGames · Porto, Portugal</p>
+</footer>
+<script src="shared.js"></script>
 </body>
 </html>

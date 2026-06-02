@@ -374,7 +374,6 @@
     }
     .newsletter-perk { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
     .newsletter-perk span { color: var(--cyan); }
-    .newsletter-input-row { display: flex; margin: 24px 0 0; }
     .nl-success { display: none; }
     .nl-success .nl-ok-icon { font-size: 2.5rem; margin-bottom: 12px; }
     .nl-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; }
@@ -509,10 +508,80 @@
     <div class="section-line"></div>
   </div>
 
-  <div class="products-grid" id="products-grid">
-    <div style="color:var(--muted);font-size:0.9rem;padding:40px;text-align:center;grid-column:1/-1;">A carregar produtos...</div>
+  <div class="products-grid">
+
+    <!-- Pack Amoriel -->
+    <div class="product-card reveal" onclick="openModal('cadeira1')">
+      <span class="product-badge badge-hot">BESTSELLER</span>
+      <div class="product-img-wrapper">
+        <img src="amoriel_pack.png" alt="Pack de Cartas Amoriel ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Amoriel</div>
+        <p class="product-desc">Pack exclusivo de cartas da Amoriel, a Guardiã do Amor Verdadeiro. Edição especial Dia dos Namorados com arte única e acabamentos premium.</p>
+        <div class="product-footer">
+          <div class="product-price">4<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira1')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pack Aqualis -->
+    <div class="product-card reveal" onclick="openModal('cadeira2')">
+      <span class="product-badge badge-limited">EDIÇÃO LIMITADA</span>
+      <div class="product-img-wrapper">
+        <img src="aqualis_pack.png" alt="Pack de Cartas Aqualis ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Aqualis</div>
+        <p class="product-desc">Pack exclusivo de cartas do Aqualis, o Guardião das Nascentes. Arte deslumbrante inspirada nas águas puras e montanhas sagradas.</p>
+        <div class="product-footer">
+          <div class="product-price">4<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira2')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garrafa Amoriel -->
+    <div class="product-card reveal" onclick="openModal('amoriel')">
+      <span class="product-badge badge-new">NOVO</span>
+      <div class="product-img-wrapper">
+        <img src="garrafa amoriel.png" alt="Garrafa Amoriel ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Lifestyle · Acessórios</div>
+        <div class="product-name">Garrafa Amoriel</div>
+        <p class="product-desc">Garrafa de 750ml em aço inoxidável com logotipo Amoriel gravado. Mantém bebidas frias 24h e quentes 12h. Ideal para gamers.</p>
+        <div class="product-footer">
+          <div class="product-price">34<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('amoriel')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garrafa Aqualis -->
+    <div class="product-card reveal" onclick="openModal('aqualis')">
+      <span class="product-badge badge-new">NOVO</span>
+      <div class="product-img-wrapper">
+        <img src="garrafa aqualis.png" alt="Garrafa Aqualis ManyGames" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Lifestyle · Acessórios</div>
+        <div class="product-name">Garrafa Aqualis</div>
+        <p class="product-desc">Garrafa de 600ml ultra-leve com design Aqualis exclusivo e tampa de fecho rápido. Perfeita para treinos e sessões de gaming prolongadas.</p>
+        <div class="product-footer">
+          <div class="product-price">29<span>.99€</span></div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('aqualis')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<!-- ENCOMENDA SECTION -->
 <section id="encomenda" class="alt">
   <div class="reveal" style="text-align:center;margin-bottom:48px;">
     <div class="section-tag" style="text-align:center;">// Fazer Pedido</div>
@@ -544,6 +613,11 @@
           <label>Produto <span class="req">*</span></label>
           <select id="o_produto" required>
             <option value="">Selecionar produto...</option>
+            <option value="Pack de Cartas Amoriel – 4.99€">Pack de Cartas Amoriel – 4.99€</option>
+            <option value="Pack de Cartas Aqualis – 4.99€">Pack de Cartas Aqualis – 4.99€</option>
+            <option value="Manual de Regras WoR – 0.50€">Manual de Regras WoR – 0.50€</option>
+            <option value="Garrafa Amoriel – 34.99€">Garrafa Amoriel – 34.99€</option>
+            <option value="Garrafa Aqualis – 29.99€">Garrafa Aqualis – 29.99€</option>
           </select>
         </div>
         <div class="form-group">
@@ -718,188 +792,151 @@
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
-  authDomain: "manygames-2f8a7.firebaseapp.com",
-  projectId: "manygames-2f8a7",
-  storageBucket: "manygames-2f8a7.firebasestorage.app",
-  messagingSenderId: "1053374536523",
-  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+<script>
+// ─── PRODUCTS DATA ───────────────────────────────────────────────────────────
+const PRODUCTS = {
+  cadeira1: { name: 'Pack de Cartas Amoriel', price: 4.99, category: 'Cartas / Colecionável' },
+  cadeira2: { name: 'Pack de Cartas Aqualis', price: 4.99, category: 'Cartas / Colecionável' },
+  manual:   { name: 'Manual de Regras – World of Reason', price: 0.50, category: 'Livros / Regras' },
+  amoriel:  { name: 'Garrafa Amoriel', price: 34.99, category: 'Lifestyle / Acessórios' },
+  aqualis:  { name: 'Garrafa Aqualis', price: 29.99, category: 'Lifestyle / Acessórios' }
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-// ─── PRODUCTS DATA ───────────────────────────────────────────────
-let PRODUCTS_LIST = []; // loaded from Firestore
 let currentProduct = null;
 
-async function loadProducts() {
-  try {
-    const snap = await getDocs(query(collection(db, 'produtos'), orderBy('timestamp', 'asc')));
-    PRODUCTS_LIST = snap.docs.map(d => ({ _id: d.id, ...d.data() })).filter(p => p.ativo !== false);
-  } catch(e) {
-    console.error('Erro ao carregar produtos:', e);
-    PRODUCTS_LIST = [];
-  }
-  renderProductsGrid();
-  populateDropdown();
+// ─── ORDER STORAGE ────────────────────────────────────────────────────────────
+function getOrders() {
+  try { return JSON.parse(localStorage.getItem('mg_orders') || '[]'); } catch { return []; }
 }
 
-function badgeClass(badge) {
-  if (!badge) return '';
-  const map = { 'NOVO': 'badge-new', 'BESTSELLER': 'badge-hot', 'EDIÇÃO LIMITADA': 'badge-limited', 'DESTAQUE': 'badge-hot' };
-  return map[badge] || 'badge-new';
-}
-
-function renderProductsGrid() {
-  const grid = document.getElementById('products-grid');
-  if (!PRODUCTS_LIST.length) {
-    grid.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:40px;text-align:center;grid-column:1/-1;">Sem produtos disponíveis de momento.</div>';
-    return;
-  }
-  grid.innerHTML = PRODUCTS_LIST.map(p => {
-    const priceStr = parseFloat(p.preco).toFixed(2);
-    const [intPart, decPart] = priceStr.split('.');
-    const imgSrc = p.imagem ? p.imagem : 'logo.png';
-    return `
-    <div class="product-card reveal" onclick="openModal('${p._id}')">
-      ${p.badge ? `<span class="product-badge ${badgeClass(p.badge)}">${p.badge}</span>` : ''}
-      <div class="product-img-wrapper">
-        <img src="${imgSrc}" alt="${p.nome}" class="product-img" onerror="this.src='logo.png'"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">${p.categoria || ''}</div>
-        <div class="product-name">${p.nome}</div>
-        <p class="product-desc">${p.desc || ''}</p>
-        <div class="product-footer">
-          <div class="product-price">${intPart}<span>.${decPart}€</span></div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('${p._id}')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // re-observe reveal
-  document.querySelectorAll('#products-grid .reveal').forEach(el => {
-    el.classList.remove('visible');
-    revealObserver.observe(el);
-  });
-}
-
-function populateDropdown() {
-  const sel = document.getElementById('o_produto');
-  sel.innerHTML = '<option value="">Selecionar produto...</option>';
-  PRODUCTS_LIST.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.nome + ' – ' + parseFloat(p.preco).toFixed(2) + '€';
-    opt.textContent = opt.value;
-    sel.appendChild(opt);
-  });
-}
-
-// ─── SAVE ORDER TO FIRESTORE ─────────────────────────────────────
-async function saveOrder(order) {
+function saveOrder(order) {
+  const orders = getOrders();
+  order.id = String(orders.length + 1).padStart(3, '0');
   order.data = new Date().toLocaleDateString('pt-PT');
   order.estado = 'Pendente';
-  order.timestamp = serverTimestamp();
-  try {
-    await addDoc(collection(db, 'encomendas'), order);
-    return true;
-  } catch(e) {
-    console.error('Erro ao guardar encomenda:', e);
-    alert('Erro ao guardar encomenda. Verifica a ligação e tenta novamente.');
-    return false;
+  orders.push(order);
+  localStorage.setItem('mg_orders', JSON.stringify(orders));
+  appendCSVRow(order);
+  updateExportBtn();
+}
+
+function appendCSVRow(order) {
+  const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+  const row = [
+    order.id, order.data,
+    esc(order.nome), esc(order.email), esc(order.telefone),
+    esc(order.produto), order.quantidade, esc(order.variante),
+    esc(order.morada), esc(order.cp), esc(order.cidade),
+    esc(order.msg), order.total, order.estado
+  ].join(',');
+  let csv = sessionStorage.getItem('mg_csv') ||
+    'ID,Data,Nome,Email,Telefone,Produto,Quantidade,Tamanho/Cor,Morada,Código Postal,Cidade,Mensagem,Total (€),Estado\n';
+  csv += row + '\n';
+  sessionStorage.setItem('mg_csv', csv);
+}
+
+function updateExportBtn() {
+  const orders = getOrders();
+  const btn = document.getElementById('exportBtn');
+  const cnt = document.getElementById('orderCount');
+  if (orders.length > 0) {
+    btn.style.display = 'flex';
+    cnt.textContent = orders.length + ' encomenda(s)';
   }
 }
 
-// ─── MODAL ───────────────────────────────────────────────────────
-function openModal(productId) {
-  const p = PRODUCTS_LIST.find(x => x._id === productId);
-  if (!p) return;
-  currentProduct = productId;
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(productKey) {
+  currentProduct = productKey;
+  const p = PRODUCTS[productKey];
   document.getElementById('modalTitle').textContent = 'ENCOMENDAR';
-  document.getElementById('modalProduct').textContent = p.nome + ' · ' + parseFloat(p.preco).toFixed(2) + '€';
+  document.getElementById('modalProduct').textContent = `${p.name} · ${p.price.toFixed(2)}€`;
   document.getElementById('modalFormFields').style.display = 'block';
   document.getElementById('modalSuccess').style.display = 'none';
-  document.getElementById('o_produto').value = p.nome + ' – ' + parseFloat(p.preco).toFixed(2) + '€';
+  // Pre-fill product in main form too
+  document.getElementById('o_produto').value = `${p.name} – ${p.price.toFixed(2)}€`;
   updateSummary();
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-window.openModal = openModal;
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
   currentProduct = null;
 }
-window.closeModal = closeModal;
 
-async function submitModal() {
-  const nome   = document.getElementById('m_nome').value.trim();
-  const email  = document.getElementById('m_email').value.trim();
+function submitModal() {
+  const nome = document.getElementById('m_nome').value.trim();
+  const email = document.getElementById('m_email').value.trim();
   const morada = document.getElementById('m_morada').value.trim();
-  const cp     = document.getElementById('m_cp').value.trim();
+  const cp = document.getElementById('m_cp').value.trim();
   const cidade = document.getElementById('m_cidade').value.trim();
+
   if (!nome || !email || !morada || !cp || !cidade) {
-    flashRequired(['m_nome','m_email','m_morada','m_cp','m_cidade']); return;
+    flashRequired(['m_nome','m_email','m_morada','m_cp','m_cidade']);
+    return;
   }
-  const p = PRODUCTS_LIST.find(x => x._id === currentProduct);
-  if (!p) return;
+
+  const p = PRODUCTS[currentProduct];
   const qty = parseInt(document.getElementById('m_quantidade').value) || 1;
-  const ok = await saveOrder({
+
+  saveOrder({
     nome, email,
     telefone: document.getElementById('m_telefone').value.trim(),
-    produto: p.nome, quantidade: qty,
+    produto: p.name,
+    quantidade: qty,
     variante: document.getElementById('m_variante').value.trim(),
-    morada, cp, cidade,
+    morada,
+    cp, cidade,
     msg: document.getElementById('m_msg').value.trim(),
-    total: (parseFloat(p.preco) * qty).toFixed(2)
+    total: (p.price * qty).toFixed(2)
   });
-  if (ok) {
-    document.getElementById('modalFormFields').style.display = 'none';
-    document.getElementById('modalSuccess').style.display = 'block';
-    showToast('✓ ENCOMENDA GUARDADA!');
-  }
-}
-window.submitModal = submitModal;
 
-// ─── MAIN ORDER FORM ─────────────────────────────────────────────
+  document.getElementById('modalFormFields').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
+  showToast('✓ ENCOMENDA GUARDADA!');
+}
+
+// ─── MAIN ORDER FORM ─────────────────────────────────────────────────────────
 function updateSummary() {
   const sel = document.getElementById('o_produto').value;
   const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
   const prodSummary = document.getElementById('summary_product');
   const totalSummary = document.getElementById('summary_total');
+
   if (!sel) { prodSummary.textContent = '—'; totalSummary.textContent = '0.00€'; return; }
+
+  // Extract price from option label
   const match = sel.match(/(\d+\.\d+)€/);
   const price = match ? parseFloat(match[1]) : 0;
+  const total = price * qty;
   prodSummary.textContent = sel.split(' – ')[0];
-  totalSummary.textContent = (price * qty).toFixed(2) + '€';
+  totalSummary.textContent = total.toFixed(2) + '€';
 }
-window.updateSummary = updateSummary;
 
 document.getElementById('o_produto').addEventListener('change', updateSummary);
 document.getElementById('o_quantidade').addEventListener('input', updateSummary);
 
-async function submitOrder() {
-  const nome     = document.getElementById('o_nome').value.trim();
-  const email    = document.getElementById('o_email').value.trim();
-  const produto  = document.getElementById('o_produto').value;
-  const morada   = document.getElementById('o_morada').value.trim();
-  const cp       = document.getElementById('o_cp').value.trim();
-  const cidade   = document.getElementById('o_cidade').value.trim();
+function submitOrder() {
+  const nome = document.getElementById('o_nome').value.trim();
+  const email = document.getElementById('o_email').value.trim();
+  const produto = document.getElementById('o_produto').value;
+  const morada = document.getElementById('o_morada').value.trim();
+  const cp = document.getElementById('o_cp').value.trim();
+  const cidade = document.getElementById('o_cidade').value.trim();
   const telefone = document.getElementById('o_telefone').value.trim();
+
   if (!nome || !email || !telefone || !produto || !morada || !cp || !cidade) {
-    flashRequired(['o_nome','o_email','o_telefone','o_produto','o_morada','o_cp','o_cidade']); return;
+    flashRequired(['o_nome','o_email','o_telefone','o_produto','o_morada','o_cp','o_cidade']);
+    return;
   }
+
   const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
   const match = produto.match(/(\d+\.\d+)€/);
   const price = match ? parseFloat(match[1]) : 0;
-  const ok = await saveOrder({
+
+  saveOrder({
     nome, email, telefone,
     produto: produto.split(' – ')[0],
     quantidade: qty,
@@ -908,13 +945,11 @@ async function submitOrder() {
     msg: document.getElementById('o_msg').value.trim(),
     total: (price * qty).toFixed(2)
   });
-  if (ok) {
-    document.getElementById('orderFormFields').style.display = 'none';
-    document.getElementById('orderSuccess').style.display = 'block';
-    showToast('✓ ENCOMENDA REGISTADA!');
-  }
+
+  document.getElementById('orderFormFields').style.display = 'none';
+  document.getElementById('orderSuccess').style.display = 'block';
+  showToast('✓ ENCOMENDA REGISTADA!');
 }
-window.submitOrder = submitOrder;
 
 function resetOrder() {
   document.getElementById('orderFormFields').style.display = 'block';
@@ -924,65 +959,85 @@ function resetOrder() {
   document.getElementById('o_quantidade').value = '1';
   updateSummary();
 }
-window.resetOrder = resetOrder;
 
-// ─── HELPERS ─────────────────────────────────────────────────────
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
 function flashRequired(ids) {
   ids.forEach(id => {
     const el = document.getElementById(id);
-    if (!el || el.value.trim()) return;
-    el.style.borderColor = 'var(--accent)';
-    el.style.background = 'rgba(230,57,70,0.08)';
-    el.addEventListener('input', () => { el.style.borderColor=''; el.style.background=''; }, { once: true });
+    if (!el.value.trim()) {
+      el.style.borderColor = 'var(--accent)';
+      el.style.background = 'rgba(230,57,70,0.08)';
+      el.addEventListener('input', () => {
+        el.style.borderColor = '';
+        el.style.background = '';
+      }, { once: true });
+    }
   });
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.style.display = 'block';
+  t.textContent = msg;
+  t.style.display = 'block';
   setTimeout(() => t.style.display = 'none', 3000);
 }
-window.showToast = showToast;
 
-// ─── REVEAL ON SCROLL ────────────────────────────────────────────
-const revealObserver = new IntersectionObserver((entries) => {
+// ─── EXPORT CSV ──────────────────────────────────────────────────────────────
+function exportCSV() {
+  const csv = sessionStorage.getItem('mg_csv');
+  if (!csv) { alert('Sem encomendas nesta sessão ainda.'); return; }
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'encomendas_manygames.csv';
+  a.click();
+}
+
+// ─── REVEAL ON SCROLL ─────────────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
-    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); revealObserver.unobserve(e.target); }
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
   });
 }, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+revealEls.forEach(el => obs.observe(el));
 
-// Smooth scroll
+// Restore export button state on load
+updateExportBtn();
+
+// Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
-    const el = document.getElementById(a.getAttribute('href').slice(1));
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
     if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
 
-// Load products on page start
-loadProducts();
-
-// ─── NEWSLETTER ──────────────────────────────────────────────────
-async function subscribeNewsletter() {
+// ─── NEWSLETTER ──────────────────────────────────────────────────────────────
+function subscribeNewsletter() {
   const email = document.getElementById('nl_email').value.trim();
   if (!email || !email.includes('@')) {
     const inp = document.getElementById('nl_email');
-    inp.style.borderColor = 'var(--accent)'; inp.focus();
-    setTimeout(() => inp.style.borderColor = '', 1500); return;
+    inp.style.borderColor = 'var(--accent)';
+    inp.focus();
+    setTimeout(() => inp.style.borderColor = '', 1500);
+    return;
   }
-  try {
-    await addDoc(collection(db, 'newsletter'), { email, data: new Date().toLocaleDateString('pt-PT'), timestamp: serverTimestamp() });
-  } catch(e) { console.error(e); }
+  // Save to localStorage
+  const subs = JSON.parse(localStorage.getItem('mg_newsletter') || '[]');
+  if (!subs.includes(email)) { subs.push(email); localStorage.setItem('mg_newsletter', JSON.stringify(subs)); }
+  // Append to CSV
+  let csv = sessionStorage.getItem('mg_nl_csv') || 'Email,Data\n';
+  csv += email + ',' + new Date().toLocaleDateString('pt-PT') + '\n';
+  sessionStorage.setItem('mg_nl_csv', csv);
   document.getElementById('nlForm').style.display = 'none';
   document.getElementById('nlSuccess').style.display = 'block';
   showToast('✓ SUBSCRITO COM SUCESSO!');
 }
-window.subscribeNewsletter = subscribeNewsletter;
-
-// Escape
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
 </script>
 <script src="shared.js"></script>
 </body>

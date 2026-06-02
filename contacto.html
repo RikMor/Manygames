@@ -208,51 +208,34 @@
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
-  authDomain: "manygames-2f8a7.firebaseapp.com",
-  projectId: "manygames-2f8a7",
-  storageBucket: "manygames-2f8a7.firebasestorage.app",
-  messagingSenderId: "1053374536523",
-  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-async function submitForm() {
-  const nome  = document.getElementById('f-nome').value.trim();
+<script src="shared.js"></script>
+<script>
+function submitForm() {
+  const nome = document.getElementById('f-nome').value.trim();
   const email = document.getElementById('f-email').value.trim();
-  const msg   = document.getElementById('f-msg').value.trim();
+  const msg = document.getElementById('f-msg').value.trim();
   if (!nome || !email || !msg) {
     alert('Por favor preenche todos os campos obrigatórios.');
     return;
   }
+  // Save to localStorage
   const entry = {
+    id: Date.now(),
     data: new Date().toLocaleString('pt-PT'),
-    nome, email,
+    nome: nome,
+    email: email,
     assunto: document.getElementById('f-assunto').value.trim(),
-    mensagem: msg,
-    timestamp: serverTimestamp()
+    mensagem: msg
   };
-  try {
-    await addDoc(collection(db, 'contactos'), entry);
-  } catch(e) {
-    console.error('Erro ao enviar mensagem:', e);
-    alert('Erro ao enviar mensagem. Tenta novamente.');
-    return;
-  }
+  const existing = JSON.parse(localStorage.getItem('mg_contactos') || '[]');
+  existing.push(entry);
+  localStorage.setItem('mg_contactos', JSON.stringify(existing));
   document.getElementById('success-msg').style.display = 'block';
   document.getElementById('f-nome').value = '';
   document.getElementById('f-email').value = '';
   document.getElementById('f-msg').value = '';
   document.getElementById('f-assunto').value = '';
 }
-window.submitForm = submitForm;
 </script>
-<script src="shared.js"></script>
 </body>
 </html>

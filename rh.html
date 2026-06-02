@@ -451,21 +451,8 @@
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
-  authDomain: "manygames-2f8a7.firebaseapp.com",
-  projectId: "manygames-2f8a7",
-  storageBucket: "manygames-2f8a7.firebasestorage.app",
-  messagingSenderId: "1053374536523",
-  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+<script src="shared.js"></script>
+<script>
   function filterJobs(dept, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -488,34 +475,27 @@ const db = getFirestore(app);
     if (e.target === this) closeModal();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  async function submitForm() {
+  function submitForm() {
     const name = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
     if (!name || !email) { alert('Por favor preenche pelo menos o nome e email.'); return; }
+    // Save to localStorage
     const entry = {
+      id: Date.now(),
       data: new Date().toLocaleString('pt-PT'),
       nome: name,
       email: email,
       telefone: document.getElementById('f-phone').value.trim(),
       vaga: document.getElementById('f-vaga').value.trim(),
       linkedin: document.getElementById('f-url').value.trim(),
-      motivacao: document.getElementById('f-msg').value.trim(),
-      timestamp: serverTimestamp()
+      motivacao: document.getElementById('f-msg').value.trim()
     };
-    try {
-      await addDoc(collection(db, 'candidaturas'), entry);
-    } catch(e) {
-      console.error('Erro ao guardar candidatura:', e);
-      alert('Erro ao enviar candidatura. Tenta novamente.');
-      return;
-    }
+    const existing = JSON.parse(localStorage.getItem('mg_candidaturas') || '[]');
+    existing.push(entry);
+    localStorage.setItem('mg_candidaturas', JSON.stringify(existing));
     document.getElementById('form-success').style.display = 'block';
     setTimeout(closeModal, 2200);
   }
-  window.submitForm = submitForm;
-  window.filterJobs = filterJobs;
-  window.openModal = openModal;
-  window.closeModal = closeModal;
 </script>
 </body>
 </html>
