@@ -146,7 +146,7 @@
 <script src="shared.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
@@ -163,9 +163,13 @@ let posts = [];
 
 async function loadPosts() {
   try {
-    const snap = await getDocs(query(collection(db, 'instagram'), orderBy('timestamp', 'asc')));
+    const snap = await getDocs(collection(db, 'instagram'));
     posts = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
-  } catch(e) { console.error(e); posts = []; }
+    posts.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+  } catch(e) {
+    console.error('Erro Instagram:', e);
+    posts = [];
+  }
   renderGrid();
 }
 
