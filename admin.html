@@ -322,7 +322,7 @@
 
 <script>
 // ── AUTH ──────────────────────────────────────────────────────────
-const CREDENTIALS = { user: 'admin', pass: 'manygames2026' };
+const CREDENTIALS = { user: 'admin', pass: 'admin' };
 
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
@@ -529,7 +529,7 @@ function updateEstado(key, id, estado, page) {
   const items = JSON.parse(localStorage.getItem(key) || '[]');
   const item = items.find(o => String(o.id) === String(id));
   if (item) { item.estado = estado; localStorage.setItem(key, JSON.stringify(items)); }
-  if (page === 'encomendas') renderDashboard();
+  if (page === 'encomendas') { renderDashboard(); renderEncomendas(); }
 }
 
 // ── EXPORT CSV ────────────────────────────────────────────────────
