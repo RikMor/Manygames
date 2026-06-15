@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ManyGames – Twitter / X</title>
-  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
     /* ── TWITTER LAYOUT ── */
     .tw-page { padding-top: 68px; }
@@ -99,15 +99,21 @@
 
     @media(max-width:800px){ .tw-feed-wrap{grid-template-columns:1fr;} }
   </style>
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-  <ul class="nav-links">
-    <li><a href="index.html">Início</a></li><li><a href="sobre.html">Sobre</a></li>
-    <li><a href="jogo.html">Kill of Reason</a></li><li><a href="equipa.html">Equipa</a></li>
-    <li><a href="rh.html">Carreiras</a></li><li><a href="regulamento.html">Regulamento</a></li>
+        <ul class="nav-links">
+    <li><a href="index.html" class="active">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="videos.html">Vídeos</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
@@ -153,6 +159,22 @@
   <!-- FEED + SIDEBAR -->
   <div class="tw-feed-wrap">
     <div>
+
+      <!-- Tweet Brissos – Pack Promocional (NOVO) -->
+      <div class="tweet reveal">
+        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
+        <div style="flex:1;">
+          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· agora</span></div>
+          <div class="tweet-body">🛡️ Novo Pack Promocional: BRISSOS – O Pastor da Luz 🛡️<br><br>Chegou ao World of Reason uma edição limitada com cartas exclusivas, arte premium e recompensas garantidas.<br><br>✨ 7 Cartas &nbsp;⭐ 1 Rara Garantida &nbsp;💎 1 Brilhante Garantida<br><br>Coleciona. Joga. Evolui.<br><br><span class="hashtag">#Manygames #WorldOfReason #TCG #CardGame #Brissos #PackPromocional</span></div>
+          <img class="tweet-photo" src="amoriel_pack_redes.png" alt="Pack Brissos – O Pastor da Luz" style="max-height:360px;object-fit:contain;background:#0d0d14;"/>
+          <div class="tweet-actions">
+            <span class="tweet-action" onclick="this.style.color='var(--accent)'">💬 <span>0</span></span>
+            <span class="tweet-action" onclick="this.style.color='var(--accent)'">🔁 <span>0</span></span>
+            <span class="tweet-action" onclick="this.style.color='var(--accent)'">❤️ <span>0</span></span>
+            <span class="tweet-action">📊 <span>0</span></span>
+          </div>
+        </div>
+      </div>
 
       <!-- Tweet 1 — foto das instalações -->
       <div class="tweet reveal">
@@ -272,9 +294,8 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-  <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a>
-    <a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="contacto.html">Contacto</a>
+        <nav class="footer-nav">
+    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>

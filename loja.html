@@ -57,7 +57,7 @@
     .nav-links { display: flex; gap: 0; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-weight: 700; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; padding: 8px 13px; transition: color .2s; }
     .nav-links a:hover { color: #fff; }
-    .nav-links a.active { color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+    .nav-links a.active { color: var(--accent) !important; }
     .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
 
     /* HERO */
@@ -374,6 +374,7 @@
     }
     .newsletter-perk { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
     .newsletter-perk span { color: var(--cyan); }
+    .newsletter-input-row { display: flex; margin: 24px 0 0; }
     .nl-success { display: none; }
     .nl-success .nl-ok-icon { font-size: 2.5rem; margin-bottom: 12px; }
     .nl-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; }
@@ -392,6 +393,7 @@
       .order-form-wrapper { padding: 24px; }
     }
   </style>
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
 <body>
 
@@ -414,17 +416,22 @@
     </div>
   </a>
     <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
-  <ul class="nav-links">
+        <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
-    <li><a href="#produtos" class="active">Loja</a></li>
-    <li><a href="#encomenda">Encomendar</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html" class="active">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="videos.html">Vídeos</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
+    <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section id="hero">
+<section id="hero" style="display:flex;align-items:center;justify-content:center;gap:80px;flex-wrap:wrap;">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
@@ -438,6 +445,26 @@
     <div class="hero-actions">
       <a href="#produtos" class="btn-primary">Ver Produtos</a>
       <a href="#encomenda" class="btn-outline">Encomendar Agora</a>
+    </div>
+  </div>
+
+  <!-- Manual de Regras -->
+  <div style="position:relative;z-index:2;flex-shrink:0;text-align:center;animation:fadeUp .9s ease .4s both;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;color:var(--accent2);margin-bottom:12px;text-transform:uppercase;">// Destaque</div>
+    <div style="position:relative;display:inline-block;">
+      <img src="regras_wor.png" alt="Manual de Regras World of Reason"
+        style="width:220px;border:2px solid rgba(255,159,28,0.35);box-shadow:0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6);transition:transform .3s,box-shadow .3s;cursor:pointer;"
+        onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 60px rgba(255,159,28,0.3),0 20px 60px rgba(0,0,0,0.6)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6)'"
+        onclick="openModal('manual')"
+      />
+      <span style="position:absolute;top:10px;right:-10px;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:1px;padding:4px 8px;">NOVO</span>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--text);">Manual de Regras</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;">World of Reason</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;margin-bottom:12px;">0<span style="font-size:0.9rem;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;">.50&#8364;</span></div>
+      <button class="btn-cart" onclick="openModal('manual')" style="width:100%;justify-content:center;">&#128722; Comprar</button>
     </div>
   </div>
 </section>
@@ -484,36 +511,57 @@
 
   <div class="products-grid">
 
-    <!-- Cadeira 1 -->
+    <!-- Pack Amoriel -->
     <div class="product-card reveal" onclick="openModal('cadeira1')">
       <span class="product-badge badge-hot">BESTSELLER</span>
       <div class="product-img-wrapper">
-        <img src="cadeira 1.png" alt="Cadeira Gaming Pro ManyGames" class="product-img"/>
+        <img src="amoriel_pack.png" alt="Pack de Cartas Amoriel ManyGames" class="product-img"/>
       </div>
       <div class="product-info">
-        <div class="product-category">Gaming · Mobiliário</div>
-        <div class="product-name">Cadeira Gaming Pro</div>
-        <p class="product-desc">Cadeira ergonómica de alta performance com suporte lombar ajustável e cobertura em tecido respirável. Design ManyGames exclusivo.</p>
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Amoriel</div>
+        <p class="product-desc">Pack exclusivo de cartas da Amoriel, a Guardiã do Amor Verdadeiro. Edição especial Dia dos Namorados com arte única e acabamentos premium.</p>
         <div class="product-footer">
-          <div class="product-price">299<span>.99€</span></div>
+          <div class="product-price">4<span>.99€</span></div>
           <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira1')">🛒 Comprar</button>
         </div>
       </div>
     </div>
 
-    <!-- Cadeira 2 -->
+    <!-- Pack Aqualis -->
     <div class="product-card reveal" onclick="openModal('cadeira2')">
       <span class="product-badge badge-limited">EDIÇÃO LIMITADA</span>
       <div class="product-img-wrapper">
-        <img src="cadeira 2.png" alt="Cadeira Gaming Elite ManyGames" class="product-img"/>
+        <img src="aqualis_pack.png" alt="Pack de Cartas Aqualis ManyGames" class="product-img"/>
       </div>
       <div class="product-info">
-        <div class="product-category">Gaming · Mobiliário</div>
-        <div class="product-name">Cadeira Gaming Elite</div>
-        <p class="product-desc">Versão premium com apoios de braços 4D, couro sintético de alta qualidade e rodas de poliuretano. Para os que não cedem em conforto.</p>
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack de Cartas Aqualis</div>
+        <p class="product-desc">Pack exclusivo de cartas do Aqualis, o Guardião das Nascentes. Arte deslumbrante inspirada nas águas puras e montanhas sagradas.</p>
         <div class="product-footer">
-          <div class="product-price">449<span>.99€</span></div>
+          <div class="product-price">4<span>.99€</span></div>
           <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira2')">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pack Brissos – O Pastor da Luz -->
+    <div class="product-card reveal" onclick="openModal('brissos')" style="position:relative;">
+      <span class="product-badge badge-limited">EDIÇÃO LIMITADA</span>
+      <div style="position:absolute;top:16px;left:16px;z-index:2;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:2px;padding:4px 10px;">PROMO</div>
+      <div class="product-img-wrapper">
+        <img src="bisos_pack.png" alt="Pack de Cartas Brissos – O Pastor da Luz" class="product-img"/>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Cartas · Colecionável</div>
+        <div class="product-name">Pack Brissos – O Pastor da Luz</div>
+        <p class="product-desc">Edição limitada com 7 cartas exclusivas, 1 rara garantida, 1 brilhante garantida, arte premium e impressão de alta qualidade.</p>
+        <div class="product-footer">
+          <div class="product-price" style="display:flex;flex-direction:column;gap:0;">
+            <span style="font-family:'Rajdhani',sans-serif;font-size:0.85rem;color:var(--muted);text-decoration:line-through;letter-spacing:0;">4.99€</span>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;">1<span style="font-size:0.9rem;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;">.99€</span></span>
+          </div>
+          <button class="btn-cart" onclick="event.stopPropagation(); openModal('brissos')">🛒 Comprar</button>
         </div>
       </div>
     </div>
@@ -554,8 +602,6 @@
 
   </div>
 </section>
-
-<!-- ENCOMENDA SECTION -->
 <section id="encomenda" class="alt">
   <div class="reveal" style="text-align:center;margin-bottom:48px;">
     <div class="section-tag" style="text-align:center;">// Fazer Pedido</div>
@@ -587,8 +633,10 @@
           <label>Produto <span class="req">*</span></label>
           <select id="o_produto" required>
             <option value="">Selecionar produto...</option>
-            <option value="Cadeira Gaming Pro – 299.99€">Cadeira Gaming Pro – 299.99€</option>
-            <option value="Cadeira Gaming Elite – 449.99€">Cadeira Gaming Elite – 449.99€</option>
+            <option value="Pack Brissos – O Pastor da Luz – 1.99€">Pack Brissos – O Pastor da Luz – 1.99€ 🔥 PROMO</option>
+            <option value="Pack de Cartas Amoriel – 4.99€">Pack de Cartas Amoriel – 4.99€</option>
+            <option value="Pack de Cartas Aqualis – 4.99€">Pack de Cartas Aqualis – 4.99€</option>
+            <option value="Manual de Regras WoR – 0.50€">Manual de Regras WoR – 0.50€</option>
             <option value="Garrafa Amoriel – 34.99€">Garrafa Amoriel – 34.99€</option>
             <option value="Garrafa Aqualis – 29.99€">Garrafa Aqualis – 29.99€</option>
           </select>
@@ -675,12 +723,8 @@
     <img src="logo.png" alt=""/>
     <span class="footer-logo-text">MANY<span>GAMES</span></span>
   </div>
-  <nav class="footer-nav">
-    <a href="index.html">Início</a>
-    <a href="sobre.html">Sobre</a>
-    <a href="jogo.html">Jogo</a>
-    <a href="#produtos">Loja</a>
-    <a href="contacto.html">Contacto</a>
+        <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html" class="active">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
@@ -772,8 +816,9 @@
 <script>
 // ─── PRODUCTS DATA ───────────────────────────────────────────────────────────
 const PRODUCTS = {
-  cadeira1: { name: 'Cadeira Gaming Pro', price: 299.99, category: 'Mobiliário Gaming' },
-  cadeira2: { name: 'Cadeira Gaming Elite', price: 449.99, category: 'Mobiliário Gaming' },
+  cadeira1: { name: 'Pack de Cartas Amoriel', price: 4.99, category: 'Cartas / Colecionável' },
+  brissos:  { name: 'Pack Brissos – O Pastor da Luz', price: 1.99, category: 'Cartas / Colecionável' },
+  manual:   { name: 'Manual de Regras – World of Reason', price: 0.50, category: 'Livros / Regras' },
   amoriel:  { name: 'Garrafa Amoriel', price: 34.99, category: 'Lifestyle / Acessórios' },
   aqualis:  { name: 'Garrafa Aqualis', price: 29.99, category: 'Lifestyle / Acessórios' }
 };
@@ -1015,5 +1060,6 @@ function subscribeNewsletter() {
   showToast('✓ SUBSCRITO COM SUCESSO!');
 }
 </script>
+<script src="shared.js"></script>
 </body>
 </html>
