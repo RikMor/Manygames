@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ManyGames – Facebook</title>
-  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
     .fb-header { padding-top: 68px; background: var(--panel); }
 
@@ -80,15 +80,21 @@
 
     @media(max-width:800px){ .fb-main{grid-template-columns:1fr;} }
   </style>
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-  <ul class="nav-links">
-    <li><a href="index.html">Início</a></li><li><a href="sobre.html">Sobre</a></li>
-    <li><a href="jogo.html">Kill of Reason</a></li><li><a href="equipa.html">Equipa</a></li>
-    <li><a href="rh.html">Carreiras</a></li><li><a href="regulamento.html">Regulamento</a></li>
+        <ul class="nav-links">
+    <li><a href="index.html" class="active">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="videos.html">Vídeos</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
@@ -157,6 +163,25 @@
 
   <!-- FEED -->
   <div>
+
+    <!-- Post Brissos – Pack Promocional -->
+    <div class="fb-post reveal">
+      <div class="fb-post-header">
+        <div class="fb-post-avatar"><img src="logo.png" alt=""/></div>
+        <div><div class="fb-post-meta-name">ManyGames</div><div class="fb-post-meta-time">agora · 🌐</div></div>
+      </div>
+      <div class="fb-post-body">🛡️ <strong>Novo Pack Promocional: BRISSOS – O Pastor da Luz</strong> 🛡️<br><br>Chegou ao World of Reason uma edição limitada com cartas exclusivas, arte premium e recompensas garantidas.<br><br>✨ 7 Cartas &nbsp;⭐ 1 Rara Garantida &nbsp;💎 1 Brilhante Garantida<br><br>Coleciona. Joga. Evolui.<br><br><a href="loja.html" style="color:var(--accent);">#Manygames</a> <a href="loja.html" style="color:var(--accent);">#WorldOfReason</a> <a href="loja.html" style="color:var(--accent);">#TCG</a> <a href="loja.html" style="color:var(--accent);">#CardGame</a> <a href="loja.html" style="color:var(--accent);">#Brissos</a> <a href="loja.html" style="color:var(--accent);">#PackPromocional</a></div>
+      <img class="fb-post-photo" src="amoriel_pack_redes.png" alt="Pack Brissos – O Pastor da Luz" style="max-height:480px;object-fit:contain;background:#0d0d14;"/>
+      <div class="fb-reactions-bar">
+        <span>❤️🔥✨ 0</span>
+        <span style="display:flex;gap:12px;"><span>0 comentários</span><span>0 partilhas</span></span>
+      </div>
+      <div style="display:flex;">
+        <button class="fb-reaction-btn" onclick="this.classList.toggle('liked');this.textContent=this.classList.contains('liked')?'❤️ Gosto':'👍 Gosto'">👍 Gosto</button>
+        <button class="fb-reaction-btn">💬 Comentar</button>
+        <button class="fb-reaction-btn">↗ Partilhar</button>
+      </div>
+    </div>
 
     <!-- Post 1 — Entrada da sede -->
     <div class="fb-post reveal">
@@ -239,9 +264,8 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-  <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a>
-    <a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="contacto.html">Contacto</a>
+        <nav class="footer-nav">
+    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
