@@ -456,6 +456,7 @@
     <li><a href="rh.html">Carreiras</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
+    <li><a href="noticias.html">Notícias</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
 </nav>
@@ -567,7 +568,7 @@
           <small class="field-error">Introduz um email válido (ex: nome@exemplo.com)</small>
         </div>
         <div class="form-group">
-          <label>Telefone <span class="req">*</span></label>
+          <label>Telemóvel <span class="req">*</span></label>
           <div class="phone-row">
             <div class="phone-country" id="o_phone_country" data-input="o_telefone">
               <span class="flag">🇵🇹</span><span class="ddi">+351</span><span class="arrow">▼</span>
@@ -588,8 +589,12 @@
           <input type="number" id="o_quantidade" min="1" max="99" value="1" required/>
         </div>
         <div class="form-group">
-          <label>Rua e Número da Porta <span class="req">*</span></label>
-          <input type="text" id="o_morada" placeholder="Rua das Flores, Nº 123" required/>
+          <label>Rua <span class="req">*</span></label>
+          <input type="text" id="o_rua" placeholder="Rua das Flores" required/>
+        </div>
+        <div class="form-group">
+          <label>Número da Porta <span class="req">*</span></label>
+          <input type="text" id="o_numero" placeholder="Nº 123" required/>
         </div>
         <div class="form-group">
           <label>Andar / Apartamento</label>
@@ -666,7 +671,7 @@
     <span class="footer-logo-text">MANY<span>GAMES</span></span>
   </div>
       <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html" class="active">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html" class="active">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="noticias.html">Notícias</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
@@ -716,7 +721,7 @@
             <small class="field-error">Introduz um email válido</small>
           </div>
           <div class="form-group">
-            <label>Telefone</label>
+            <label>Telemóvel</label>
             <div class="phone-row">
               <div class="phone-country" id="m_phone_country" data-input="m_telefone">
                 <span class="flag">🇵🇹</span><span class="ddi">+351</span><span class="arrow">▼</span>
@@ -730,8 +735,12 @@
             <input type="number" id="m_quantidade" min="1" max="99" value="1"/>
           </div>
           <div class="form-group">
-            <label>Rua e Número da Porta <span class="req">*</span></label>
-            <input type="text" id="m_morada" placeholder="Rua das Flores, Nº 123"/>
+            <label>Rua <span class="req">*</span></label>
+            <input type="text" id="m_rua" placeholder="Rua das Flores"/>
+          </div>
+          <div class="form-group">
+            <label>Número da Porta <span class="req">*</span></label>
+            <input type="text" id="m_numero" placeholder="Nº 123"/>
           </div>
           <div class="form-group">
             <label>Andar / Apartamento</label>
@@ -973,12 +982,13 @@ function closeModal() {
 async function submitModal() {
   var nome   = document.getElementById("m_nome").value.trim();
   var email  = document.getElementById("m_email").value.trim();
-  var morada = document.getElementById("m_morada").value.trim();
+  var rua    = document.getElementById("m_rua").value.trim();
+  var numero = document.getElementById("m_numero").value.trim();
   var andar  = document.getElementById("m_andar").value.trim();
   var cp     = document.getElementById("m_cp").value.trim();
   var cidade = document.getElementById("m_cidade").value.trim();
-  if (!nome || !email || !morada || !cp || !cidade) {
-    flashRequired(["m_nome","m_email","m_morada","m_cp","m_cidade"]); return;
+  if (!nome || !email || !rua || !numero || !cp || !cidade) {
+    flashRequired(["m_nome","m_email","m_rua","m_numero","m_cp","m_cidade"]); return;
   }
   if (!validateEmailField('m_email')) { document.getElementById('m_email').focus(); return; }
   var telRaw = document.getElementById("m_telefone").value.trim();
@@ -990,7 +1000,7 @@ async function submitModal() {
   var qty  = parseInt(document.getElementById("m_quantidade").value) || 1;
   var btn  = document.getElementById("m_submit");
   if (btn) { btn.textContent = "A guardar..."; btn.disabled = true; }
-  var moradaCompleta = morada + (andar ? ", " + andar : "");
+  var moradaCompleta = rua + ", Nº " + numero + (andar ? ", " + andar : "");
   var telefoneCompleto = telRaw ? (getPhoneDDI('m_phone_country') + " " + telRaw) : "";
   await saveOrder({
     nome: nome, email: email,
@@ -1026,13 +1036,14 @@ async function submitOrder() {
   var nome     = document.getElementById("o_nome").value.trim();
   var email    = document.getElementById("o_email").value.trim();
   var produto  = document.getElementById("o_produto").value;
-  var morada   = document.getElementById("o_morada").value.trim();
+  var rua      = document.getElementById("o_rua").value.trim();
+  var numero   = document.getElementById("o_numero").value.trim();
   var andar    = document.getElementById("o_andar").value.trim();
   var cp       = document.getElementById("o_cp").value.trim();
   var cidade   = document.getElementById("o_cidade").value.trim();
   var telefone = document.getElementById("o_telefone").value.trim();
-  if (!nome || !email || !telefone || !produto || !morada || !cp || !cidade) {
-    flashRequired(["o_nome","o_email","o_telefone","o_produto","o_morada","o_cp","o_cidade"]); return;
+  if (!nome || !email || !telefone || !produto || !rua || !numero || !cp || !cidade) {
+    flashRequired(["o_nome","o_email","o_telefone","o_produto","o_rua","o_numero","o_cp","o_cidade"]); return;
   }
   if (!validateEmailField('o_email')) { document.getElementById('o_email').focus(); return; }
   if (!validatePhoneField('o_telefone')) { document.getElementById('o_telefone').focus(); return; }
@@ -1041,7 +1052,7 @@ async function submitOrder() {
   var price = match ? parseFloat(match[1]) : 0;
   var btn   = document.querySelector("button[onclick=\"submitOrder()\"]");
   if (btn) { btn.textContent = "A guardar..."; btn.disabled = true; }
-  var moradaCompleta = morada + (andar ? ", " + andar : "");
+  var moradaCompleta = rua + ", Nº " + numero + (andar ? ", " + andar : "");
   var telefoneCompleto = getPhoneDDI('o_phone_country') + " " + telefone;
   await saveOrder({
     nome: nome, email: email, telefone: telefoneCompleto,
@@ -1059,7 +1070,7 @@ async function submitOrder() {
 function resetOrder() {
   document.getElementById("orderFormFields").style.display = "block";
   document.getElementById("orderSuccess").style.display = "none";
-  ["o_nome","o_email","o_telefone","o_morada","o_andar","o_cp","o_cidade","o_msg"].forEach(function(id) {
+  ["o_nome","o_email","o_telefone","o_rua","o_numero","o_andar","o_cp","o_cidade","o_msg"].forEach(function(id) {
     document.getElementById(id).value = "";
   });
   document.getElementById("o_produto").value    = "";
@@ -1092,15 +1103,25 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob); a.download = "encomendas_manygames.csv"; a.click();
 }
 
-function subscribeNewsletter() {
+async function subscribeNewsletter() {
   var email = document.getElementById("nl_email").value.trim();
   if (!isValidEmail(email)) {
     var inp = document.getElementById("nl_email");
     inp.style.borderColor = "var(--accent)"; inp.focus();
     setTimeout(function() { inp.style.borderColor = ""; }, 1500); return;
   }
-  var subs = JSON.parse(localStorage.getItem("mg_newsletter") || "[]");
-  if (!subs.includes(email)) { subs.push(email); localStorage.setItem("mg_newsletter", JSON.stringify(subs)); }
+  var btn = document.querySelector('.newsletter-btn');
+  if (btn) { btn.textContent = "A subscrever..."; btn.disabled = true; }
+  try {
+    await addDoc(collection(_db, 'newsletter'), {
+      email: email,
+      data: new Date().toLocaleDateString('pt-PT'),
+      timestamp: serverTimestamp()
+    });
+  } catch(e) {
+    console.error('Erro Firebase newsletter:', e);
+  }
+  if (btn) { btn.textContent = "SUBSCREVER"; btn.disabled = false; }
   document.getElementById("nlForm").style.display = "none";
   document.getElementById("nlSuccess").style.display = "block";
   showToast("SUBSCRITO COM SUCESSO!");
@@ -1135,14 +1156,48 @@ var COUNTRIES = [
   { flag: "🇳🇱", name: "Países Baixos", ddi: "+31" },
   { flag: "🇧🇪", name: "Bélgica", ddi: "+32" },
   { flag: "🇨🇭", name: "Suíça", ddi: "+41" },
+  { flag: "🇦🇹", name: "Áustria", ddi: "+43" },
   { flag: "🇮🇪", name: "Irlanda", ddi: "+353" },
   { flag: "🇱🇺", name: "Luxemburgo", ddi: "+352" },
+  { flag: "🇸🇪", name: "Suécia", ddi: "+46" },
+  { flag: "🇳🇴", name: "Noruega", ddi: "+47" },
+  { flag: "🇩🇰", name: "Dinamarca", ddi: "+45" },
+  { flag: "🇫🇮", name: "Finlândia", ddi: "+358" },
+  { flag: "🇵🇱", name: "Polónia", ddi: "+48" },
+  { flag: "🇨🇿", name: "República Checa", ddi: "+420" },
+  { flag: "🇬🇷", name: "Grécia", ddi: "+30" },
+  { flag: "🇭🇺", name: "Hungria", ddi: "+36" },
+  { flag: "🇷🇴", name: "Roménia", ddi: "+40" },
+  { flag: "🇧🇬", name: "Bulgária", ddi: "+359" },
+  { flag: "🇭🇷", name: "Croácia", ddi: "+385" },
+  { flag: "🇸🇰", name: "Eslováquia", ddi: "+421" },
+  { flag: "🇸🇮", name: "Eslovénia", ddi: "+386" },
+  { flag: "🇲🇹", name: "Malta", ddi: "+356" },
+  { flag: "🇮🇸", name: "Islândia", ddi: "+354" },
   { flag: "🇧🇷", name: "Brasil", ddi: "+55" },
   { flag: "🇺🇸", name: "Estados Unidos", ddi: "+1" },
   { flag: "🇨🇦", name: "Canadá", ddi: "+1" },
+  { flag: "🇲🇽", name: "México", ddi: "+52" },
+  { flag: "🇦🇷", name: "Argentina", ddi: "+54" },
+  { flag: "🇨🇱", name: "Chile", ddi: "+56" },
+  { flag: "🇨🇴", name: "Colômbia", ddi: "+57" },
+  { flag: "🇵🇪", name: "Peru", ddi: "+51" },
   { flag: "🇦🇴", name: "Angola", ddi: "+244" },
   { flag: "🇲🇿", name: "Moçambique", ddi: "+258" },
-  { flag: "🇨🇻", name: "Cabo Verde", ddi: "+238" }
+  { flag: "🇨🇻", name: "Cabo Verde", ddi: "+238" },
+  { flag: "🇬🇼", name: "Guiné-Bissau", ddi: "+245" },
+  { flag: "🇸🇹", name: "São Tomé e Príncipe", ddi: "+239" },
+  { flag: "🇿🇦", name: "África do Sul", ddi: "+27" },
+  { flag: "🇲🇦", name: "Marrocos", ddi: "+212" },
+  { flag: "🇨🇳", name: "China", ddi: "+86" },
+  { flag: "🇯🇵", name: "Japão", ddi: "+81" },
+  { flag: "🇰🇷", name: "Coreia do Sul", ddi: "+82" },
+  { flag: "🇮🇳", name: "Índia", ddi: "+91" },
+  { flag: "🇦🇺", name: "Austrália", ddi: "+61" },
+  { flag: "🇳🇿", name: "Nova Zelândia", ddi: "+64" },
+  { flag: "🇦🇪", name: "Emirados Árabes Unidos", ddi: "+971" },
+  { flag: "🇹🇷", name: "Turquia", ddi: "+90" },
+  { flag: "🇷🇺", name: "Rússia", ddi: "+7" }
 ];
 
 function setupPhoneSelector(countryId, listId, inputId) {

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames – Notícias</title>
+  <link rel="stylesheet" href="shared.css?v=2"/>
+  <style>
+    .news-filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .news-filter-btn {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 18px; border: 1px solid var(--border);
+      background: none; color: var(--muted); cursor: pointer; transition: all .2s;
+    }
+    .news-filter-btn:hover, .news-filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
+
+    .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .news-card {
+      background: var(--card); border: 1px solid var(--border);
+      overflow: hidden; cursor: pointer; transition: border-color .3s, transform .2s;
+      display: flex; flex-direction: column;
+    }
+    .news-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .news-card-img { width: 100%; aspect-ratio: 16/9; background: var(--panel); overflow: hidden; position: relative; }
+    .news-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .news-card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .news-cat-badge {
+      position: absolute; top: 10px; left: 10px;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; letter-spacing: 1px;
+      padding: 4px 10px; text-transform: uppercase; font-weight: 700;
+    }
+    .cat-anuncio   { background: var(--accent); color: #fff; }
+    .cat-evento    { background: var(--accent2); color: #000; }
+    .cat-imprensa  { background: #4da3ff; color: #fff; }
+    .cat-atualizacao { background: #00e676; color: #000; }
+    .cat-geral     { background: rgba(255,255,255,0.15); color: #fff; }
+    .news-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .news-card-date { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
+    .news-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 1px; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+    .news-card-excerpt { color: var(--muted); font-size: 0.88rem; line-height: 1.6; flex: 1; }
+    .news-card-readmore { margin-top: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); }
+    .news-empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+    .news-empty .ei { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+
+    .news-featured {
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: stretch;
+      background: var(--card); border: 1px solid var(--border); margin-bottom: 40px; overflow: hidden; cursor: pointer;
+      transition: border-color .3s;
+    }
+    .news-featured:hover { border-color: var(--accent); }
+    .news-featured-img { width: 100%; height: 100%; min-height: 280px; background: var(--panel); overflow: hidden; position: relative; }
+    .news-featured-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .news-featured-body { padding: 32px 32px 32px 0; display: flex; flex-direction: column; justify-content: center; }
+    .news-featured-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; color: var(--accent2); margin-bottom: 10px; text-transform: uppercase; }
+    .news-featured-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 1px; color: #fff; margin-bottom: 14px; line-height: 1.15; }
+    .news-featured-excerpt { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 18px; }
+
+    /* MODAL */
+    .news-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.92); z-index: 500; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+    .news-modal-overlay.open { display: flex; }
+    .news-modal-box { background: var(--panel); border: 1px solid var(--border); max-width: 720px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; }
+    .news-modal-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.5); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; line-height: 1; width: 36px; height: 36px; border-radius: 50%; z-index: 10; }
+    .news-modal-close:hover { background: rgba(0,0,0,0.8); }
+    .news-modal-img { width: 100%; aspect-ratio: 16/9; background: var(--card); overflow: hidden; }
+    .news-modal-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .news-modal-content { padding: 32px; }
+    .news-modal-date { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; }
+    .news-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1px; color: #fff; margin-bottom: 18px; line-height: 1.2; }
+    .news-modal-text { color: var(--text); font-size: 0.98rem; line-height: 1.8; white-space: pre-line; }
+
+    @media(max-width:900px){ .news-grid{grid-template-columns:1fr 1fr;} .news-featured{grid-template-columns:1fr;} .news-featured-body{padding:28px;} }
+    @media(max-width:600px){ .news-grid{grid-template-columns:1fr;} }
+  </style>
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <button class="nav-mobile-toggle">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="noticias.html" class="active">Notícias</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-glow"></div>
+  <div class="page-hero-content">
+    <div class="page-tag">// Sala de Imprensa</div>
+    <h1 class="page-title">NOTÍCIAS &<br><span>ATUALIZAÇÕES</span></h1>
+    <p class="page-subtitle">Tudo o que precisas de saber sobre a ManyGames, o Kill of Reason e a comunidade — anúncios oficiais, eventos e cobertura de imprensa.</p>
+  </div>
+</div>
+
+<section>
+  <!-- DESTAQUE -->
+  <div id="news-featured-wrap" style="display:none;"></div>
+
+  <!-- FILTROS -->
+  <div class="news-filter-bar reveal" id="news-filter-bar">
+    <button class="news-filter-btn active" onclick="filterNews('todos',this)">Todas</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="news-grid" id="news-grid">
+    <div class="news-empty"><div class="ei">📰</div>A carregar notícias...</div>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="news-modal-overlay" id="news-modal">
+  <div class="news-modal-box">
+    <button class="news-modal-close" onclick="closeNewsModal()">✕</button>
+    <div class="news-modal-img" id="news-modal-img" style="display:none;"></div>
+    <div class="news-modal-content">
+      <div class="news-modal-date" id="news-modal-date"></div>
+      <div class="news-modal-title" id="news-modal-title"></div>
+      <div class="news-modal-text" id="news-modal-text"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="noticias.html" class="active">Notícias</a><a href="contacto.html">Contacto</a>
+  </nav>
+  <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
+</footer>
+
+<script src="shared.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+});
+const db = getFirestore(app);
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const CAT_LABELS = {
+  anuncio: '📢 Anúncio',
+  evento: '🎉 Evento',
+  imprensa: '📰 Imprensa',
+  atualizacao: '🔧 Atualização',
+  geral: '📌 Geral'
+};
+const CAT_CLASS = {
+  anuncio: 'cat-anuncio', evento: 'cat-evento', imprensa: 'cat-imprensa',
+  atualizacao: 'cat-atualizacao', geral: 'cat-geral'
+};
+
+let allNews = [];
+
+async function loadNews() {
+  const grid = document.getElementById('news-grid');
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'noticias'), orderBy('timestamp', 'asc')));
+    } catch(e) {
+      snap = await getDocs(collection(db, 'noticias'));
+    }
+    allNews = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
+    renderFeatured();
+    buildFilters();
+    renderGrid(allNews.filter(n => !(n.destaque === true || n.destaque === 'true')));
+  } catch(e) {
+    console.error('Erro ao carregar notícias:', e);
+    grid.innerHTML = '<div class="news-empty"><div class="ei">⚠️</div>Erro ao carregar notícias.</div>';
+  }
+}
+
+function renderFeatured() {
+  const destaque = allNews.find(n => n.destaque === true || n.destaque === 'true');
+  if (!destaque) return;
+  const wrap = document.getElementById('news-featured-wrap');
+  const imgHtml = destaque.imagem
+    ? `<img src="${esc(destaque.imagem)}" alt="${esc(destaque.titulo)}"/>`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">📰</div>`;
+  wrap.innerHTML = `
+    <div class="news-featured reveal" onclick="openNewsModal('${destaque._id}')">
+      <div class="news-featured-img">${imgHtml}</div>
+      <div class="news-featured-body">
+        <div class="news-featured-tag">${CAT_LABELS[destaque.categoria] || '📌 Geral'} · ${esc(destaque.data||'')}</div>
+        <div class="news-featured-title">${esc(destaque.titulo)}</div>
+        <p class="news-featured-excerpt">${esc((destaque.resumo||destaque.texto||'').substring(0,220))}${(destaque.resumo||destaque.texto||'').length>220?'…':''}</p>
+        <span class="news-card-readmore">LER MAIS →</span>
+      </div>
+    </div>`;
+  wrap.style.display = 'block';
+}
+
+function buildFilters() {
+  const cats = [...new Set(allNews.map(n => n.categoria).filter(Boolean))];
+  const bar = document.getElementById('news-filter-bar');
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'news-filter-btn';
+    btn.textContent = CAT_LABELS[c] || c;
+    btn.onclick = function() { filterNews(c, this); };
+    bar.appendChild(btn);
+  });
+}
+
+window.filterNews = function(cat, btn) {
+  document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const nonFeatured = allNews.filter(n => !(n.destaque === true || n.destaque === 'true'));
+  const filtered = cat === 'todos' ? nonFeatured : nonFeatured.filter(n => n.categoria === cat);
+  renderGrid(filtered);
+};
+
+function renderGrid(items) {
+  const grid = document.getElementById('news-grid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="news-empty"><div class="ei">📰</div>Sem notícias nesta categoria de momento.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(n => {
+    try {
+      const imgHtml = n.imagem
+        ? `<img src="${esc(n.imagem)}" alt="${esc(n.titulo)}" loading="lazy"/>`
+        : `<div class="news-card-img-placeholder">📰</div>`;
+      const catClass = CAT_CLASS[n.categoria] || 'cat-geral';
+      const catLabel = CAT_LABELS[n.categoria] || '📌 Geral';
+      const excerpt = (n.resumo || n.texto || '').substring(0,110);
+      return `
+      <div class="news-card reveal" onclick="openNewsModal('${n._id}')">
+        <div class="news-card-img">
+          ${imgHtml}
+          <span class="news-cat-badge ${catClass}">${catLabel}</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-date">${esc(n.data||'')}</div>
+          <div class="news-card-title">${esc(n.titulo||'Sem título')}</div>
+          <p class="news-card-excerpt">${esc(excerpt)}${(n.resumo||n.texto||'').length>110?'…':''}</p>
+          <span class="news-card-readmore">LER MAIS →</span>
+        </div>
+      </div>`;
+    } catch(err) {
+      console.error('Erro ao renderizar notícia', n, err);
+      return '';
+    }
+  }).join('');
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 80);
+}
+
+window.openNewsModal = function(id) {
+  const n = allNews.find(x => x._id === id);
+  if (!n) return;
+  const imgWrap = document.getElementById('news-modal-img');
+  if (n.imagem) {
+    imgWrap.innerHTML = `<img src="${esc(n.imagem)}" alt="${esc(n.titulo)}"/>`;
+    imgWrap.style.display = 'block';
+  } else {
+    imgWrap.style.display = 'none';
+  }
+  document.getElementById('news-modal-date').textContent = (CAT_LABELS[n.categoria] || '📌 Geral') + ' · ' + (n.data || '');
+  document.getElementById('news-modal-title').textContent = n.titulo || '';
+  document.getElementById('news-modal-text').textContent = n.texto || n.resumo || '';
+  document.getElementById('news-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeNewsModal = function() {
+  document.getElementById('news-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+document.getElementById('news-modal').addEventListener('click', function(e) {
+  if (e.target === this) window.closeNewsModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeNewsModal(); });
+
+loadNews();
+</script>
+</body>
+</html>

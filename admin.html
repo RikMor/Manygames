@@ -234,6 +234,10 @@
       <span class="icon">✉️</span><span>Contactos</span>
       <span class="nav-badge-count" id="badge-cont">0</span>
     </div>
+    <div class="nav-item" onclick="showPage('newsletter')">
+      <span class="icon">📰</span><span>Newsletter</span>
+      <span class="nav-badge-count" id="badge-news">0</span>
+    </div>
     <div class="nav-item" onclick="showPage('produtos')">
       <span class="icon">🛍️</span><span>Produtos</span>
     </div>
@@ -251,6 +255,9 @@
     </div>
     <div class="nav-item" onclick="showPage('twitter')">
       <span class="icon">🐦</span><span>Twitter / X</span>
+    </div>
+    <div class="nav-item" onclick="showPage('noticias')">
+      <span class="icon">📰</span><span>Notícias</span>
     </div>
     <div class="sidebar-logout" onclick="doLogout()">
       <span>🚪</span><span>Sair</span>
@@ -419,6 +426,28 @@
           <tbody id="tbody-cont"></tbody>
         </table>
         <div id="empty-cont" class="empty" style="display:none"><div class="empty-icon">✉️</div>Sem mensagens ainda.</div>
+      </div>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="page" id="page-newsletter">
+      <div class="page-header">
+        <h1>📰 Newsletter</h1>
+        <p>Emails subscritos pela newsletter da loja</p>
+      </div>
+      <div class="table-wrap">
+        <div class="toolbar">
+          <input type="text" id="search-news" placeholder="🔍  Pesquisar email..." oninput="renderNewsletter()"/>
+          <button class="btn-sm btn-export" onclick="exportCSV('newsletter')">⬇ Exportar CSV</button>
+          <button class="btn-sm btn-clear" onclick="clearData('newsletter','newsletter')">🗑 Limpar</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Email</th><th>Ação</th>
+          </tr></thead>
+          <tbody id="tbody-news"></tbody>
+        </table>
+        <div id="empty-news" class="empty" style="display:none"><div class="empty-icon">📰</div>Sem subscritores ainda.</div>
       </div>
     </div>
 
@@ -766,6 +795,68 @@
       </div>
     </div>
 
+    <!-- NOTÍCIAS -->
+    <div class="page" id="page-noticias">
+      <div class="page-header">
+        <h1>📰 Notícias</h1>
+        <p>Gerir os artigos e anúncios publicados na página de Notícias</p>
+      </div>
+      <div class="admin-form">
+        <div class="section-title" style="margin-top:0;">Adicionar / Editar Notícia</div>
+        <input type="hidden" id="news-edit-id"/>
+        <div class="admin-form-grid">
+          <div class="admin-form-group full">
+            <label>Título *</label>
+            <input type="text" id="news-titulo" placeholder="Ex: ManyGames anuncia Season 5 do Kill of Reason"/>
+          </div>
+          <div class="admin-form-group">
+            <label>Categoria *</label>
+            <select id="news-categoria">
+              <option value="anuncio">📢 Anúncio</option>
+              <option value="evento">🎉 Evento</option>
+              <option value="imprensa">📰 Imprensa</option>
+              <option value="atualizacao">🔧 Atualização</option>
+              <option value="geral">📌 Geral</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Data</label>
+            <input type="date" id="news-data"/>
+          </div>
+          <div class="admin-form-group full">
+            <label>Imagem (URL GitHub raw)</label>
+            <input type="text" id="news-imagem" placeholder="https://raw.githubusercontent.com/user/repo/main/img.png"/>
+            <small style="color:var(--muted);font-size:0.7rem;">GitHub → ficheiro → Raw → copiar URL</small>
+          </div>
+          <div class="admin-form-group full">
+            <label>Resumo (curto, aparece nos cards)</label>
+            <textarea id="news-resumo" placeholder="Resumo de 1-2 frases para o card da notícia..." style="min-height:60px;"></textarea>
+          </div>
+          <div class="admin-form-group full">
+            <label>Texto Completo *</label>
+            <textarea id="news-texto" placeholder="Conteúdo completo da notícia (aparece ao abrir o artigo)..." style="min-height:140px;"></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label>⭐ Notícia em Destaque?</label>
+            <select id="news-destaque">
+              <option value="false">Não</option>
+              <option value="true">Sim — mostrar em destaque no topo</option>
+            </select>
+            <small style="color:var(--muted);font-size:0.7rem;">Só 1 notícia deve estar em destaque de cada vez</small>
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveNoticia()">💾 GUARDAR NOTÍCIA</button>
+          <button class="btn-sm btn-clear" onclick="clearNewsForm()">✕ LIMPAR</button>
+        </div>
+        <div id="news-success" style="display:none;margin-top:12px;color:var(--green);font-size:0.82rem;letter-spacing:1px;">✓ Notícia guardada com sucesso!</div>
+      </div>
+      <div class="section-title">Notícias Existentes</div>
+      <div class="items-grid" id="news-grid-admin">
+        <div class="empty"><div class="empty-icon">📰</div>A carregar...</div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
@@ -820,17 +911,20 @@ window.doLogout = doLogout;
 let ordersCache = [];
 let candsCache  = [];
 let contsCache  = [];
+let newsCache   = [];
 
 async function loadAll() {
   try {
-    const [oSnap, cSnap, ctSnap] = await Promise.all([
+    const [oSnap, cSnap, ctSnap, nSnap] = await Promise.all([
       getDocs(query(collection(db, 'encomendas'), orderBy('timestamp', 'asc'))),
       getDocs(query(collection(db, 'candidaturas'), orderBy('timestamp', 'asc'))),
-      getDocs(query(collection(db, 'contactos'), orderBy('timestamp', 'asc')))
+      getDocs(query(collection(db, 'contactos'), orderBy('timestamp', 'asc'))),
+      getDocs(query(collection(db, 'newsletter'), orderBy('timestamp', 'asc')))
     ]);
     ordersCache = oSnap.docs.map((d,i) => ({ _id: d.id, id: String(i+1).padStart(3,'0'), ...d.data() }));
     candsCache  = cSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
     contsCache  = ctSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    newsCache   = nSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
   } catch(e) {
     console.error('Erro ao carregar dados:', e);
   }
@@ -845,12 +939,14 @@ async function initApp() {
   renderEncomendas();
   renderCandidaturas();
   renderContactos();
+  renderNewsletter();
 }
 
 function updateBadges() {
   document.getElementById('badge-enc').textContent  = ordersCache.length;
   document.getElementById('badge-cand').textContent = candsCache.length;
   document.getElementById('badge-cont').textContent = contsCache.length;
+  document.getElementById('badge-news').textContent = newsCache.length;
 }
 
 // ── NAV ───────────────────────────────────────────────────────────
@@ -866,6 +962,7 @@ function showPage(id) {
   if (id === 'facebook') loadFbAdmin();
   if (id === 'reddit') loadRdAdmin();
   if (id === 'twitter') loadTwAdmin();
+  if (id === 'noticias') loadNoticiasAdmin();
 }
 window.showPage = showPage;
 
@@ -1027,6 +1124,37 @@ async function deleteContacto(id) {
 }
 window.deleteContacto = deleteContacto;
 
+// ── NEWSLETTER ────────────────────────────────────────────────────
+function renderNewsletter() {
+  let subs = newsCache.slice();
+  const q = document.getElementById('search-news').value.toLowerCase();
+  if (q) subs = subs.filter(s => (s.email||'').toLowerCase().includes(q));
+
+  const tbody = document.getElementById('tbody-news');
+  document.getElementById('empty-news').style.display = subs.length ? 'none' : 'block';
+
+  tbody.innerHTML = subs.slice().reverse().map(s => `
+    <tr>
+      <td class="td-muted">${s.data || '—'}</td>
+      <td><strong>${esc(s.email)}</strong></td>
+      <td>
+        <button class="btn-sm btn-del" onclick="deleteNewsletter('${s._id}')" title="Eliminar subscrição">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+window.renderNewsletter = renderNewsletter;
+
+async function deleteNewsletter(id) {
+  if (!confirm('Eliminar esta subscrição de newsletter?')) return;
+  try {
+    await deleteDoc(doc(db, 'newsletter', id));
+    newsCache = newsCache.filter(s => s._id !== id);
+    renderNewsletter();
+    updateBadges();
+  } catch(e) { console.error(e); alert('Erro ao eliminar.'); }
+}
+window.deleteNewsletter = deleteNewsletter;
+
 // ── DETAIL MODAL ──────────────────────────────────────────────────
 function showDetail(type, data) {
   const o = typeof data === 'string' ? JSON.parse(data) : data;
@@ -1100,10 +1228,14 @@ function exportCSV(type) {
     data = candsCache;
     headers = ['Data','Nome','Email','Telefone','Vaga','LinkedIn','Motivação'];
     rows = data.map(c => [c.data,c.nome,c.email,c.telefone,c.vaga,c.linkedin,c.motivacao]);
-  } else {
+  } else if (type === 'contactos') {
     data = contsCache;
     headers = ['Data','Nome','Email','Assunto','Mensagem'];
     rows = data.map(c => [c.data,c.nome,c.email,c.assunto,c.mensagem||c.msg]);
+  } else {
+    data = newsCache;
+    headers = ['Data','Email'];
+    rows = data.map(s => [s.data,s.email]);
   }
   const escCSV = v => '"' + String(v||'').replace(/"/g,'""') + '"';
   const csv = [headers.map(escCSV).join(','), ...rows.map(r => r.map(escCSV).join(','))].join('\n');
@@ -1756,6 +1888,108 @@ function clearTwForm() {
   ['tw-edit-id','tw-url','tw-body','tw-img','tw-tempo','tw-replies','tw-retweets','tw-likes','tw-views'].forEach(id => document.getElementById(id).value = '');
 }
 window.clearTwForm = clearTwForm;
+
+// ── NOTÍCIAS ──────────────────────────────────────────────────────
+let newsCacheAdmin = [];
+
+async function loadNoticiasAdmin() {
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'noticias'), orderBy('timestamp', 'asc')));
+    } catch(e) {
+      snap = await getDocs(collection(db, 'noticias'));
+    }
+    newsCacheAdmin = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
+  renderNoticiasAdmin();
+}
+
+function renderNoticiasAdmin() {
+  const grid = document.getElementById('news-grid-admin');
+  if (!newsCacheAdmin.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📰</div>Sem notícias ainda. Adiciona a primeira acima.</div>';
+    return;
+  }
+  const catLabels = { anuncio:'📢 Anúncio', evento:'🎉 Evento', imprensa:'📰 Imprensa', atualizacao:'🔧 Atualização', geral:'📌 Geral' };
+  grid.innerHTML = newsCacheAdmin.slice().reverse().map(n => `
+    <div class="item-card">
+      <div class="item-card-title">${esc(n.titulo||'Sem título')}</div>
+      <div class="item-card-sub">${catLabels[n.categoria]||'📌 Geral'} · ${esc(n.data||'—')}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">
+        ${(n.destaque===true||n.destaque==='true')?`<span class="badge" style="background:rgba(255,159,28,0.15);color:var(--accent2);">⭐ DESTAQUE</span>`:''}
+      </div>
+      <div class="item-card-actions">
+        <button class="btn-edit" onclick='editNoticia(${JSON.stringify(n).replace(/'/g,"&#39;")})'>✏️ Editar</button>
+        <button class="btn-del" onclick="deleteNoticia('${n._id}')">🗑 Apagar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function saveNoticia() {
+  const titulo = document.getElementById('news-titulo').value.trim();
+  const texto  = document.getElementById('news-texto').value.trim();
+  if (!titulo || !texto) { alert('Título e texto completo são obrigatórios.'); return; }
+  const editId = document.getElementById('news-edit-id').value;
+  let dataVal = document.getElementById('news-data').value;
+  let dataFormatada = dataVal ? new Date(dataVal + 'T00:00:00').toLocaleDateString('pt-PT') : new Date().toLocaleDateString('pt-PT');
+  const data = {
+    titulo,
+    categoria: document.getElementById('news-categoria').value,
+    data: dataFormatada,
+    imagem: document.getElementById('news-imagem').value.trim(),
+    resumo: document.getElementById('news-resumo').value.trim(),
+    texto,
+    destaque: document.getElementById('news-destaque').value === 'true',
+    timestamp: serverTimestamp()
+  };
+  try {
+    if (editId) { await setDoc(doc(db, 'noticias', editId), data); }
+    else { await addDoc(collection(db, 'noticias'), data); }
+    document.getElementById('news-success').style.display = 'block';
+    setTimeout(() => document.getElementById('news-success').style.display = 'none', 2500);
+    clearNewsForm();
+    await loadNoticiasAdmin();
+  } catch(e) { console.error(e); alert('Erro ao guardar notícia.'); }
+}
+window.saveNoticia = saveNoticia;
+
+function editNoticia(n) {
+  document.getElementById('news-edit-id').value  = n._id;
+  document.getElementById('news-titulo').value   = n.titulo || '';
+  document.getElementById('news-categoria').value = n.categoria || 'anuncio';
+  document.getElementById('news-imagem').value   = n.imagem || '';
+  document.getElementById('news-resumo').value   = n.resumo || '';
+  document.getElementById('news-texto').value    = n.texto || '';
+  document.getElementById('news-destaque').value = (n.destaque===true||n.destaque==='true') ? 'true' : 'false';
+  // try to parse data back to yyyy-mm-dd for the date input
+  if (n.data) {
+    const parts = n.data.split('/');
+    if (parts.length === 3) {
+      document.getElementById('news-data').value = parts[2] + '-' + parts[1] + '-' + parts[0];
+    }
+  }
+  document.getElementById('news-titulo').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+window.editNoticia = editNoticia;
+
+async function deleteNoticia(id) {
+  if (!confirm('Tens a certeza que queres apagar esta notícia?')) return;
+  try {
+    await deleteDoc(doc(db, 'noticias', id));
+    newsCacheAdmin = newsCacheAdmin.filter(n => n._id !== id);
+    renderNoticiasAdmin();
+  } catch(e) { console.error(e); alert('Erro ao apagar notícia.'); }
+}
+window.deleteNoticia = deleteNoticia;
+
+function clearNewsForm() {
+  ['news-edit-id','news-titulo','news-imagem','news-resumo','news-texto','news-data'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('news-categoria').value = 'anuncio';
+  document.getElementById('news-destaque').value = 'false';
+}
+window.clearNewsForm = clearNewsForm;
 </script>
 </body>
 </html>
