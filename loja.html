@@ -235,6 +235,36 @@
     }
     .form-group select option { background: var(--card); }
     .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group input:invalid:not(:placeholder-shown) { border-color: var(--accent); }
+    .form-group small.field-error { color: var(--accent); font-size: 0.72rem; display: none; margin-top: -2px; }
+    .form-group.has-error small.field-error { display: block; }
+    .form-group.has-error input { border-color: var(--accent); background: rgba(230,57,70,0.06); }
+
+    /* PHONE WITH COUNTRY FLAG */
+    .phone-row { display: flex; gap: 8px; }
+    .phone-country {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+      padding: 0 10px; cursor: pointer; position: relative; flex-shrink: 0; min-width: 92px;
+      font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; color: var(--text);
+    }
+    .phone-country:hover { border-color: rgba(255,255,255,0.25); }
+    .phone-country .flag { font-size: 1.1rem; }
+    .phone-country .ddi { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; }
+    .phone-country .arrow { margin-left: auto; font-size: 0.6rem; color: var(--muted); }
+    .phone-country-list {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; min-width: 230px;
+      background: var(--card); border: 1px solid rgba(255,255,255,0.15); z-index: 50;
+      max-height: 260px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .phone-country-list.open { display: block; }
+    .phone-country-item {
+      display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer;
+      font-size: 0.88rem; color: var(--text);
+    }
+    .phone-country-item:hover { background: rgba(230,57,70,0.1); }
+    .phone-country-item .ddi { color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.78rem; margin-left: auto; }
+    .phone-number-input { flex: 1; min-width: 0; }
     .form-submit {
       margin-top: 22px;
       width: 100%;
@@ -374,7 +404,6 @@
     }
     .newsletter-perk { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
     .newsletter-perk span { color: var(--cyan); }
-    .newsletter-input-row { display: flex; margin: 24px 0 0; }
     .nl-success { display: none; }
     .nl-success .nl-ok-icon { font-size: 2.5rem; margin-bottom: 12px; }
     .nl-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; }
@@ -403,27 +432,28 @@
     <img src="logo.png" alt="ManyGames logo"/>
     <span class="nav-logo-text">MANY<span>GAMES</span></span>
   </a>
-  <a href="#produtos" class="nav-deal" onclick="openModal('amoriel')">
-    <img src="garrafa amoriel.png" alt="Garrafa Amoriel" class="nav-deal-img"/>
+  <a href="#produtos" class="nav-deal" id="nav-deal-destaque" style="display:none;">
+    <img src="" alt="" class="nav-deal-img" id="nav-deal-img"/>
     <div class="nav-deal-text">
-      <div class="nav-deal-label">🔥 Oferta do dia</div>
-      <div class="nav-deal-name">Garrafa Amoriel</div>
+      <div class="nav-deal-label">⭐ Destaque</div>
+      <div class="nav-deal-name" id="nav-deal-nome"></div>
       <div class="nav-deal-prices">
-        <span class="nav-deal-old">49.99€</span>
-        <span class="nav-deal-new">34.99€</span>
-        <span class="nav-deal-badge">-30%</span>
+        <span class="nav-deal-old" id="nav-deal-old" style="display:none;"></span>
+        <span class="nav-deal-new" id="nav-deal-new"></span>
+        <span class="nav-deal-badge" id="nav-deal-badge" style="display:none;"></span>
+      </div>
+    </div>
       </div>
     </div>
   </a>
     <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
-        <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html" class="active">Loja</a></li>
     <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
@@ -448,23 +478,20 @@
     </div>
   </div>
 
-  <!-- Manual de Regras -->
-  <div style="position:relative;z-index:2;flex-shrink:0;text-align:center;animation:fadeUp .9s ease .4s both;">
+  <!-- Destaque do Firebase -->
+  <div id="hero-destaque" style="display:none;position:relative;z-index:2;flex-shrink:0;text-align:center;animation:fadeUp .9s ease .4s both;">
     <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;color:var(--accent2);margin-bottom:12px;text-transform:uppercase;">// Destaque</div>
     <div style="position:relative;display:inline-block;">
-      <img src="regras_wor.png" alt="Manual de Regras World of Reason"
-        style="width:220px;border:2px solid rgba(255,159,28,0.35);box-shadow:0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6);transition:transform .3s,box-shadow .3s;cursor:pointer;"
+      <img id="hero-dest-img" src="" alt="" style="width:220px;border:2px solid rgba(255,159,28,0.35);box-shadow:0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6);transition:transform .3s,box-shadow .3s;cursor:pointer;"
         onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 60px rgba(255,159,28,0.3),0 20px 60px rgba(0,0,0,0.6)'"
-        onmouseout="this.style.transform='';this.style.boxShadow='0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6)'"
-        onclick="openModal('manual')"
-      />
-      <span style="position:absolute;top:10px;right:-10px;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:1px;padding:4px 8px;">NOVO</span>
+        onmouseout="this.style.transform='';this.style.boxShadow='0 0 40px rgba(255,159,28,0.15),0 20px 60px rgba(0,0,0,0.6)'"/>
+      <span id="hero-dest-badge" style="position:absolute;top:10px;right:-10px;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:1px;padding:4px 8px;display:none;"></span>
     </div>
     <div style="margin-top:16px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--text);">Manual de Regras</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;">World of Reason</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;margin-bottom:12px;">0<span style="font-size:0.9rem;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;">.50&#8364;</span></div>
-      <button class="btn-cart" onclick="openModal('manual')" style="width:100%;justify-content:center;">&#128722; Comprar</button>
+      <div id="hero-dest-nome" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--text);"></div>
+      <div id="hero-dest-cat" style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:10px;"></div>
+      <div id="hero-dest-preco" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;margin-bottom:12px;"></div>
+      <button class="btn-cart" id="hero-dest-btn" style="width:100%;justify-content:center;">🛒 Comprar</button>
     </div>
   </div>
 </section>
@@ -509,97 +536,12 @@
     <div class="section-line"></div>
   </div>
 
-  <div class="products-grid">
-
-    <!-- Pack Amoriel -->
-    <div class="product-card reveal" onclick="openModal('cadeira1')">
-      <div class="product-img-wrapper">
-        <img src="amoriel_pack.png" alt="Pack de Cartas Amoriel ManyGames" class="product-img"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Cartas · Colecionável</div>
-        <div class="product-name">Pack de Cartas Amoriel</div>
-        <p class="product-desc">Pack exclusivo de cartas da Amoriel, a Guardiã do Amor Verdadeiro. Edição especial Dia dos Namorados com arte única e acabamentos premium.</p>
-        <div class="product-footer">
-          <div class="product-price">4<span>.99€</span></div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira1')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pack Aqualis -->
-    <div class="product-card reveal" onclick="openModal('cadeira2')">
-      <div class="product-img-wrapper">
-        <img src="aqualis_pack.png" alt="Pack de Cartas Aqualis ManyGames" class="product-img"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Cartas · Colecionável</div>
-        <div class="product-name">Pack de Cartas Aqualis</div>
-        <p class="product-desc">Pack exclusivo de cartas do Aqualis, o Guardião das Nascentes. Arte deslumbrante inspirada nas águas puras e montanhas sagradas.</p>
-        <div class="product-footer">
-          <div class="product-price">4<span>.99€</span></div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('cadeira2')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pack Brissos – O Pastor da Luz -->
-    <div class="product-card reveal" onclick="openModal('brissos')" style="position:relative;">
-      <span class="product-badge badge-hot">EDIÇÃO LIMITADA</span>
-      <div style="position:absolute;top:16px;left:16px;z-index:2;background:var(--accent);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:2px;padding:4px 10px;">PROMO</div>
-      <div class="product-img-wrapper">
-        <img src="bisos_pack.png" alt="Pack de Cartas Brissos – O Pastor da Luz" class="product-img"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Cartas · Colecionável</div>
-        <div class="product-name">Pack Brissos – O Pastor da Luz</div>
-        <p class="product-desc">Edição limitada com 7 cartas exclusivas, 1 rara garantida, 1 brilhante garantida, arte premium e impressão de alta qualidade.</p>
-        <div class="product-footer">
-          <div class="product-price" style="display:flex;flex-direction:column;gap:0;">
-            <span style="font-family:'Rajdhani',sans-serif;font-size:0.85rem;color:var(--muted);text-decoration:line-through;letter-spacing:0;">4.99€</span>
-            <span style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);letter-spacing:1px;">1<span style="font-size:0.9rem;color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;">.99€</span></span>
-          </div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('brissos')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Garrafa Amoriel -->
-    <div class="product-card reveal" onclick="openModal('amoriel')">
-      <span class="product-badge badge-new">NOVO</span>
-      <div class="product-img-wrapper">
-        <img src="garrafa amoriel.png" alt="Garrafa Amoriel ManyGames" class="product-img"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Lifestyle · Acessórios</div>
-        <div class="product-name">Garrafa Amoriel</div>
-        <p class="product-desc">Garrafa de 750ml em aço inoxidável com logotipo Amoriel gravado. Mantém bebidas frias 24h e quentes 12h. Ideal para gamers.</p>
-        <div class="product-footer">
-          <div class="product-price">34<span>.99€</span></div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('amoriel')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Garrafa Aqualis -->
-    <div class="product-card reveal" onclick="openModal('aqualis')">
-      <span class="product-badge badge-new">NOVO</span>
-      <div class="product-img-wrapper">
-        <img src="garrafa aqualis.png" alt="Garrafa Aqualis ManyGames" class="product-img"/>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Lifestyle · Acessórios</div>
-        <div class="product-name">Garrafa Aqualis</div>
-        <p class="product-desc">Garrafa de 600ml ultra-leve com design Aqualis exclusivo e tampa de fecho rápido. Perfeita para treinos e sessões de gaming prolongadas.</p>
-        <div class="product-footer">
-          <div class="product-price">29<span>.99€</span></div>
-          <button class="btn-cart" onclick="event.stopPropagation(); openModal('aqualis')">🛒 Comprar</button>
-        </div>
-      </div>
-    </div>
-
+  <div class="products-grid" id="products-grid">
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);">A carregar produtos...</div>
   </div>
 </section>
+
+<!-- ENCOMENDA SECTION -->
 <section id="encomenda" class="alt">
   <div class="reveal" style="text-align:center;margin-bottom:48px;">
     <div class="section-tag" style="text-align:center;">// Fazer Pedido</div>
@@ -621,22 +563,24 @@
         </div>
         <div class="form-group">
           <label>Email <span class="req">*</span></label>
-          <input type="email" id="o_email" placeholder="joao@email.com" required/>
+          <input type="email" id="o_email" placeholder="joao@email.com" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" required/>
+          <small class="field-error">Introduz um email válido (ex: nome@exemplo.com)</small>
         </div>
         <div class="form-group">
           <label>Telefone <span class="req">*</span></label>
-          <input type="tel" id="o_telefone" placeholder="912 345 678" required/>
+          <div class="phone-row">
+            <div class="phone-country" id="o_phone_country" data-input="o_telefone">
+              <span class="flag">🇵🇹</span><span class="ddi">+351</span><span class="arrow">▼</span>
+              <div class="phone-country-list" id="o_phone_list"></div>
+            </div>
+            <input type="tel" id="o_telefone" class="phone-number-input" placeholder="912 345 678" inputmode="numeric" maxlength="9" required/>
+          </div>
+          <small class="field-error">Introduz um número de telemóvel válido</small>
         </div>
         <div class="form-group">
           <label>Produto <span class="req">*</span></label>
           <select id="o_produto" required>
             <option value="">Selecionar produto...</option>
-            <option value="Pack Brissos – O Pastor da Luz – 1.99€">Pack Brissos – O Pastor da Luz – 1.99€ 🔥 PROMO</option>
-            <option value="Pack de Cartas Amoriel – 4.99€">Pack de Cartas Amoriel – 4.99€</option>
-            <option value="Pack de Cartas Aqualis – 4.99€">Pack de Cartas Aqualis – 4.99€</option>
-            <option value="Manual de Regras WoR – 0.50€">Manual de Regras WoR – 0.50€</option>
-            <option value="Garrafa Amoriel – 34.99€">Garrafa Amoriel – 34.99€</option>
-            <option value="Garrafa Aqualis – 29.99€">Garrafa Aqualis – 29.99€</option>
           </select>
         </div>
         <div class="form-group">
@@ -644,12 +588,12 @@
           <input type="number" id="o_quantidade" min="1" max="99" value="1" required/>
         </div>
         <div class="form-group">
-          <label>Tamanho / Cor</label>
-          <input type="text" id="o_variante" placeholder="Ex: Preto, L, Vermelho..."/>
-        </div>
-        <div class="form-group full">
-          <label>Morada Completa <span class="req">*</span></label>
+          <label>Rua e Número da Porta <span class="req">*</span></label>
           <input type="text" id="o_morada" placeholder="Rua das Flores, Nº 123" required/>
+        </div>
+        <div class="form-group">
+          <label>Andar / Apartamento</label>
+          <input type="text" id="o_andar" placeholder="Ex: 3º Esq., Apt. 12 (se aplicável)"/>
         </div>
         <div class="form-group">
           <label>Código Postal <span class="req">*</span></label>
@@ -721,8 +665,8 @@
     <img src="logo.png" alt=""/>
     <span class="footer-logo-text">MANY<span>GAMES</span></span>
   </div>
-        <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html" class="active">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+      <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html" class="active">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
@@ -768,23 +712,30 @@
           </div>
           <div class="form-group">
             <label>Email <span class="req">*</span></label>
-            <input type="email" id="m_email" placeholder="joao@email.com"/>
+            <input type="email" id="m_email" placeholder="joao@email.com" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"/>
+            <small class="field-error">Introduz um email válido</small>
           </div>
           <div class="form-group">
             <label>Telefone</label>
-            <input type="tel" id="m_telefone" placeholder="912 345 678"/>
+            <div class="phone-row">
+              <div class="phone-country" id="m_phone_country" data-input="m_telefone">
+                <span class="flag">🇵🇹</span><span class="ddi">+351</span><span class="arrow">▼</span>
+                <div class="phone-country-list" id="m_phone_list"></div>
+              </div>
+              <input type="tel" id="m_telefone" class="phone-number-input" placeholder="912 345 678" inputmode="numeric" maxlength="9"/>
+            </div>
           </div>
           <div class="form-group">
             <label>Quantidade</label>
             <input type="number" id="m_quantidade" min="1" max="99" value="1"/>
           </div>
-          <div class="form-group full">
-            <label>Tamanho / Cor</label>
-            <input type="text" id="m_variante" placeholder="Ex: Preto, L..."/>
-          </div>
-          <div class="form-group full">
-            <label>Morada <span class="req">*</span></label>
+          <div class="form-group">
+            <label>Rua e Número da Porta <span class="req">*</span></label>
             <input type="text" id="m_morada" placeholder="Rua das Flores, Nº 123"/>
+          </div>
+          <div class="form-group">
+            <label>Andar / Apartamento</label>
+            <input type="text" id="m_andar" placeholder="Ex: 3º Esq., Apt. 12"/>
           </div>
           <div class="form-group">
             <label>Código Postal <span class="req">*</span></label>
@@ -811,252 +762,493 @@
   </div>
 </div>
 
-<script>
-// ─── PRODUCTS DATA ───────────────────────────────────────────────────────────
-const PRODUCTS = {
-  cadeira1: { name: 'Pack de Cartas Amoriel', price: 4.99, category: 'Cartas / Colecionável' },
-  brissos:  { name: 'Pack Brissos – O Pastor da Luz', price: 1.99, category: 'Cartas / Colecionável' },
-  manual:   { name: 'Manual de Regras – World of Reason', price: 0.50, category: 'Livros / Regras' },
-  amoriel:  { name: 'Garrafa Amoriel', price: 34.99, category: 'Lifestyle / Acessórios' },
-  aqualis:  { name: 'Garrafa Aqualis', price: 29.99, category: 'Lifestyle / Acessórios' }
-};
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+const _fbApp = initializeApp({
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+});
+const _db = getFirestore(_fbApp);
+
+// PRODUCTS loaded from Firebase
+let PRODUCTS = {}; // { _id: { name, price, ... } }
 let currentProduct = null;
 
-// ─── ORDER STORAGE ────────────────────────────────────────────────────────────
-function getOrders() {
-  try { return JSON.parse(localStorage.getItem('mg_orders') || '[]'); } catch { return []; }
+// ─── BADGE STYLE MAP ─────────────────────────────────────────────────────────
+function badgeClass(b) {
+  if (!b) return '';
+  const bUp = b.toUpperCase();
+  if (bUp.includes('BEST')) return 'badge-hot';
+  if (bUp.includes('LIMIT') || bUp.includes('EDIÇÃO')) return 'badge-limited';
+  if (bUp.includes('NOVO') || bUp.includes('NEW')) return 'badge-new';
+  return 'badge-new';
 }
 
-function saveOrder(order) {
-  const orders = getOrders();
-  order.id = String(orders.length + 1).padStart(3, '0');
-  order.data = new Date().toLocaleDateString('pt-PT');
-  order.estado = 'Pendente';
-  orders.push(order);
-  localStorage.setItem('mg_orders', JSON.stringify(orders));
+// ─── LOAD PRODUCTS FROM FIREBASE ─────────────────────────────────────────────
+async function loadProducts() {
+  try {
+    let snap;
+    try {
+      snap = await getDocs(query(collection(_db, 'produtos'), orderBy('timestamp', 'asc')));
+    } catch(e) {
+      console.warn('orderBy timestamp falhou, a carregar sem ordenação:', e);
+      snap = await getDocs(collection(_db, 'produtos'));
+    }
+    const prods = snap.docs.map(d => ({ _id: d.id, ...d.data() })).filter(p => p.ativo !== false);
+
+    // Build PRODUCTS lookup by _id
+    PRODUCTS = {};
+    prods.forEach(p => { PRODUCTS[p._id] = p; });
+
+    renderProductGrid(prods);
+    renderProductSelect(prods);
+    try { renderDestaqueHero(prods); } catch(e) { console.error('Erro destaque hero:', e); }
+    try { renderNavDeal(prods); } catch(e) { console.error('Erro nav deal:', e); }
+  } catch(e) {
+    console.error('Erro ao carregar produtos:', e);
+    document.getElementById('products-grid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);">Erro ao carregar produtos. Tenta novamente.</div>';
+  }
+}
+
+function renderProductGrid(prods) {
+  const grid = document.getElementById('products-grid');
+  if (!prods.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);">Em breve novos produtos!</div>';
+    return;
+  }
+  grid.innerHTML = prods.map(p => {
+    try {
+      const imgHtml = p.imagem
+        ? `<img src="${esc(p.imagem)}" alt="${esc(p.nome)}" class="product-img" loading="lazy"/>`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🎮</div>`;
+      const badgeHtml = p.badge ? `<span class="product-badge ${badgeClass(p.badge)}">${esc(p.badge)}</span>` : '';
+      const precoBase = parseFloat(p.preco) || 0;
+      const desconto = parseInt(p.desconto) || 0;
+      const preco = desconto > 0 ? (parseFloat(p.precoFinal) || precoBase) : precoBase;
+      const precoHtml = desconto > 0
+        ? `<div class="product-price" style="display:flex;align-items:baseline;gap:8px;">
+             <span style="font-size:1.5rem;color:var(--accent2);">${preco.toFixed(2)}<span style="font-size:0.8rem;">€</span></span>
+             <span style="text-decoration:line-through;color:var(--muted);font-size:0.9rem;">${precoBase.toFixed(2)}€</span>
+             <span style="font-size:0.75rem;color:var(--accent);font-weight:700;">-${desconto}%</span>
+           </div>`
+        : `<div class="product-price">${String(preco.toFixed(2)).split('.')[0]}<span>.${String(preco.toFixed(2)).split('.')[1]}€</span></div>`;
+      return `
+      <div class="product-card reveal" onclick="openModal('${p._id}')">
+        ${badgeHtml}
+        <div class="product-img-wrapper">${imgHtml}</div>
+        <div class="product-info">
+          <div class="product-category">${esc(p.categoria||'')}</div>
+          <div class="product-name">${esc(p.nome||'Produto')}</div>
+          ${p.desc ? `<p class="product-desc">${esc(p.desc)}</p>` : ''}
+          <div class="product-footer">
+            ${precoHtml}
+            <button class="btn-cart" onclick="event.stopPropagation(); openModal('${p._id}')">🛒 Comprar</button>
+          </div>
+        </div>
+      </div>`;
+    } catch(err) {
+      console.error('Erro ao renderizar produto', p, err);
+      return '';
+    }
+  }).join('');
+  document.querySelectorAll('.reveal').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+}
+
+function renderProductSelect(prods) {
+  const sel = document.getElementById('o_produto');
+  sel.innerHTML = '<option value="">Selecionar produto...</option>' +
+    prods.map(p => {
+      const precoBase = parseFloat(p.preco) || 0;
+      const desconto = parseInt(p.desconto) || 0;
+      const preco = desconto > 0 ? (parseFloat(p.precoFinal) || precoBase) : precoBase;
+      return `<option value="${esc(p.nome||'')} - ${preco.toFixed(2)}EUR">${esc(p.nome||'')} - ${preco.toFixed(2)}€</option>`;
+    }).join('');
+}
+
+function renderDestaqueHero(prods) {
+  const destaque = prods.find(p => p.destaque === true || p.destaque === 'true');
+  if (!destaque) return;
+  const wrap = document.getElementById('hero-destaque');
+  if (!wrap) return;
+  const precoBase = parseFloat(destaque.preco) || 0;
+  const desconto = parseInt(destaque.desconto) || 0;
+  const preco = desconto > 0 ? (parseFloat(destaque.precoFinal) || precoBase) : precoBase;
+  const imgEl = document.getElementById('hero-dest-img');
+  imgEl.src = destaque.imagem || '';
+  imgEl.alt = destaque.nome || '';
+  imgEl.onclick = function() { openModal(destaque._id); };
+  imgEl.style.cursor = 'pointer';
+  if (destaque.badge) {
+    const b = document.getElementById('hero-dest-badge');
+    b.textContent = destaque.badge; b.style.display = '';
+  }
+  document.getElementById('hero-dest-nome').textContent = destaque.nome || '';
+  document.getElementById('hero-dest-cat').textContent  = destaque.categoria || '';
+  document.getElementById('hero-dest-preco').textContent = preco.toFixed(2) + '€';
+  document.getElementById('hero-dest-btn').onclick = function() { openModal(destaque._id); };
+  wrap.style.display = 'block';
+}
+
+function renderNavDeal(prods) {
+  const destaque = prods.find(p => p.destaque === true || p.destaque === 'true');
+  if (!destaque) return;
+  const precoBase = parseFloat(destaque.preco) || 0;
+  const desconto = parseInt(destaque.desconto) || 0;
+  const preco = desconto > 0 ? (parseFloat(destaque.precoFinal) || precoBase) : precoBase;
+  const navEl = document.getElementById('nav-deal-destaque');
+  if (!navEl) return;
+  navEl.onclick = function(e) { e.preventDefault(); openModal(destaque._id); };
+  document.getElementById('nav-deal-img').src = destaque.imagem || '';
+  document.getElementById('nav-deal-nome').textContent = destaque.nome || '';
+  document.getElementById('nav-deal-new').textContent = preco.toFixed(2) + '€';
+  if (desconto > 0) {
+    const old = document.getElementById('nav-deal-old');
+    old.textContent = precoBase.toFixed(2) + '€';
+    old.style.display = '';
+    const badge = document.getElementById('nav-deal-badge');
+    badge.textContent = '-' + desconto + '%';
+    badge.style.display = '';
+  }
+  navEl.style.display = 'flex';
+}
+
+// FIREBASE SAVE ORDER
+async function saveOrder(order) {
+  order.data   = new Date().toLocaleDateString("pt-PT");
+  order.estado = "Pendente";
+  try {
+    await addDoc(collection(_db, "encomendas"), Object.assign({}, order, { timestamp: serverTimestamp() }));
+  } catch(e) {
+    console.error("Erro Firebase:", e);
+  }
   appendCSVRow(order);
-  updateExportBtn();
 }
 
 function appendCSVRow(order) {
-  const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
-  const row = [
-    order.id, order.data,
-    esc(order.nome), esc(order.email), esc(order.telefone),
-    esc(order.produto), order.quantidade, esc(order.variante),
-    esc(order.morada), esc(order.cp), esc(order.cidade),
-    esc(order.msg), order.total, order.estado
-  ].join(',');
-  let csv = sessionStorage.getItem('mg_csv') ||
-    'ID,Data,Nome,Email,Telefone,Produto,Quantidade,Tamanho/Cor,Morada,Código Postal,Cidade,Mensagem,Total (€),Estado\n';
-  csv += row + '\n';
-  sessionStorage.setItem('mg_csv', csv);
+  var q = function(v) { return '"' + String(v||"").replace(/"/g, '""') + '"'; };
+  var row = [
+    order.data, q(order.nome), q(order.email), q(order.telefone),
+    q(order.produto), order.quantidade,
+    q(order.morada), q(order.cp), q(order.cidade),
+    q(order.msg), order.total, order.estado
+  ].join(",");
+  var csv = sessionStorage.getItem("mg_csv") || "Data,Nome,Email,Telefone,Produto,Qtd,Morada,CP,Cidade,Mensagem,Total,Estado\n";
+  csv += row + "\n";
+  sessionStorage.setItem("mg_csv", csv);
 }
 
-function updateExportBtn() {
-  const orders = getOrders();
-  const btn = document.getElementById('exportBtn');
-  const cnt = document.getElementById('orderCount');
-  if (orders.length > 0) {
-    btn.style.display = 'flex';
-    cnt.textContent = orders.length + ' encomenda(s)';
-  }
-}
-
-// ─── MODAL ────────────────────────────────────────────────────────────────────
+// MODAL
 function openModal(productKey) {
   currentProduct = productKey;
-  const p = PRODUCTS[productKey];
-  document.getElementById('modalTitle').textContent = 'ENCOMENDAR';
-  document.getElementById('modalProduct').textContent = `${p.name} · ${p.price.toFixed(2)}€`;
-  document.getElementById('modalFormFields').style.display = 'block';
-  document.getElementById('modalSuccess').style.display = 'none';
-  // Pre-fill product in main form too
-  document.getElementById('o_produto').value = `${p.name} – ${p.price.toFixed(2)}€`;
+  var p = PRODUCTS[productKey];
+  if (!p) return;
+  var precoBase = parseFloat(p.preco) || 0;
+  var desconto = parseInt(p.desconto) || 0;
+  var preco = desconto > 0 ? (parseFloat(p.precoFinal) || precoBase) : precoBase;
+  document.getElementById("modalTitle").textContent = "ENCOMENDAR";
+  document.getElementById("modalProduct").textContent = p.nome + " - " + preco.toFixed(2) + "EUR";
+  document.getElementById("modalFormFields").style.display = "block";
+  document.getElementById("modalSuccess").style.display = "none";
+  document.getElementById("o_produto").value = p.nome + " - " + preco.toFixed(2) + "EUR";
   updateSummary();
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.getElementById("modalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
 }
 
 function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
+  document.getElementById("modalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
   currentProduct = null;
 }
 
-function submitModal() {
-  const nome = document.getElementById('m_nome').value.trim();
-  const email = document.getElementById('m_email').value.trim();
-  const morada = document.getElementById('m_morada').value.trim();
-  const cp = document.getElementById('m_cp').value.trim();
-  const cidade = document.getElementById('m_cidade').value.trim();
-
+async function submitModal() {
+  var nome   = document.getElementById("m_nome").value.trim();
+  var email  = document.getElementById("m_email").value.trim();
+  var morada = document.getElementById("m_morada").value.trim();
+  var andar  = document.getElementById("m_andar").value.trim();
+  var cp     = document.getElementById("m_cp").value.trim();
+  var cidade = document.getElementById("m_cidade").value.trim();
   if (!nome || !email || !morada || !cp || !cidade) {
-    flashRequired(['m_nome','m_email','m_morada','m_cp','m_cidade']);
-    return;
+    flashRequired(["m_nome","m_email","m_morada","m_cp","m_cidade"]); return;
   }
-
-  const p = PRODUCTS[currentProduct];
-  const qty = parseInt(document.getElementById('m_quantidade').value) || 1;
-
-  saveOrder({
-    nome, email,
-    telefone: document.getElementById('m_telefone').value.trim(),
-    produto: p.name,
-    quantidade: qty,
-    variante: document.getElementById('m_variante').value.trim(),
-    morada,
-    cp, cidade,
-    msg: document.getElementById('m_msg').value.trim(),
-    total: (p.price * qty).toFixed(2)
+  if (!validateEmailField('m_email')) { document.getElementById('m_email').focus(); return; }
+  var telRaw = document.getElementById("m_telefone").value.trim();
+  if (telRaw && !validatePhoneField('m_telefone')) { document.getElementById('m_telefone').focus(); return; }
+  var p    = PRODUCTS[currentProduct];
+  var precoBase = parseFloat(p.preco) || 0;
+  var desconto = parseInt(p.desconto) || 0;
+  var preco = desconto > 0 ? (parseFloat(p.precoFinal) || precoBase) : precoBase;
+  var qty  = parseInt(document.getElementById("m_quantidade").value) || 1;
+  var btn  = document.getElementById("m_submit");
+  if (btn) { btn.textContent = "A guardar..."; btn.disabled = true; }
+  var moradaCompleta = morada + (andar ? ", " + andar : "");
+  var telefoneCompleto = telRaw ? (getPhoneDDI('m_phone_country') + " " + telRaw) : "";
+  await saveOrder({
+    nome: nome, email: email,
+    telefone: telefoneCompleto,
+    produto: p.nome, quantidade: qty,
+    morada: moradaCompleta, cp: cp, cidade: cidade,
+    msg: document.getElementById("m_msg").value.trim(),
+    total: (preco * qty).toFixed(2)
   });
-
-  document.getElementById('modalFormFields').style.display = 'none';
-  document.getElementById('modalSuccess').style.display = 'block';
-  showToast('✓ ENCOMENDA GUARDADA!');
+  if (btn) { btn.textContent = "Confirmar Encomenda"; btn.disabled = false; }
+  document.getElementById("modalFormFields").style.display = "none";
+  document.getElementById("modalSuccess").style.display = "block";
+  showToast("ENCOMENDA REGISTADA!");
 }
 
-// ─── MAIN ORDER FORM ─────────────────────────────────────────────────────────
+// MAIN ORDER FORM
 function updateSummary() {
-  const sel = document.getElementById('o_produto').value;
-  const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
-  const prodSummary = document.getElementById('summary_product');
-  const totalSummary = document.getElementById('summary_total');
-
-  if (!sel) { prodSummary.textContent = '—'; totalSummary.textContent = '0.00€'; return; }
-
-  // Extract price from option label
-  const match = sel.match(/(\d+\.\d+)€/);
-  const price = match ? parseFloat(match[1]) : 0;
-  const total = price * qty;
-  prodSummary.textContent = sel.split(' – ')[0];
-  totalSummary.textContent = total.toFixed(2) + '€';
+  var sel = document.getElementById("o_produto").value;
+  var qty = parseInt(document.getElementById("o_quantidade").value) || 1;
+  var prodSummary  = document.getElementById("summary_product");
+  var totalSummary = document.getElementById("summary_total");
+  if (!sel) { prodSummary.textContent = "-"; totalSummary.textContent = "0.00EUR"; return; }
+  var match = sel.match(/(\d+\.\d+)/);
+  var price = match ? parseFloat(match[1]) : 0;
+  prodSummary.textContent  = sel.split(" - ")[0];
+  totalSummary.textContent = (price * qty).toFixed(2) + "EUR";
 }
 
-document.getElementById('o_produto').addEventListener('change', updateSummary);
-document.getElementById('o_quantidade').addEventListener('input', updateSummary);
+document.getElementById("o_produto").addEventListener("change", updateSummary);
+document.getElementById("o_quantidade").addEventListener("input", updateSummary);
 
-function submitOrder() {
-  const nome = document.getElementById('o_nome').value.trim();
-  const email = document.getElementById('o_email').value.trim();
-  const produto = document.getElementById('o_produto').value;
-  const morada = document.getElementById('o_morada').value.trim();
-  const cp = document.getElementById('o_cp').value.trim();
-  const cidade = document.getElementById('o_cidade').value.trim();
-  const telefone = document.getElementById('o_telefone').value.trim();
-
+async function submitOrder() {
+  var nome     = document.getElementById("o_nome").value.trim();
+  var email    = document.getElementById("o_email").value.trim();
+  var produto  = document.getElementById("o_produto").value;
+  var morada   = document.getElementById("o_morada").value.trim();
+  var andar    = document.getElementById("o_andar").value.trim();
+  var cp       = document.getElementById("o_cp").value.trim();
+  var cidade   = document.getElementById("o_cidade").value.trim();
+  var telefone = document.getElementById("o_telefone").value.trim();
   if (!nome || !email || !telefone || !produto || !morada || !cp || !cidade) {
-    flashRequired(['o_nome','o_email','o_telefone','o_produto','o_morada','o_cp','o_cidade']);
-    return;
+    flashRequired(["o_nome","o_email","o_telefone","o_produto","o_morada","o_cp","o_cidade"]); return;
   }
-
-  const qty = parseInt(document.getElementById('o_quantidade').value) || 1;
-  const match = produto.match(/(\d+\.\d+)€/);
-  const price = match ? parseFloat(match[1]) : 0;
-
-  saveOrder({
-    nome, email, telefone,
-    produto: produto.split(' – ')[0],
-    quantidade: qty,
-    variante: document.getElementById('o_variante').value.trim(),
-    morada, cp, cidade,
-    msg: document.getElementById('o_msg').value.trim(),
+  if (!validateEmailField('o_email')) { document.getElementById('o_email').focus(); return; }
+  if (!validatePhoneField('o_telefone')) { document.getElementById('o_telefone').focus(); return; }
+  var qty   = parseInt(document.getElementById("o_quantidade").value) || 1;
+  var match = produto.match(/(\d+\.\d+)/);
+  var price = match ? parseFloat(match[1]) : 0;
+  var btn   = document.querySelector("button[onclick=\"submitOrder()\"]");
+  if (btn) { btn.textContent = "A guardar..."; btn.disabled = true; }
+  var moradaCompleta = morada + (andar ? ", " + andar : "");
+  var telefoneCompleto = getPhoneDDI('o_phone_country') + " " + telefone;
+  await saveOrder({
+    nome: nome, email: email, telefone: telefoneCompleto,
+    produto: produto.split(" - ")[0], quantidade: qty,
+    morada: moradaCompleta, cp: cp, cidade: cidade,
+    msg: document.getElementById("o_msg").value.trim(),
     total: (price * qty).toFixed(2)
   });
-
-  document.getElementById('orderFormFields').style.display = 'none';
-  document.getElementById('orderSuccess').style.display = 'block';
-  showToast('✓ ENCOMENDA REGISTADA!');
+  if (btn) { btn.textContent = "Confirmar Encomenda"; btn.disabled = false; }
+  document.getElementById("orderFormFields").style.display = "none";
+  document.getElementById("orderSuccess").style.display = "block";
+  showToast("ENCOMENDA REGISTADA!");
 }
 
 function resetOrder() {
-  document.getElementById('orderFormFields').style.display = 'block';
-  document.getElementById('orderSuccess').style.display = 'none';
-  ['o_nome','o_email','o_telefone','o_morada','o_cp','o_cidade','o_variante','o_msg'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('o_produto').value = '';
-  document.getElementById('o_quantidade').value = '1';
+  document.getElementById("orderFormFields").style.display = "block";
+  document.getElementById("orderSuccess").style.display = "none";
+  ["o_nome","o_email","o_telefone","o_morada","o_andar","o_cp","o_cidade","o_msg"].forEach(function(id) {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("o_produto").value    = "";
+  document.getElementById("o_quantidade").value = "1";
   updateSummary();
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
+// HELPERS
 function flashRequired(ids) {
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      el.style.borderColor = 'var(--accent)';
-      el.style.background = 'rgba(230,57,70,0.08)';
-      el.addEventListener('input', () => {
-        el.style.borderColor = '';
-        el.style.background = '';
-      }, { once: true });
-    }
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el || el.value.trim()) return;
+    el.style.borderColor = "var(--accent)";
+    el.style.background  = "rgba(230,57,70,0.08)";
+    el.addEventListener("input", function() { el.style.borderColor = ""; el.style.background = ""; }, { once: true });
   });
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 3000);
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  setTimeout(function() { t.style.display = "none"; }, 3000);
 }
 
-// ─── EXPORT CSV ──────────────────────────────────────────────────────────────
 function exportCSV() {
-  const csv = sessionStorage.getItem('mg_csv');
-  if (!csv) { alert('Sem encomendas nesta sessão ainda.'); return; }
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'encomendas_manygames.csv';
-  a.click();
+  var csv = sessionStorage.getItem("mg_csv");
+  if (!csv) { alert("Sem encomendas nesta sessao ainda."); return; }
+  var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "encomendas_manygames.csv"; a.click();
 }
 
-// ─── REVEAL ON SCROLL ─────────────────────────────────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 80);
-      obs.unobserve(e.target);
-    }
+function subscribeNewsletter() {
+  var email = document.getElementById("nl_email").value.trim();
+  if (!isValidEmail(email)) {
+    var inp = document.getElementById("nl_email");
+    inp.style.borderColor = "var(--accent)"; inp.focus();
+    setTimeout(function() { inp.style.borderColor = ""; }, 1500); return;
+  }
+  var subs = JSON.parse(localStorage.getItem("mg_newsletter") || "[]");
+  if (!subs.includes(email)) { subs.push(email); localStorage.setItem("mg_newsletter", JSON.stringify(subs)); }
+  document.getElementById("nlForm").style.display = "none";
+  document.getElementById("nlSuccess").style.display = "block";
+  showToast("SUBSCRITO COM SUCESSO!");
+}
+
+// REVEAL ON SCROLL
+var revealEls = document.querySelectorAll(".reveal");
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e, i) {
+    if (e.isIntersecting) { setTimeout(function() { e.target.classList.add("visible"); }, i * 80); obs.unobserve(e.target); }
   });
 }, { threshold: 0.1 });
-revealEls.forEach(el => obs.observe(el));
+revealEls.forEach(function(el) { obs.observe(el); });
 
-// Restore export button state on load
-updateExportBtn();
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const id = a.getAttribute('href').slice(1);
-    const el = document.getElementById(id);
-    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener("click", function(e) {
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth" }); }
   });
 });
 
-// ─── NEWSLETTER ──────────────────────────────────────────────────────────────
-function subscribeNewsletter() {
-  const email = document.getElementById('nl_email').value.trim();
-  if (!email || !email.includes('@')) {
-    const inp = document.getElementById('nl_email');
-    inp.style.borderColor = 'var(--accent)';
-    inp.focus();
-    setTimeout(() => inp.style.borderColor = '', 1500);
-    return;
-  }
-  // Save to localStorage
-  const subs = JSON.parse(localStorage.getItem('mg_newsletter') || '[]');
-  if (!subs.includes(email)) { subs.push(email); localStorage.setItem('mg_newsletter', JSON.stringify(subs)); }
-  // Append to CSV
-  let csv = sessionStorage.getItem('mg_nl_csv') || 'Email,Data\n';
-  csv += email + ',' + new Date().toLocaleDateString('pt-PT') + '\n';
-  sessionStorage.setItem('mg_nl_csv', csv);
-  document.getElementById('nlForm').style.display = 'none';
-  document.getElementById('nlSuccess').style.display = 'block';
-  showToast('✓ SUBSCRITO COM SUCESSO!');
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── COUNTRY PHONE CODES ──────────────────────────────────────────────────
+var COUNTRIES = [
+  { flag: "🇵🇹", name: "Portugal", ddi: "+351" },
+  { flag: "🇪🇸", name: "Espanha", ddi: "+34" },
+  { flag: "🇫🇷", name: "França", ddi: "+33" },
+  { flag: "🇩🇪", name: "Alemanha", ddi: "+49" },
+  { flag: "🇬🇧", name: "Reino Unido", ddi: "+44" },
+  { flag: "🇮🇹", name: "Itália", ddi: "+39" },
+  { flag: "🇳🇱", name: "Países Baixos", ddi: "+31" },
+  { flag: "🇧🇪", name: "Bélgica", ddi: "+32" },
+  { flag: "🇨🇭", name: "Suíça", ddi: "+41" },
+  { flag: "🇮🇪", name: "Irlanda", ddi: "+353" },
+  { flag: "🇱🇺", name: "Luxemburgo", ddi: "+352" },
+  { flag: "🇧🇷", name: "Brasil", ddi: "+55" },
+  { flag: "🇺🇸", name: "Estados Unidos", ddi: "+1" },
+  { flag: "🇨🇦", name: "Canadá", ddi: "+1" },
+  { flag: "🇦🇴", name: "Angola", ddi: "+244" },
+  { flag: "🇲🇿", name: "Moçambique", ddi: "+258" },
+  { flag: "🇨🇻", name: "Cabo Verde", ddi: "+238" }
+];
+
+function setupPhoneSelector(countryId, listId, inputId) {
+  var countryEl = document.getElementById(countryId);
+  var listEl    = document.getElementById(listId);
+  var inputEl   = document.getElementById(inputId);
+  if (!countryEl || !listEl || !inputEl) return;
+
+  listEl.innerHTML = COUNTRIES.map(function(c) {
+    return '<div class="phone-country-item" data-ddi="' + c.ddi + '" data-flag="' + c.flag + '">' +
+      '<span>' + c.flag + '</span><span>' + c.name + '</span><span class="ddi">' + c.ddi + '</span></div>';
+  }).join('');
+
+  countryEl.addEventListener('click', function(e) {
+    if (e.target.closest('.phone-country-item')) return;
+    document.querySelectorAll('.phone-country-list.open').forEach(function(l) {
+      if (l !== listEl) l.classList.remove('open');
+    });
+    listEl.classList.toggle('open');
+  });
+
+  listEl.querySelectorAll('.phone-country-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var flagSpan = countryEl.querySelector('.flag');
+      var ddiSpan  = countryEl.querySelector('.ddi');
+      flagSpan.textContent = item.getAttribute('data-flag');
+      ddiSpan.textContent  = item.getAttribute('data-ddi');
+      listEl.classList.remove('open');
+      inputEl.focus();
+    });
+  });
+
+  // only digits allowed
+  inputEl.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!countryEl.contains(e.target)) listEl.classList.remove('open');
+  });
 }
+
+function getPhoneDDI(countryId) {
+  var el = document.getElementById(countryId);
+  if (!el) return '+351';
+  var span = el.querySelector('.ddi');
+  return span ? span.textContent : '+351';
+}
+
+setupPhoneSelector('o_phone_country', 'o_phone_list', 'o_telefone');
+setupPhoneSelector('m_phone_country', 'm_phone_list', 'm_telefone');
+
+// ─── VALIDATION HELPERS ───────────────────────────────────────────────────
+function isValidEmail(email) {
+  return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+
+function markFieldError(inputId, hasError) {
+  var el = document.getElementById(inputId);
+  if (!el) return;
+  var group = el.closest('.form-group');
+  if (!group) return;
+  group.classList.toggle('has-error', hasError);
+}
+
+function validateEmailField(inputId) {
+  var el = document.getElementById(inputId);
+  if (!el) return true;
+  var val = el.value.trim();
+  if (!val) { markFieldError(inputId, false); return true; }
+  var ok = isValidEmail(val);
+  markFieldError(inputId, !ok);
+  return ok;
+}
+
+function validatePhoneField(inputId) {
+  var el = document.getElementById(inputId);
+  if (!el) return true;
+  var val = el.value.trim();
+  if (!val) { markFieldError(inputId, false); return true; }
+  var ok = val.length >= 9;
+  markFieldError(inputId, !ok);
+  return ok;
+}
+
+['o_email','m_email'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('blur', function() { validateEmailField(id); });
+});
+['o_telefone','m_telefone'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('blur', function() { validatePhoneField(id); });
+});
+
+// Load products on page start
+loadProducts();
+
+// EXPOSE TO GLOBAL
+window.openModal           = openModal;
+window.closeModal          = closeModal;
+window.submitModal         = submitModal;
+window.submitOrder         = submitOrder;
+window.resetOrder          = resetOrder;
+window.exportCSV           = exportCSV;
+window.subscribeNewsletter = subscribeNewsletter;
+window.updateSummary       = updateSummary;
 </script>
 <script src="shared.js"></script>
 </body>

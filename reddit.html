@@ -5,7 +5,6 @@
   <title>ManyGames – Reddit r/manygames</title>
   <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
-    .rd-layout { max-width: 1100px; margin: 0 auto; padding: 88px 5vw 40px; display: grid; grid-template-columns: 1fr 312px; gap: 24px; }
     .rd-banner { height: 130px; background: linear-gradient(135deg, #8b0000, #e63946, #ff9f1c); margin-top: 68px; }
     .rd-sub-header { background: var(--panel); border-bottom: 1px solid var(--border-dim); padding: 0 5vw; }
     .rd-sub-profile { display: flex; align-items: center; gap: 16px; padding: 16px 0; flex-wrap: wrap; }
@@ -19,6 +18,8 @@
     .rd-tab { padding: 12px 20px; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
     .rd-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
+    .rd-layout { max-width: 1100px; margin: 0 auto; padding: 24px 5vw 40px; display: grid; grid-template-columns: 1fr 312px; gap: 24px; }
+
     .rd-post { background: var(--panel); border: 1px solid var(--border-dim); margin-bottom: 12px; display: flex; transition: border-color .2s; }
     .rd-post:hover { border-color: var(--border); }
     .rd-vote { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 10px; background: rgba(255,255,255,0.02); min-width: 52px; }
@@ -30,8 +31,9 @@
     .rd-post-meta span { color: var(--accent); }
     .rd-post-title { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 8px; cursor: pointer; }
     .rd-post-title:hover { color: var(--accent); }
-    .rd-post-flair { display: inline-block; font-size: 0.68rem; padding: 2px 8px; border-radius: 2px; font-family: 'Share Tech Mono',monospace; letter-spacing: 1px; margin-bottom: 6px; }
-    .rd-post-img { width: 100%; margin-bottom: 10px; overflow: hidden; }
+    .rd-post-title a { color: inherit; text-decoration: none; }
+    .rd-post-flair { display: inline-block; font-size: 0.68rem; padding: 2px 8px; border-radius: 2px; font-family: 'Share Tech Mono',monospace; letter-spacing: 1px; margin-bottom: 6px; background: rgba(230,57,70,0.15); color: var(--accent); }
+    .rd-post-img { width: 100%; margin-bottom: 10px; overflow: hidden; max-height: 320px; object-fit: cover; display: block; }
     .rd-post-text { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 10px; max-height: 80px; overflow: hidden; }
     .rd-post-actions { display: flex; gap: 12px; }
     .rd-post-action { font-size: 0.75rem; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 2px; font-family: 'Share Tech Mono',monospace; }
@@ -43,6 +45,7 @@
     .rd-rule { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-dim); font-size: 0.85rem; color: var(--muted); }
     .rd-rule:last-child { border-bottom: none; }
     .rd-rule-num { font-family: 'Share Tech Mono', monospace; color: var(--accent); flex-shrink: 0; }
+    .rd-empty { text-align:center; padding:60px 20px; color:var(--muted); }
     @media(max-width:800px){ .rd-layout{grid-template-columns:1fr;} }
   </style>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
@@ -51,14 +54,13 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-        <ul class="nav-links">
-    <li><a href="index.html" class="active">Início</a></li>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
@@ -73,6 +75,7 @@
       <div class="rd-sub-name">r/manygames</div>
       <div class="rd-sub-handle">A comunidade oficial da ManyGames</div>
     </div>
+    <div id="rd-member-count" style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--muted);"></div>
     <button class="rd-join-btn" id="rd-join" onclick="rdJoin(this)">+ Aderir</button>
   </div>
   <div class="rd-tabs">
@@ -84,136 +87,37 @@
 </div>
 
 <div class="rd-layout">
-  <!-- POSTS -->
-  <div>
-    <!-- Pinned post -->
-    <div class="rd-post rd-pinned reveal">
-      <div class="rd-vote">
-        <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
-        <div class="rd-vote-num">12.4k</div>
-        <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
-      </div>
-      <div class="rd-post-body">
-        <div class="rd-post-meta">📌 Fixado · Publicado por <span>u/ManyGames_Official</span> · há 2 horas</div>
-        <div class="rd-post-flair" style="background:rgba(230,57,70,0.2);color:var(--accent);">📢 ANÚNCIO OFICIAL</div>
-        <div class="rd-post-title">🎮 SEASON 5 CONFIRMADA — Tudo o que sabemos até agora</div>
-        <div class="rd-post-text">Olá comunidade! A equipa da ManyGames tem muito gosto em confirmar que a Season 5 do Kill of Reason está em desenvolvimento e chegará em breve. Aqui fica um resumo das novidades confirmadas: 3 novos heróis, novo mapa "Vulcão das Ruínas", ranked renovado e muito mais...</div>
-        <div class="rd-post-actions">
-          <div class="rd-post-action">💬 1.8K comentários</div>
-          <div class="rd-post-action">🔗 Partilhar</div>
-          <div class="rd-post-action">⭐ Guardar</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rd-post reveal">
-      <div class="rd-vote">
-        <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
-        <div class="rd-vote-num">8.7k</div>
-        <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
-      </div>
-      <div class="rd-post-body">
-        <div class="rd-post-meta">Publicado por <span>u/DragonSlayer_PT</span> · há 5 horas</div>
-        <div class="rd-post-flair" style="background:rgba(255,159,28,0.15);color:var(--accent2);">🏆 E-SPORTS</div>
-        <div class="rd-post-title">A equipa portuguesa chegou à final do KoR World Championship! Alguém vai ver?</div>
-        <div class="rd-post-text">Não consigo acreditar! Depois de anos a sonhar com isto, finalmente temos representação portuguesa na grande final. Vai ser no DreamHack no próximo mês. Quem vai acompanhar?</div>
-        <div class="rd-post-actions">
-          <div class="rd-post-action">💬 432 comentários</div>
-          <div class="rd-post-action">🔗 Partilhar</div>
-          <div class="rd-post-action">⭐ Guardar</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rd-post reveal">
-      <div class="rd-vote">
-        <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
-        <div class="rd-vote-num">5.2k</div>
-        <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
-      </div>
-      <div class="rd-post-body">
-        <div class="rd-post-meta">Publicado por <span>u/KoR_Fan_2015</span> · há 12 horas</div>
-        <div class="rd-post-flair" style="background:rgba(255,255,255,0.06);color:#fff;">💬 DISCUSSÃO</div>
-        <div class="rd-post-title">Qual é o vosso herói favorito do KoR e porquê? (Thread semanal)</div>
-        <div class="rd-post-text">Toda a semana pergunto isto e adoro as respostas. Pessoalmente continuo com o Shadowblade desde Season 1. É o herói mais difícil de dominar mas quando acerta é absolutamente letal...</div>
-        <div class="rd-post-actions">
-          <div class="rd-post-action">💬 671 comentários</div>
-          <div class="rd-post-action">🔗 Partilhar</div>
-          <div class="rd-post-action">⭐ Guardar</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rd-post reveal">
-      <div class="rd-vote">
-        <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
-        <div class="rd-vote-num">3.9k</div>
-        <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
-      </div>
-      <div class="rd-post-body">
-        <div class="rd-post-meta">Publicado por <span>u/ManyGames_Official</span> · há 1 dia</div>
-        <div class="rd-post-flair" style="background:rgba(230,57,70,0.2);color:var(--accent);">📢 ANÚNCIO OFICIAL</div>
-        <div class="rd-post-title">Update 5.3 — Patch Notes completas</div>
-        <div class="rd-post-text">47 bugs corrigidos, 8 heróis rebalanceados, novo modo Ranked Solo adicionado, melhorias de performance em todos os mapas. Obrigado ao feedback da comunidade — este update é vosso.</div>
-        <div class="rd-post-actions">
-          <div class="rd-post-action">💬 298 comentários</div>
-          <div class="rd-post-action">🔗 Partilhar</div>
-          <div class="rd-post-action">⭐ Guardar</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rd-post reveal">
-      <div class="rd-vote">
-        <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
-        <div class="rd-vote-num">2.1k</div>
-        <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
-      </div>
-      <div class="rd-post-body">
-        <div class="rd-post-meta">Publicado por <span>u/GamerPortugal99</span> · há 2 dias</div>
-        <div class="rd-post-flair" style="background:rgba(255,255,255,0.06);color:#fff;">🎨 FAN ART</div>
-        <div class="rd-post-title">Fiz uma ilustração do Drakon, o novo herói da Season 5 — o que acham?</div>
-        <div class="rd-post-img" style="height:140px;background:linear-gradient(135deg,#ff9f1c,#e63946);display:flex;align-items:center;justify-content:center;font-size:4rem;">🐉</div>
-        <div class="rd-post-actions">
-          <div class="rd-post-action">💬 187 comentários</div>
-          <div class="rd-post-action">🔗 Partilhar</div>
-          <div class="rd-post-action">⭐ Guardar</div>
-        </div>
-      </div>
-    </div>
+  <!-- POSTS DO FIREBASE -->
+  <div id="rd-feed">
+    <div class="rd-empty">A carregar posts...</div>
   </div>
 
   <!-- SIDEBAR -->
   <div>
     <div class="rd-sidebar-box reveal">
-      <div style="background:linear-gradient(135deg,#e63946,#8b0000);height:60px;margin:-20px -20px 16px;display:flex;align-items:center;justify-content:center;">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;">r/manygames</span>
+      <div class="rd-sidebar-title">📋 Sobre r/manygames</div>
+      <p style="font-size:0.88rem;color:var(--muted);margin-bottom:14px;line-height:1.6;">Comunidade oficial da ManyGames — estúdio de videojogos do Porto que criou o Kill of Reason.</p>
+      <div style="display:flex;gap:24px;margin-bottom:16px;">
+        <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--accent);">248K</div><div style="font-size:0.7rem;color:var(--muted);letter-spacing:1px;">MEMBROS</div></div>
+        <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#00e676;">1.2K</div><div style="font-size:0.7rem;color:var(--muted);letter-spacing:1px;">ONLINE</div></div>
       </div>
-      <div class="rd-sidebar-title">Sobre a Comunidade</div>
-      <p style="font-size:0.88rem;margin-bottom:16px;">A comunidade oficial da ManyGames — notícias, discussões, fan art e tudo sobre o Kill of Reason.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-        <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#fff;">847K</div><div style="font-size:0.72rem;color:var(--muted);">MEMBROS</div></div>
-        <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--accent);">2.4K</div><div style="font-size:0.72rem;color:var(--muted);">ONLINE AGORA</div></div>
-      </div>
-      <button class="rd-join-btn" style="width:100%;margin:0;" id="rd-join2" onclick="rdJoin2(this)">+ Aderir à Comunidade</button>
+      <button onclick="rdJoin(document.getElementById('rd-join'))" style="width:100%;padding:10px;background:var(--accent);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer;">+ Aderir ao Subreddit</button>
     </div>
-
     <div class="rd-sidebar-box reveal">
-      <div class="rd-sidebar-title">Regras</div>
-      <div class="rd-rule"><span class="rd-rule-num">1.</span><span>Sê respeitoso com todos os membros</span></div>
-      <div class="rd-rule"><span class="rd-rule-num">2.</span><span>Sem spam ou autopromoção</span></div>
-      <div class="rd-rule"><span class="rd-rule-num">3.</span><span>Usa as flairs corretas nas publicações</span></div>
-      <div class="rd-rule"><span class="rd-rule-num">4.</span><span>Sem spoilers sem aviso prévio</span></div>
-      <div class="rd-rule"><span class="rd-rule-num">5.</span><span>Conteúdo relacionado com ManyGames/KoR apenas</span></div>
+      <div class="rd-sidebar-title">📌 Regras</div>
+      <div class="rd-rule"><div class="rd-rule-num">1.</div><div>Respeita todos os membros</div></div>
+      <div class="rd-rule"><div class="rd-rule-num">2.</div><div>Sem spoilers sem aviso</div></div>
+      <div class="rd-rule"><div class="rd-rule-num">3.</div><div>Conteúdo relacionado com ManyGames</div></div>
+      <div class="rd-rule"><div class="rd-rule-num">4.</div><div>Sem spam ou publicidade</div></div>
+      <div class="rd-rule"><div class="rd-rule-num">5.</div><div>Usa os flairs corretos</div></div>
     </div>
-
     <div class="rd-sidebar-box reveal">
-      <div class="rd-sidebar-title">Links Úteis</div>
+      <div class="rd-sidebar-title">🔗 Links Úteis</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <a href="jogo.html" style="color:var(--accent);text-decoration:none;font-size:0.88rem;">🎮 Descarregar Kill of Reason</a>
-        <a href="sobre.html" style="color:var(--accent);text-decoration:none;font-size:0.88rem;">🏢 Sobre a ManyGames</a>
-        <a href="rh.html" style="color:var(--accent);text-decoration:none;font-size:0.88rem;">💼 Carreiras</a>
-        <a href="rh.html" style="color:var(--accent);text-decoration:none;font-size:0.88rem;">📧 Suporte</a>
+        <a href="jogo.html" style="color:var(--accent);font-size:0.88rem;text-decoration:none;">🎮 Kill of Reason — Jogar Grátis</a>
+        <a href="sobre.html" style="color:var(--accent);font-size:0.88rem;text-decoration:none;">🏢 Sobre a ManyGames</a>
+        <a href="rh.html" style="color:var(--accent);font-size:0.88rem;text-decoration:none;">💼 Carreiras</a>
+        <a href="contacto.html" style="color:var(--accent);font-size:0.88rem;text-decoration:none;">✉️ Contacto</a>
       </div>
     </div>
     <div style="text-align:center;">
@@ -224,21 +128,87 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-        <nav class="footer-nav">
-    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
 <script src="shared.js"></script>
-<script>
-function vote(btn, dir) {
-  const numEl = btn.parentElement.querySelector('.rd-vote-num');
-  const n = parseFloat(numEl.textContent) * (numEl.textContent.includes('k') ? 1000 : 1);
-  numEl.textContent = dir === 'up' ? ((n+1)/1000).toFixed(1)+'k' : ((n-1)/1000).toFixed(1)+'k';
-  btn.style.color = dir === 'up' ? 'var(--accent)' : '#7193ff';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function loadFeed() {
+  const feed = document.getElementById('rd-feed');
+  try {
+    const snap = await getDocs(query(collection(db, 'reddit'), orderBy('timestamp', 'asc')));
+    const posts = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
+    if (!posts.length) {
+      feed.innerHTML = '<div class="rd-empty">Ainda não há posts. Em breve!</div>';
+      return;
+    }
+    feed.innerHTML = posts.map(p => {
+      const isPinned = p.pinned === true || p.pinned === 'true';
+      const imgHtml = p.img ? `<img class="rd-post-img" src="${esc(p.img)}" alt="post" loading="lazy"/>` : '';
+      const flairHtml = p.flair ? `<div class="rd-post-flair">${esc(p.flair)}</div>` : '';
+      return `
+      <div class="rd-post ${isPinned ? 'rd-pinned' : ''} reveal">
+        <div class="rd-vote">
+          <button class="rd-vote-btn" onclick="vote(this,'up')">▲</button>
+          <div class="rd-vote-num">${esc(p.votos||'0')}</div>
+          <button class="rd-vote-btn" onclick="vote(this,'down')">▼</button>
+        </div>
+        <div class="rd-post-body">
+          <div class="rd-post-meta">${isPinned?'📌 Fixado · ':''}Publicado por <span>${esc(p.autor||'u/ManyGames_Official')}</span> · ${esc(p.tempo||'recentemente')}</div>
+          ${flairHtml}
+          <div class="rd-post-title">${p.url ? `<a href="${esc(p.url)}" target="_blank">${esc(p.titulo)}</a>` : esc(p.titulo)}</div>
+          ${imgHtml}
+          ${p.texto ? `<div class="rd-post-text">${esc(p.texto)}</div>` : ''}
+          <div class="rd-post-actions">
+            <div class="rd-post-action">💬 ${esc(p.comentarios||'0')} comentários</div>
+            <div class="rd-post-action">🔗 Partilhar</div>
+            <div class="rd-post-action">⭐ Guardar</div>
+            ${p.url ? `<a href="${esc(p.url)}" target="_blank" class="rd-post-action" style="color:var(--accent);text-decoration:none;">↗ Ver no Reddit</a>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    document.querySelectorAll('.reveal').forEach(el => setTimeout(() => el.classList.add('visible'), 100));
+  } catch(e) {
+    console.error(e);
+    feed.innerHTML = '<div class="rd-empty">Erro ao carregar posts.</div>';
+  }
 }
-function rdJoin(btn){ btn.textContent = btn.textContent === '+ Aderir' ? '✓ Aderido' : '+ Aderir'; btn.style.background = btn.textContent==='✓ Aderido'?'#2da44e':'var(--accent)'; }
-function rdJoin2(btn){ btn.textContent = btn.textContent.includes('Aderir') ? '✓ Comunidade Aderida' : '+ Aderir à Comunidade'; btn.style.background = btn.textContent.includes('Aderida')?'#2da44e':'var(--accent)'; }
+
+window.vote = function(btn, dir) {
+  const numEl = btn.parentElement.querySelector('.rd-vote-num');
+  const val = numEl.textContent;
+  const num = parseFloat(val.replace('k','')) * (val.includes('k') ? 1000 : 1);
+  const newNum = dir === 'up' ? num + 1 : Math.max(0, num - 1);
+  numEl.textContent = newNum >= 1000 ? (newNum/1000).toFixed(1) + 'k' : String(newNum);
+};
+
+window.rdJoin = function(btn) {
+  const joined = btn.textContent.includes('Aderi');
+  btn.textContent = joined ? '+ Aderir' : '✓ Aderiste';
+  btn.style.background = joined ? 'var(--accent)' : 'rgba(0,230,118,0.2)';
+  btn.style.color = joined ? '#fff' : '#00e676';
+};
+
+loadFeed();
 </script>
 </body>
 </html>

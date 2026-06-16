@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ManyGames – Instagram</title>
-  <link rel="stylesheet" href="shared.css"/>
+  <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
     .ig-wrap { max-width: 940px; margin: 0 auto; padding: 90px 20px 40px; }
     .ig-profile { display: flex; gap: 48px; align-items: center; padding: 32px 0 40px; border-bottom: 1px solid var(--border-dim); flex-wrap: wrap; }
@@ -30,10 +30,9 @@
     .ig-tab { padding: 14px 32px; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); cursor: pointer; border-top: 2px solid transparent; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .ig-tab.active { color: #fff; border-top-color: #fff; }
     .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-    .ig-post {
-      aspect-ratio: 1; position: relative; overflow: hidden; cursor: pointer;
-    }
+    .ig-post { aspect-ratio: 1; position: relative; overflow: hidden; cursor: pointer; }
     .ig-post-bg { width: 100%; height: 100%; background: var(--card); transition: filter .3s; }
+    .ig-post-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .ig-post:hover .ig-post-bg { filter: brightness(0.6); }
     .ig-post-overlay {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -41,28 +40,34 @@
       font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: #fff; font-weight: 700;
     }
     .ig-post:hover .ig-post-overlay { opacity: 1; }
+    .ig-empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); font-size: 0.9rem; }
+    /* MODAL */
     .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center; }
     .modal-backdrop.open { display:flex; }
     .modal-box { background:var(--card); border:1px solid var(--border); max-width:800px; width:95%; display:grid; grid-template-columns:1fr 340px; }
-    .modal-img { aspect-ratio:1; }
+    .modal-img { aspect-ratio:1; overflow:hidden; background:var(--panel); display:flex; align-items:center; justify-content:center; }
+    .modal-img img { width:100%; height:100%; object-fit:cover; display:block; }
     .modal-side { padding:20px; display:flex; flex-direction:column; }
     .modal-side-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border-dim); }
     .modal-caption { font-size:0.9rem; color:var(--text); line-height:1.6; flex:1; }
     .modal-likes { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#fff; margin-top:16px; border-top:1px solid var(--border-dim); padding-top:12px; }
     .modal-close { position:absolute; top:16px; right:16px; font-size:1.5rem; color:#fff; cursor:pointer; z-index:201; background:none; border:none; }
-    .modal-subscribe { display:none; margin-top:14px; }
-    .modal-subscribe a { display:block; text-align:center; background:var(--accent); color:#fff; padding:10px 20px; text-decoration:none; font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:2px; }
     @media(max-width:600px){ .modal-box{grid-template-columns:1fr;} .modal-img{display:none;} }
   </style>
+<style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
   <ul class="nav-links">
-    <li><a href="index.html">Início</a></li><li><a href="sobre.html">Sobre</a></li>
-    <li><a href="jogo.html">Kill of Reason</a></li><li><a href="equipa.html">Equipa</a></li>
-    <li><a href="rh.html">Carreiras</a></li><li><a href="regulamento.html">Regulamento</a></li>
+    <li><a href="index.html">Início</a></li>
+    <li><a href="sobre.html">Sobre</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="equipa.html">Equipa</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="rh.html">Carreiras</a></li>
+    <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
   </ul>
@@ -80,7 +85,7 @@
         <button class="ig-btn secondary">▼</button>
       </div>
       <div class="ig-stats">
-        <div class="ig-stat"><strong>150</strong> <span>publicações</span></div>
+        <div class="ig-stat"><strong id="ig-count">0</strong> <span>publicações</span></div>
         <div class="ig-stat"><strong>2.4M</strong> <span>seguidores</span></div>
         <div class="ig-stat"><strong>312</strong> <span>a seguir</span></div>
       </div>
@@ -100,72 +105,9 @@
     <div class="ig-tab">🏷️ Marcados</div>
   </div>
 
-  <!-- GRID -->
-  <div class="ig-grid">
-    <!-- Post Brissos – Pack Promocional (NOVO) -->
-    <div class="ig-post" onclick="openModal(0)" style="border:2px solid rgba(255,159,28,0.5);">
-      <div class="ig-post-bg" style="background:#0d0a1a;"><img src="amoriel_pack_redes.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 0 &nbsp; 💬 0</div>
-    </div>
-    <!-- Post 0 — Tyler1 x Amoriel -->
-    <div class="ig-post" onclick="openModal(1)">
-      <div class="ig-post-bg" style="background:#1a0010;"><img src="t1_amoriel.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 84K &nbsp; 💬 3.9K</div>
-    </div>
-    <!-- Post 1 — Newsletter -->
-    <div class="ig-post" onclick="openModal(2)">
-      <div class="ig-post-bg" style="background:#0d0d1a;"><img src="newsletter_post1.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 58K &nbsp; 💬 2.3K</div>
-    </div>
-    <!-- Post 2 — Entrada -->
-    <div class="ig-post" onclick="openModal(3)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_entrada.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 42K &nbsp; 💬 1.2K</div>
-    </div>
-    <!-- Post 3 — Season 5 -->
-    <div class="ig-post" onclick="openModal(4)">
-      <div class="ig-post-bg" style="background:linear-gradient(135deg,#1a0005 0%,#e63946 100%);display:flex;align-items:center;justify-content:center;">
-        <div style="text-align:center;"><div style="font-size:3rem;">🎮</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:#fff;">SEASON 5</div></div>
-      </div>
-      <div class="ig-post-overlay">❤️ 38K &nbsp; 💬 987</div>
-    </div>
-    <!-- Post 3 — Diversidade -->
-    <div class="ig-post" onclick="openModal(5)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_diversidade.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 71K &nbsp; 💬 3.1K</div>
-    </div>
-    <!-- Post 4 — Corredor salas -->
-    <div class="ig-post" onclick="openModal(6)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_corredor.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 29K &nbsp; 💬 654</div>
-    </div>
-    <!-- Post 5 — Educação -->
-    <div class="ig-post" onclick="openModal(7)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_educacao.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 15K &nbsp; 💬 892</div>
-    </div>
-    <!-- Post 6 — 8M jogadores -->
-    <div class="ig-post" onclick="openModal(8)">
-      <div class="ig-post-bg" style="background:linear-gradient(135deg,#e63946,#ff9f1c);display:flex;align-items:center;justify-content:center;">
-        <div style="text-align:center;padding:16px;"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;color:#fff;">8 MILHÕES<br>DE JOGADORES</div><div style="font-size:2rem;margin-top:8px;">🎉</div></div>
-      </div>
-      <div class="ig-post-overlay">❤️ 95K &nbsp; 💬 4.8K</div>
-    </div>
-    <!-- Post 7 — Cultura rebelde -->
-    <div class="ig-post" onclick="openModal(9)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_cultura.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 33K &nbsp; 💬 1.1K</div>
-    </div>
-    <!-- Post 8 — Vestuário -->
-    <div class="ig-post" onclick="openModal(10)">
-      <div class="ig-post-bg" style="background:#111;"><img src="img_vestuario.png" style="width:100%;height:100%;object-fit:cover;"/></div>
-      <div class="ig-post-overlay">❤️ 22K &nbsp; 💬 567</div>
-    </div>
-    <!-- Post 9 — Planta -->
-    <div class="ig-post" onclick="openModal(11)">
-      <div class="ig-post-bg" style="background:#fff;"><img src="img_planta.png" style="width:100%;height:100%;object-fit:contain;"/></div>
-      <div class="ig-post-overlay">❤️ 18K &nbsp; 💬 734</div>
-    </div>
+  <!-- GRID (carregado do Firebase) -->
+  <div class="ig-grid" id="ig-grid">
+    <div class="ig-empty">A carregar publicações...</div>
   </div>
 
   <div style="text-align:center;margin-top:40px;">
@@ -185,16 +127,11 @@
       </div>
       <div class="modal-caption" id="modal-caption"></div>
       <div class="modal-likes" id="modal-likes"></div>
-      <div class="modal-subscribe" id="modal-subscribe">
-        <a href="contacto.html">✉️ Inscrever-se na Newsletter</a>
-      </div>
-      <div id="modal-saber-mais" style="display:none;margin-top:14px;">
-        <a href="sobre.html" style="display:block;text-align:center;background:#e63946;color:#fff;padding:12px 20px;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;">Saber mais</a>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:12px;">
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center;">
         <span style="font-size:1.3rem;cursor:pointer;" id="modal-heart" onclick="likePost(this)">🤍</span>
         <span style="font-size:1.3rem;cursor:pointer;">💬</span>
         <span style="font-size:1.3rem;cursor:pointer;">📤</span>
+        <a id="modal-link" href="#" target="_blank" style="margin-left:auto;font-family:'Bebas Neue',sans-serif;font-size:0.8rem;letter-spacing:2px;color:var(--accent);text-decoration:none;">VER NO INSTAGRAM ↗</a>
       </div>
     </div>
   </div>
@@ -203,54 +140,85 @@
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
   <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a>
-    <a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="contacto.html">Contacto</a>
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
 <script src="shared.js"></script>
-<script>
-const posts = [
-  { caption:'🛡️ Novo Pack Promocional: BRISSOS – O Pastor da Luz 🛡️\n\nChegou ao World of Reason uma edição limitada com cartas exclusivas, arte premium e recompensas garantidas.\n\n✨ 7 Cartas ⭐ 1 Rara Garantida 💎 1 Brilhante Garantida\n\nColeciona. Joga. Evolui.\n\n#Manygames #WorldOfReason #TCG #CardGame #Brissos #PackPromocional', likes:'❤️ 0 gostos', img:'amoriel_pack_redes.png' },
-  { caption:'📢 Tyler1 apresenta: AMORIEL 💖🛡️\n\n"Vocês já me viram enfrentar desafios impossíveis, mas hoje quero apresentar alguém diferente.\n\nEsta é Amoriel, a Guardiã do Amor Verdadeiro. ✨\nEnquanto eu entro em batalha com força bruta, ela luta com algo ainda mais poderoso: conexão, empatia e companheirismo. Com suas asas majestosas, escudo em forma de coração e uma determinação inabalável, Amoriel protege os laços que realmente importam."\n\n#Amoriel #DiaDosNamorados #AmorVerdadeiro #FantasiaÉpica #GuardiãDoAmor #Tyler1Style #LoveWins 💖🔥', likes:'❤️ 84.2K gostos', img:'t1_amoriel.png' },
-  { caption:'📩 Fique por dentro de tudo sobre Kill of Reason! Receba novidades, atualizações, eventos e conteúdos exclusivos só para inscritos. Junte-se à comunidade e faça parte da batalha! ⚔️ #KillOfReason #Newsletter #ManyGames #MOBA', likes:'❤️ 58.0K gostos', img:'newsletter_post1.png', newsletter:true },
-  { caption:'🏢 Bem-vindos à nossa sede em Valongo, Porto! É aqui que o Kill of Reason ganha vida todos os dias. #ManyGames #GameDev #Porto', likes:'❤️ 42.3K gostos', img:'img_entrada.png' },
-  { caption:'🎮 Season 5 está a chegar! Novos heróis, novo mapa, novas mecânicas. Prepara-te para o maior update de sempre. #KillOfReason #Season5', likes:'❤️ 38.1K gostos', bg:'linear-gradient(135deg,#1a0005 0%,#e63946 100%)', icon:'🎮' },
-  { caption:'🤝 Diversidade e Inclusão — os pilares da nossa cultura. Equipas diversas, clima inclusivo. #Diversidade #Inclusão #ManyGames', likes:'❤️ 71.4K gostos', img:'img_diversidade.png' },
-  { caption:'💻 As nossas salas de desenvolvimento — onde o Kill of Reason é criado linha a linha. #GameDev #BastidoresKoR', likes:'❤️ 29.0K gostos', img:'img_corredor.png' },
-  { caption:'📚 Educação para todos. Promovemos soluções inovadoras para elevar os sistemas educacionais em todo o mundo. #Educação #ImpactoSocial', likes:'❤️ 15.2K gostos', img:'img_educacao.png' },
-  { caption:'🎉 8 MILHÕES DE JOGADORES! Nunca imaginámos chegar aqui quando começámos em 2015 com €5.000 e um sonho. Obrigado! #8Milhões', likes:'❤️ 95.7K gostos', bg:'linear-gradient(135deg,#e63946,#ff9f1c)', icon:'🎉' },
-  { caption:'🔥 Descobre o mundo dos eSports na ManyGames!\n\nOs eSports estão a crescer cada vez mais e a ManyGames faz parte desta revolução com o jogo Kill of Reason.\n\nNeste artigo explicamos como funciona o cenário competitivo, os torneios, o desenvolvimento dos jogadores e o futuro dos eSports dentro da empresa.\n\n#CulturaRebelde #KillOfReason #ManyGames #eSports', likes:'❤️ 33.1K gostos', img:'img_cultura.png', saberMais: true },
-  { caption:'🚿 O nosso vestiário — conforto e bem-estar para todos os colaboradores. Instalações modernas e pensadas para quem cria. #ManyGames #Instalações', likes:'❤️ 22.4K gostos', img:'img_vestuario.png' },
-  { caption:'🗺️ A planta geral da nossa sede em Valongo. 4 salas de desenvolvimento, zona de convívio, secretaria e muito mais! #Sede #Porto #ManyGames', likes:'❤️ 18.9K gostos', img:'img_planta.png', bg:'#fff', dark:true },
-];
-function openModal(i) {
-  const p = posts[i];
-  const imgEl = document.getElementById('modal-img');
-  if (p.img) {
-    imgEl.style.background = p.bg || '#111';
-    imgEl.innerHTML = `<img src="${p.img}" style="width:100%;height:100%;object-fit:${p.dark?'contain':'cover'};display:block;"/>`;
-  } else {
-    imgEl.style.background = p.bg;
-    imgEl.innerHTML = `<span style="font-size:5rem;">${p.icon}</span>`;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let postsData = [];
+
+async function loadPosts() {
+  try {
+    const snap = await getDocs(query(collection(db, 'instagram'), orderBy('timestamp', 'asc')));
+    postsData = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
+  } catch(e) {
+    console.error('Erro ao carregar posts:', e);
+    postsData = [];
   }
-  imgEl.style.display = 'flex';
-  imgEl.style.alignItems = 'center';
-  imgEl.style.justifyContent = 'center';
-  document.getElementById('modal-caption').innerHTML = p.caption.replace(/\n/g, '<br>');
-  document.getElementById('modal-likes').textContent = p.likes;
-  document.getElementById('modal-heart').textContent = '🤍';
-  document.getElementById('modal-subscribe').style.display = p.newsletter ? 'block' : 'none';
-  document.getElementById('modal-saber-mais').style.display = p.saberMais ? 'block' : 'none';
-  document.getElementById('modal').classList.add('open');
+  renderGrid();
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-function likePost(el) { el.textContent = el.textContent === '🤍' ? '❤️' : '🤍'; }
-function igFollow(btn) {
+
+function renderGrid() {
+  const grid = document.getElementById('ig-grid');
+  document.getElementById('ig-count').textContent = postsData.length;
+  if (!postsData.length) {
+    grid.innerHTML = '<div class="ig-empty">Ainda não há publicações. Em breve!</div>';
+    return;
+  }
+  grid.innerHTML = postsData.map((p, i) => {
+    const hasImg = p.img && p.img.trim();
+    const imgHtml = hasImg
+      ? `<img src="${esc(p.img)}" alt="post" loading="lazy"/>`
+      : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a0005,#e63946);display:flex;align-items:center;justify-content:center;font-size:3rem;">🎮</div>`;
+    return `
+      <div class="ig-post" onclick="openModal(${i})">
+        <div class="ig-post-bg">${imgHtml}</div>
+        <div class="ig-post-overlay">${esc(p.likes||'❤️ 0')} &nbsp; 💬</div>
+      </div>`;
+  }).join('');
+}
+
+window.openModal = function(i) {
+  const p = postsData[i];
+  const imgEl = document.getElementById('modal-img');
+  if (p.img && p.img.trim()) {
+    imgEl.innerHTML = `<img src="${esc(p.img)}" alt="post"/>`;
+  } else {
+    imgEl.innerHTML = `<div style="font-size:5rem;">🎮</div>`;
+  }
+  document.getElementById('modal-caption').textContent = p.caption || '';
+  document.getElementById('modal-likes').textContent = p.likes || '';
+  document.getElementById('modal-heart').textContent = '🤍';
+  document.getElementById('modal-link').href = p.url || '#';
+  document.getElementById('modal').classList.add('open');
+};
+
+window.closeModal = function() { document.getElementById('modal').classList.remove('open'); };
+window.likePost = function(el) { el.textContent = el.textContent === '🤍' ? '❤️' : '🤍'; };
+window.igFollow = function(btn) {
   const following = btn.textContent === 'A seguir';
   btn.textContent = following ? 'Seguir' : 'A seguir';
   btn.style.background = following ? 'var(--accent)' : 'rgba(255,255,255,0.12)';
-}
+};
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+loadPosts();
 </script>
 </body>
 </html>

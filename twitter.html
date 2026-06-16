@@ -5,73 +5,32 @@
   <title>ManyGames – Twitter / X</title>
   <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
-    /* ── TWITTER LAYOUT ── */
     .tw-page { padding-top: 68px; }
-
-    /* Header area: grey bg like X */
     .tw-header { background: #0f1923; border-bottom: 1px solid var(--border-dim); }
-
-    /* Profile block: avatar + follow button row */
-    .tw-profile-top {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 12px 24px 0; gap: 12px;
-    }
-
-    /* Avatar overlaps upward from the profile-top */
-    .profile-avatar-wrap { margin-top: -44px; }
-    .profile-avatar {
-      width: 88px; height: 88px;
-      border: 4px solid #0f1923;
-      border-radius: 50%; overflow: hidden;
-      background: #fff;
-    }
-    .profile-avatar img { width: 100%; height: 100%; object-fit: contain; }
-
-    /* Banner sits BELOW the avatar row */
-    .profile-banner {
-      width: 100%;
-      height: 200px;
-      position: relative;
-      overflow: hidden;
-      background: #1a0005;
-    }
-    .profile-banner img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center;
-      opacity: 0.92;
-    }
+    .profile-banner { width: 100%; height: 200px; position: relative; overflow: hidden; background: linear-gradient(135deg,#1a0005,#e63946,#ff9f1c); }
     .profile-banner-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
       display: flex; align-items: flex-end; padding: 16px 20px;
     }
-    .profile-banner-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem; letter-spacing: 5px;
-      color: rgba(255,255,255,0.85);
-      text-shadow: 0 2px 12px rgba(0,0,0,0.7);
-    }
-
-    .profile-follow-btn {
-      padding: 10px 24px; border: 1px solid #fff; color: #fff;
-      background: transparent; font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem; letter-spacing: 2px; cursor: pointer;
-      transition: background .2s, color .2s; flex-shrink: 0;
-    }
+    .profile-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 5px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
+    .tw-profile-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 24px 0; gap: 12px; }
+    .profile-avatar-wrap { margin-top: -44px; }
+    .profile-avatar { width: 88px; height: 88px; border: 4px solid #0f1923; border-radius: 50%; overflow: hidden; background: #fff; }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: contain; }
+    .profile-follow-btn { padding: 10px 24px; border: 1px solid #fff; color: #fff; background: transparent; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; transition: background .2s, color .2s; flex-shrink: 0; }
     .profile-follow-btn:hover, .profile-follow-btn.following { background: #fff; color: #000; }
-
+    .profile-info { padding: 12px 24px 16px; }
     .profile-name  { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; color: #fff; }
     .profile-handle { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--muted); }
     .profile-bio   { color: var(--muted); font-size: 0.9rem; margin: 8px 0; max-width: 440px; }
     .profile-stats { display: flex; gap: 24px; margin-top: 8px; }
     .profile-stats span { font-size: 0.85rem; color: var(--muted); }
     .profile-stats strong { color: #fff; }
-
     .tw-tabs { display: flex; border-bottom: 1px solid var(--border-dim); margin-top: 16px; }
     .tw-tab { padding: 14px 24px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s; }
     .tw-tab.active { color: #fff; border-bottom-color: var(--accent); }
 
-    /* Feed */
     .tw-feed-wrap { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 0; padding: 0 5vw; }
 
     .tweet { background: var(--panel); border-bottom: 1px solid var(--border-dim); padding: 20px 24px; display: flex; gap: 14px; transition: background .2s; }
@@ -81,14 +40,14 @@
     .tweet-name  { font-weight: 700; color: #fff; font-size: 0.9rem; }
     .tweet-handle { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--muted); margin-left: 6px; }
     .tweet-time  { font-size: 0.75rem; color: var(--muted); margin-left: 6px; }
-    .tweet-body  { color: var(--text); font-size: 0.95rem; margin: 6px 0 12px; line-height: 1.5; }
-    .tweet-photo { width: 100%; border: 1px solid var(--border-dim); margin-bottom: 12px; overflow: hidden; max-height: 280px; object-fit: cover; display: block; }
-    .tweet-actions { display: flex; gap: 28px; }
+    .tweet-body  { color: var(--text); font-size: 0.95rem; margin: 6px 0 12px; line-height: 1.5; white-space: pre-line; }
+    .tweet-photo { width: 100%; border: 1px solid var(--border-dim); margin-bottom: 12px; object-fit: cover; max-height: 320px; display: block; border-radius: 2px; }
+    .tweet-actions { display: flex; gap: 28px; flex-wrap: wrap; }
     .tweet-action { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--muted); cursor: pointer; transition: color .2s; display: flex; align-items: center; gap: 6px; }
     .tweet-action:hover { color: var(--accent); }
+    .tweet-link { font-family: 'Bebas Neue',sans-serif; font-size:0.75rem; letter-spacing:2px; color:var(--accent); text-decoration:none; margin-left:auto; }
     .hashtag { color: #4da3ff; }
 
-    /* Sidebar */
     .tw-search { background: rgba(255,255,255,0.06); border: 1px solid var(--border-dim); padding: 10px 16px; color: var(--muted); font-family: 'Rajdhani',sans-serif; font-size: 0.9rem; width: 100%; outline: none; margin-bottom: 20px; }
     .tw-sidebar-box { background: var(--panel); border: 1px solid var(--border-dim); padding: 20px; margin-bottom: 16px; }
     .trending-item { padding: 10px 0; border-bottom: 1px solid var(--border-dim); cursor: pointer; }
@@ -96,7 +55,7 @@
     .trending-cat { font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; }
     .trending-tag { font-weight: 700; color: #fff; font-size: 0.88rem; }
     .trending-count { font-size: 0.7rem; color: var(--muted); }
-
+    .tw-empty { text-align:center; padding:60px 20px; color:var(--muted); }
     @media(max-width:800px){ .tw-feed-wrap{grid-template-columns:1fr;} }
   </style>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
@@ -105,14 +64,13 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-        <ul class="nav-links">
-    <li><a href="index.html" class="active">Início</a></li>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
@@ -120,173 +78,82 @@
 </nav>
 
 <div class="tw-page">
-  <!-- BANNER EM CIMA — igual ao Reddit -->
-  <div style="height:130px;background:linear-gradient(135deg,#8b0000,#e63946,#ff9f1c);margin-top:68px;"></div>
-
   <div class="tw-header">
-    <!-- Avatar + Follow button -->
+    <div class="profile-banner">
+      <div class="profile-banner-overlay">
+        <div class="profile-banner-title">MANYGAMES</div>
+      </div>
+    </div>
     <div class="tw-profile-top">
       <div class="profile-avatar-wrap">
         <div class="profile-avatar"><img src="logo.png" alt="logo"/></div>
       </div>
-      <button class="profile-follow-btn" id="follow-btn" onclick="toggleFollow(this)">Seguir</button>
+      <button class="profile-follow-btn" id="tw-follow" onclick="this.classList.toggle('following');this.textContent=this.classList.contains('following')?'✓ A seguir':'Seguir'">Seguir</button>
     </div>
-    <div style="padding: 10px 24px 0;">
-      <div class="profile-name">ManyGames <span style="font-size:1rem;color:var(--accent);">✓</span></div>
+    <div class="profile-info">
+      <div class="profile-name">ManyGames <span style="color:#4da3ff;font-size:1rem;">✓</span></div>
       <div class="profile-handle">@manygames</div>
-      <p class="profile-bio">🎮 Estúdio de videojogos · Porto, Portugal · Criadores do Kill of Reason · 8M+ jogadores · Parceiros da Tencent</p>
-      <div style="display:flex;gap:16px;font-size:0.82rem;color:var(--muted);margin:6px 0;flex-wrap:wrap;">
-        <span>📍 Valongo, Porto</span>
-        <span>🔗 <a href="index.html" style="color:var(--accent);text-decoration:none;">manygames.com</a></span>
-        <span>📅 Desde Janeiro 2015</span>
-      </div>
+      <div class="profile-bio">🎮 Estúdio de videojogos · Porto 🇵🇹 | Criadores de Kill of Reason · 8M+ jogadores | ISO 9001:2015</div>
       <div class="profile-stats">
-        <span><strong>247</strong> A seguir</span>
-        <span><strong>1.2M</strong> Seguidores</span>
+        <span><strong>1.2K</strong> A seguir</span>
+        <span><strong>847K</strong> Seguidores</span>
       </div>
-    </div>
-
-
-    <!-- 4. Tabs -->
-    <div class="tw-tabs">
-      <div class="tw-tab active">Tweets</div>
-      <div class="tw-tab">Respostas</div>
-      <div class="tw-tab">Media</div>
-      <div class="tw-tab">Gostos</div>
+      <div class="tw-tabs">
+        <div class="tw-tab active">Tweets</div>
+        <div class="tw-tab">Respostas</div>
+        <div class="tw-tab">Multimédia</div>
+        <div class="tw-tab">Gostos</div>
+      </div>
     </div>
   </div>
 
-  <!-- FEED + SIDEBAR -->
   <div class="tw-feed-wrap">
-    <div>
-
-      <!-- Tweet Brissos – Pack Promocional (NOVO) -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· agora</span></div>
-          <div class="tweet-body">🛡️ Novo Pack Promocional: BRISSOS – O Pastor da Luz 🛡️<br><br>Chegou ao World of Reason uma edição limitada com cartas exclusivas, arte premium e recompensas garantidas.<br><br>✨ 7 Cartas &nbsp;⭐ 1 Rara Garantida &nbsp;💎 1 Brilhante Garantida<br><br>Coleciona. Joga. Evolui.<br><br><span class="hashtag">#Manygames #WorldOfReason #TCG #CardGame #Brissos #PackPromocional</span></div>
-          <img class="tweet-photo" src="amoriel_pack_redes.png" alt="Pack Brissos – O Pastor da Luz" style="max-height:360px;object-fit:contain;background:#0d0d14;"/>
-          <div class="tweet-actions">
-            <span class="tweet-action" onclick="this.style.color='var(--accent)'">💬 <span>0</span></span>
-            <span class="tweet-action" onclick="this.style.color='var(--accent)'">🔁 <span>0</span></span>
-            <span class="tweet-action" onclick="this.style.color='var(--accent)'">❤️ <span>0</span></span>
-            <span class="tweet-action">📊 <span>0</span></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tweet 1 — foto das instalações -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· 2h</span></div>
-          <div class="tweet-body">🏢 As nossas instalações em <strong>Valongo, Porto</strong> — onde a magia acontece todos os dias! Salas de desenvolvimento, zona de convívio e muito mais.<br><br><span class="hashtag">#ManyGames #GameDev #Porto #BastidoresKoR</span></div>
-          <img class="tweet-photo" src="img_entrada.png" alt="Entrada da sede ManyGames"/>
-          <div class="tweet-actions">
-            <span class="tweet-action" onclick="this.style.color='var(--accent)'">💬 <span>843</span></span>
-            <span class="tweet-action" onclick="this.style.color='#2da44e'">🔁 <span>2.1K</span></span>
-            <span class="tweet-action" onclick="this.classList.toggle('liked')">❤️ <span>14K</span></span>
-            <span class="tweet-action">🔗</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tweet 2 — Season 5 -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· 5h</span></div>
-          <div class="tweet-body">🎮 O <strong>Kill of Reason Season 5</strong> está a chegar! Novos heróis, novo mapa e mecânicas completamente renovadas. Prepara-te.<br><br><span class="hashtag">#KillOfReason #KoR #Season5 #Gaming</span></div>
-          <div style="height:180px;background:linear-gradient(135deg,#e63946,#8b0000);display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:1px solid var(--border-dim);">
-            <span style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:4px;color:rgba(255,255,255,0.9);">SEASON 5 · EM BREVE</span>
-          </div>
-          <div class="tweet-actions">
-            <span class="tweet-action" onclick="this.style.color='var(--accent)'">💬 <span>1.2K</span></span>
-            <span class="tweet-action" onclick="this.style.color='#2da44e'">🔁 <span>3.4K</span></span>
-            <span class="tweet-action" onclick="this.classList.toggle('liked')">❤️ <span>18K</span></span>
-            <span class="tweet-action">🔗</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tweet 3 — Diversidade foto -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· 1d</span></div>
-          <div class="tweet-body">🤝 Na ManyGames acreditamos que a <strong>diversidade e inclusão</strong> são a base de uma equipa forte. Orgulhosos da nossa cultura colaborativa!<br><br><span class="hashtag">#Diversidade #Inclusão #ManyGames #Equipa</span></div>
-          <img class="tweet-photo" src="img_diversidade.png" alt="Diversidade e Inclusão ManyGames"/>
-          <div class="tweet-actions">
-            <span class="tweet-action">💬 <span>567</span></span>
-            <span class="tweet-action">🔁 <span>1.8K</span></span>
-            <span class="tweet-action">❤️ <span>9.3K</span></span>
-            <span class="tweet-action">🔗</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tweet 4 — Espaço de trabalho -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· 2d</span></div>
-          <div class="tweet-body">💻 Uma das nossas salas de desenvolvimento — onde o Kill of Reason ganha vida! Cada posto de trabalho é uma estação de criação.<br><br><span class="hashtag">#GameDev #BastidoresKoR #ManyGames</span></div>
-          <img class="tweet-photo" src="img_corredor.png" alt="Salas de desenvolvimento ManyGames"/>
-          <div class="tweet-actions">
-            <span class="tweet-action">💬 <span>892</span></span>
-            <span class="tweet-action">🔁 <span>5.1K</span></span>
-            <span class="tweet-action">❤️ <span>24K</span></span>
-            <span class="tweet-action">🔗</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tweet 5 — Educação -->
-      <div class="tweet reveal">
-        <div class="tweet-avatar"><img src="logo.png" alt=""/></div>
-        <div style="flex:1;">
-          <div><span class="tweet-name">ManyGames</span><span class="tweet-handle">@manygames</span><span class="tweet-time">· 4d</span></div>
-          <div class="tweet-body">📚 A ManyGames acredita no poder da <strong>educação</strong>. Promovemos soluções inovadoras para elevar o nível dos sistemas educacionais em todo o mundo.<br><br><span class="hashtag">#Educação #ImpactoSocial #ManyGames</span></div>
-          <img class="tweet-photo" src="img_educacao.png" alt="Educação ManyGames"/>
-          <div class="tweet-actions">
-            <span class="tweet-action">💬 <span>445</span></span>
-            <span class="tweet-action">🔁 <span>2.1K</span></span>
-            <span class="tweet-action">❤️ <span>8.7K</span></span>
-            <span class="tweet-action">🔗</span>
-          </div>
-        </div>
-      </div>
-
+    <!-- FEED DO FIREBASE -->
+    <div id="tw-feed">
+      <div class="tw-empty">A carregar tweets...</div>
     </div>
 
     <!-- SIDEBAR -->
-    <div style="padding: 20px 0 20px 24px;">
-      <div style="position:sticky;top:80px;">
-        <input class="tw-search" placeholder="🔍  Pesquisar no Twitter"/>
-        <div class="tw-sidebar-box">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;margin-bottom:16px;">Tendências</div>
-          <div class="trending-item"><div class="trending-cat">Gaming · Tendência</div><div class="trending-tag">#KillOfReason</div><div class="trending-count">142K Tweets</div></div>
-          <div class="trending-item"><div class="trending-cat">E-Sports · Tendência</div><div class="trending-tag">#KoRWorlds</div><div class="trending-count">89K Tweets</div></div>
-          <div class="trending-item"><div class="trending-cat">Portugal · Tendência</div><div class="trending-tag">#ManyGames</div><div class="trending-count">34K Tweets</div></div>
-          <div class="trending-item"><div class="trending-cat">Gaming · Tendência</div><div class="trending-tag">#Season5</div><div class="trending-count">21K Tweets</div></div>
+    <div style="padding:20px 0 0 24px;">
+      <input class="tw-search" placeholder="🔍 Pesquisar no Twitter"/>
+      <div class="tw-sidebar-box">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:#fff;margin-bottom:12px;">O que está a acontecer</div>
+        <div class="trending-item">
+          <div class="trending-cat">GAMING · EM ALTA</div>
+          <div class="trending-tag">#KillOfReason</div>
+          <div class="trending-count">142K Tweets</div>
         </div>
-        <div class="tw-sidebar-box">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;margin-bottom:14px;">Talvez gostes</div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎮</div>
-            <div style="flex:1;"><div style="font-size:0.85rem;font-weight:700;">KoR Esports</div><div style="font-size:0.75rem;color:var(--muted);">@KoREsports</div></div>
-            <button style="border:1px solid #fff;background:transparent;color:#fff;padding:5px 12px;font-family:'Bebas Neue',sans-serif;font-size:0.8rem;cursor:pointer;" onclick="this.textContent='✓';this.style.background='#fff';this.style.color='#000'">Seguir</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🐉</div>
-            <div style="flex:1;"><div style="font-size:0.85rem;font-weight:700;">KoR Portugal</div><div style="font-size:0.75rem;color:var(--muted);">@KoRPortugal</div></div>
-            <button style="border:1px solid #fff;background:transparent;color:#fff;padding:5px 12px;font-family:'Bebas Neue',sans-serif;font-size:0.8rem;cursor:pointer;" onclick="this.textContent='✓';this.style.background='#fff';this.style.color='#000'">Seguir</button>
-          </div>
+        <div class="trending-item">
+          <div class="trending-cat">ESPORTS · EM ALTA</div>
+          <div class="trending-tag">#KoRWorldChampionship</div>
+          <div class="trending-count">38.4K Tweets</div>
         </div>
-        <div style="text-align:center;">
-          <a href="index.html" class="btn-primary" style="font-size:0.85rem;padding:10px 20px;">← Voltar ao Site</a>
+        <div class="trending-item">
+          <div class="trending-cat">GAMING · EM ALTA</div>
+          <div class="trending-tag">#Season5</div>
+          <div class="trending-count">92.1K Tweets</div>
         </div>
+        <div class="trending-item">
+          <div class="trending-cat">PORTUGAL · EM ALTA</div>
+          <div class="trending-tag">#ManyGames</div>
+          <div class="trending-count">21.7K Tweets</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-cat">GAMING</div>
+          <div class="trending-tag">#GameDevPortugal</div>
+          <div class="trending-count">8.3K Tweets</div>
+        </div>
+      </div>
+      <div class="tw-sidebar-box">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:#fff;margin-bottom:12px;">Quem seguir</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-dim);">
+          <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:#fff;"><img src="logo.png" style="width:100%;object-fit:contain;"/></div>
+          <div style="flex:1;"><div style="color:#fff;font-weight:700;font-size:0.88rem;">ManyGames</div><div style="font-size:0.75rem;color:var(--muted);">@manygames</div></div>
+          <button onclick="this.textContent='✓ Seguido'" style="padding:6px 16px;background:var(--accent);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;cursor:pointer;font-size:0.85rem;">Seguir</button>
+        </div>
+      </div>
+      <div style="text-align:center;padding-top:8px;">
+        <a href="index.html" class="btn-primary" style="font-size:0.85rem;padding:10px 20px;">← Voltar ao Site</a>
       </div>
     </div>
   </div>
@@ -294,17 +161,69 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-        <nav class="footer-nav">
-    <a href="index.html" class="active">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal</p>
 </footer>
 <script src="shared.js"></script>
-<script>
-function toggleFollow(btn) {
-  btn.classList.toggle('following');
-  btn.textContent = btn.classList.contains('following') ? 'A seguir ✓' : 'Seguir';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function loadFeed() {
+  const feed = document.getElementById('tw-feed');
+  try {
+    const snap = await getDocs(query(collection(db, 'twitter'), orderBy('timestamp', 'asc')));
+    const tweets = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
+    if (!tweets.length) {
+      feed.innerHTML = '<div class="tw-empty">Ainda não há tweets. Em breve!</div>';
+      return;
+    }
+    feed.innerHTML = tweets.map(t => {
+      const imgHtml = t.img ? `<img class="tweet-photo" src="${esc(t.img)}" alt="tweet" loading="lazy"/>` : '';
+      return `
+      <div class="tweet">
+        <div class="tweet-avatar"><img src="logo.png" alt="logo"/></div>
+        <div style="flex:1;">
+          <div>
+            <span class="tweet-name">ManyGames</span>
+            <span class="tweet-handle">@manygames</span>
+            <span class="tweet-time">· ${esc(t.tempo||'recentemente')}</span>
+            ${t.url ? `<a href="${esc(t.url)}" target="_blank" class="tweet-link" style="float:right;">↗ Ver</a>` : ''}
+          </div>
+          <div class="tweet-body">${esc(t.body)}</div>
+          ${imgHtml}
+          <div class="tweet-actions">
+            <span class="tweet-action">💬 ${esc(t.replies||'0')}</span>
+            <span class="tweet-action">🔁 ${esc(t.retweets||'0')}</span>
+            <span class="tweet-action" onclick="this.style.color='var(--accent)'">❤️ ${esc(t.likes||'0')}</span>
+            <span class="tweet-action">📊 ${esc(t.views||'0')}</span>
+            <span class="tweet-action">📤</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    console.error(e);
+    feed.innerHTML = '<div class="tw-empty">Erro ao carregar tweets.</div>';
+  }
 }
+
+loadFeed();
 </script>
 </body>
 </html>

@@ -27,6 +27,9 @@
     .form-group select:focus { border-color: var(--cyan); }
     .form-group textarea { resize: vertical; min-height: 120px; }
     .form-group select option { background: var(--card); }
+    .form-group small.field-error { color: var(--accent); font-size: 0.72rem; display: none; margin-top: 6px; }
+    .form-group.has-error small.field-error { display: block; }
+    .form-group.has-error input { border-color: var(--accent); }
     .contact-item { display:flex; gap:16px; align-items:flex-start; margin-bottom:28px; }
     .contact-icon { font-size:1.6rem; flex-shrink:0; margin-top:2px; }
     .contact-label { font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
@@ -55,14 +58,13 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-        <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html" class="active">Contacto</a></li>
@@ -149,7 +151,8 @@
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" placeholder="email@exemplo.com" id="f-email"/>
+          <input type="email" placeholder="email@exemplo.com" id="f-email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"/>
+          <small class="field-error">Introduz um email válido (ex: nome@exemplo.com)</small>
         </div>
         <div class="form-group">
           <label>Assunto</label>
@@ -203,8 +206,8 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-        <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html" class="active">Contacto</a>
+      <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html" class="active">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
@@ -218,24 +221,64 @@ function submitForm() {
     alert('Por favor preenche todos os campos obrigatórios.');
     return;
   }
-  // Save to localStorage
-  const entry = {
-    id: Date.now(),
-    data: new Date().toLocaleString('pt-PT'),
-    nome: nome,
-    email: email,
-    assunto: document.getElementById('f-assunto').value.trim(),
-    mensagem: msg
-  };
-  const existing = JSON.parse(localStorage.getItem('mg_contactos') || '[]');
-  existing.push(entry);
-  localStorage.setItem('mg_contactos', JSON.stringify(existing));
   document.getElementById('success-msg').style.display = 'block';
   document.getElementById('f-nome').value = '';
   document.getElementById('f-email').value = '';
   document.getElementById('f-msg').value = '';
   document.getElementById('f-assunto').value = '';
 }
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+});
+const db = getFirestore(app);
+
+function isValidEmail(email) {
+  return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+
+// Override submitForm to also save to Firebase
+window.submitForm = async function() {
+  const nome    = document.getElementById('f-nome').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const msg     = document.getElementById('f-msg').value.trim();
+  const assunto = document.getElementById('f-assunto').value;
+  if (!nome || !email || !msg) {
+    alert('Por favor preenche todos os campos obrigatórios.');
+    return;
+  }
+  const emailGroup = document.getElementById('f-email').closest('.form-group');
+  if (!isValidEmail(email)) {
+    if (emailGroup) emailGroup.classList.add('has-error');
+    document.getElementById('f-email').focus();
+    return;
+  }
+  if (emailGroup) emailGroup.classList.remove('has-error');
+  const btn = document.querySelector('button[onclick="submitForm()"]');
+  if (btn) { btn.textContent = 'A enviar...'; btn.disabled = true; }
+  try {
+    await addDoc(collection(db, 'contactos'), {
+      nome, email, assunto, mensagem: msg,
+      data: new Date().toLocaleDateString('pt-PT'),
+      timestamp: serverTimestamp()
+    });
+  } catch(e) { console.error('Firebase error:', e); }
+  document.getElementById('success-msg').style.display = 'block';
+  document.getElementById('f-nome').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-msg').value = '';
+  document.getElementById('f-assunto').value = '';
+  if (btn) { btn.textContent = 'Enviar Mensagem'; btn.disabled = false; }
+};
 </script>
 </body>
 </html>

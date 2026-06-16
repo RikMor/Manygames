@@ -6,15 +6,12 @@
   <link rel="stylesheet" href="shared.css?v=2"/>
   <style>
     .job-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 28px 32px;
-      position: relative;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 28px 32px; position: relative;
       transition: border-color .3s, transform .2s;
     }
     .job-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
     }
     .job-card:hover { border-color: var(--accent); transform: translateY(-3px); }
@@ -26,100 +23,86 @@
       color: var(--accent); border: 1px solid rgba(230,57,70,0.35);
       padding: 4px 12px; white-space: nowrap; align-self: center;
     }
+    .job-estado-aberta  { color: #00e676; border-color: rgba(0,230,118,0.4); }
+    .job-estado-analise { color: var(--accent2); border-color: rgba(255,159,28,0.4); }
+    .job-estado-fechada { color: var(--muted); border-color: rgba(255,255,255,0.15); }
     .job-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
-    .job-meta-item {
-      font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
-      color: var(--muted); letter-spacing: 1px;
-      display: flex; align-items: center; gap: 6px;
-    }
+    .job-meta-item { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
     .job-meta-item span { color: var(--text); }
-    .job-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px; }
+    .job-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px; }
+    .job-list { list-style: none; padding: 0; margin: 0 0 14px; }
+    .job-list li { font-size: 0.9rem; color: var(--muted); padding: 3px 0 3px 18px; position: relative; line-height: 1.5; }
+    .job-list li::before { content: '›'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+    .job-list-title { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
     .job-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .process-step {
-      display: flex; gap: 24px; align-items: flex-start;
-      padding: 24px 0; border-bottom: 1px solid var(--border-dim);
-    }
-    .process-step:last-child { border-bottom: none; }
-    .step-num {
-      font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
-      color: var(--accent); line-height: 1; flex-shrink: 0; width: 60px; text-align: center;
-      opacity: 0.5;
-    }
-    .step-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; color: #fff; margin-bottom: 6px; }
-    .step-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin: 0; }
-    .benefit-card {
-      background: rgba(230,57,70,0.05);
-      border: 1px solid rgba(230,57,70,0.12);
-      padding: 24px;
-      transition: border-color .3s;
-    }
-    .benefit-card:hover { border-color: rgba(230,57,70,0.4); }
-    .benefit-icon { font-size: 2rem; margin-bottom: 12px; }
-    .benefit-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 2px; color: var(--accent2); margin-bottom: 8px; }
-    .benefit-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin: 0; }
     .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
     .filter-btn {
       font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
       letter-spacing: 2px; text-transform: uppercase;
       padding: 8px 18px; border: 1px solid var(--border);
-      background: none; color: var(--muted); cursor: pointer;
-      transition: all .2s;
+      background: none; color: var(--muted); cursor: pointer; transition: all .2s;
     }
-    .filter-btn:hover, .filter-btn.active {
-      border-color: var(--accent); color: var(--accent);
-      background: rgba(230,57,70,0.08);
-    }
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(5,5,8,0.92); z-index: 500;
-      align-items: center; justify-content: center; padding: 20px;
-    }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
+    .process-step { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid var(--border-dim); }
+    .process-step:last-child { border-bottom: none; }
+    .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--accent); line-height: 1; flex-shrink: 0; width: 60px; text-align: center; opacity: 0.5; }
+    .step-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; color: #fff; margin-bottom: 6px; }
+    .step-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+    .benefit-card { background: rgba(230,57,70,0.05); border: 1px solid rgba(230,57,70,0.12); padding: 24px; transition: border-color .3s; }
+    .benefit-card:hover { border-color: rgba(230,57,70,0.4); }
+    .benefit-icon { font-size: 2rem; margin-bottom: 12px; }
+    .benefit-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 2px; color: var(--accent2); margin-bottom: 8px; }
+    .benefit-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin: 0; }
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.92); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: var(--panel); border: 1px solid var(--border);
-      max-width: 560px; width: 100%; padding: 36px;
-      position: relative; max-height: 90vh; overflow-y: auto;
-    }
-    .modal-box::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
-    }
-    .modal-close {
-      position: absolute; top: 16px; right: 20px;
-      background: none; border: none; color: var(--muted);
-      font-size: 1.4rem; cursor: pointer; line-height: 1;
-    }
+    .modal-box { background: var(--panel); border: 1px solid var(--border); max-width: 560px; width: 100%; padding: 36px; position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2), transparent); }
+    .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; line-height: 1; }
     .modal-close:hover { color: #fff; }
     .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: #fff; margin-bottom: 6px; }
     .modal-subtitle { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 24px; }
     .form-group { margin-bottom: 18px; }
-    .form-group label {
-      display: block; font-family: 'Share Tech Mono', monospace;
-      font-size: 0.68rem; letter-spacing: 3px; color: var(--muted);
-      text-transform: uppercase; margin-bottom: 7px;
+    .form-group label { display: block; font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 7px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 12px 14px; background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 1rem; outline: none;
+      transition: border-color .2s; box-sizing: border-box;
     }
-    .form-group input,
-    .form-group textarea {
-      width: 100%; padding: 12px 14px;
-      background: var(--card); border: 1px solid var(--border);
-      color: var(--text); font-family: 'Rajdhani', sans-serif;
-      font-size: 1rem; outline: none; transition: border-color .2s;
-      box-sizing: border-box;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus { border-color: #00e676; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #00e676; }
     .form-group textarea { resize: vertical; min-height: 100px; }
-    .form-success {
-      display: none; padding: 18px;
-      background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.3);
-      color: #00e676; font-family: 'Share Tech Mono', monospace;
-      font-size: 0.82rem; text-align: center; margin-top: 14px;
+    .form-group select option { background: var(--panel); }
+    .form-group small.field-error { color: var(--accent); font-size: 0.72rem; display: none; margin-top: 6px; }
+    .form-group.has-error small.field-error { display: block; }
+    .form-group.has-error input { border-color: var(--accent); }
+    .phone-row { display: flex; gap: 8px; }
+    .phone-country {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 0 10px; cursor: pointer; position: relative; flex-shrink: 0; min-width: 92px;
+      font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; color: var(--text);
     }
-    @media (max-width: 600px) {
-      .job-header { flex-direction: column; }
-      .process-step { flex-direction: column; gap: 8px; }
-      .step-num { font-size: 2rem; width: auto; }
+    .phone-country:hover { border-color: rgba(255,255,255,0.3); }
+    .phone-country .flag { font-size: 1.1rem; }
+    .phone-country .ddi { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; }
+    .phone-country .arrow { margin-left: auto; font-size: 0.6rem; color: var(--muted); }
+    .phone-country-list {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; min-width: 230px;
+      background: var(--panel); border: 1px solid var(--border); z-index: 50;
+      max-height: 260px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
+    .phone-country-list.open { display: block; }
+    .phone-country-item {
+      display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer;
+      font-size: 0.88rem; color: var(--text);
+    }
+    .phone-country-item:hover { background: rgba(0,230,118,0.1); }
+    .phone-country-item .ddi { color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.78rem; margin-left: auto; }
+    .phone-number-input { flex: 1; min-width: 0; }
+    .form-success { display: none; padding: 18px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.3); color: #00e676; font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; text-align: center; margin-top: 14px; }
+    .jobs-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .jobs-empty .ei { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+    @media(max-width:600px){ .job-header{flex-direction:column;} .process-step{flex-direction:column;gap:8px;} .step-num{font-size:2rem;width:auto;} }
   </style>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
@@ -128,14 +111,13 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-      <ul class="nav-links">
+  <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="rh.html" class="active">Carreiras</a></li>
-    <li><a href="videos.html">Vídeos</a></li>
     <li><a href="regulamento.html">Regulamento</a></li>
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="contacto.html">Contacto</a></li>
@@ -154,7 +136,7 @@
 
 <section class="alt">
   <div class="grid-4 reveal">
-    <div class="stat-block"><div class="n">12</div><div class="l">Vagas Abertas</div></div>
+    <div class="stat-block"><div class="n" id="stat-vagas">—</div><div class="l">Vagas Abertas</div></div>
     <div class="stat-block"><div class="n">500+</div><div class="l">Colaboradores</div></div>
     <div class="stat-block"><div class="n">24</div><div class="l">Escritórios Globais</div></div>
     <div class="stat-block"><div class="n">19+</div><div class="l">Países Representados</div></div>
@@ -167,167 +149,22 @@
     <h2>VAGAS ABERTAS</h2>
     <div class="section-line"></div>
   </div>
-  <div class="filter-bar reveal">
+
+  <!-- FILTROS DINÂMICOS -->
+  <div class="filter-bar reveal" id="filter-bar">
     <button class="filter-btn active" onclick="filterJobs('todos',this)">Todos</button>
-    <button class="filter-btn" onclick="filterJobs('desenvolvimento',this)">Desenvolvimento</button>
-    <button class="filter-btn" onclick="filterJobs('design',this)">Design</button>
-    <button class="filter-btn" onclick="filterJobs('marketing',this)">Marketing</button>
-    <button class="filter-btn" onclick="filterJobs('operacoes',this)">Operações</button>
   </div>
 
+  <!-- LISTA DE VAGAS DO FIREBASE -->
   <div id="jobs-list" style="display:flex;flex-direction:column;gap:16px;">
-
-    <div class="job-card reveal" data-dept="desenvolvimento">
-      <div class="job-header">
-        <div class="job-title">Game Developer — Backend</div>
-        <div class="job-dept">Desenvolvimento</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto, Portugal</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Sénior (5+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€45 000 – €60 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Responsável pela arquitetura e manutenção dos servidores do Kill of Reason — matchmaking, anti-cheat, persistência de dados e escalabilidade global. Trabalharás em estreita colaboração com a equipa de Franquia do Jogo liderada por Rita Rodrigues.</p>
-      <div class="job-tags">
-        <span class="tag">C++</span><span class="tag">Go</span><span class="tag">Redis</span><span class="tag">Kubernetes</span><span class="tag red">Urgente</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Game Developer — Backend','Desenvolvimento')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="design">
-      <div class="job-header">
-        <div class="job-title">Character Artist 2D/3D</div>
-        <div class="job-dept">Design</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto, Portugal</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Pleno (3+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€32 000 – €45 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Criação de novos heróis e skins para o Kill of Reason — concept art, modelação 3D, rigging e animações. Reporta à Olivia Nunes (Dept. Design). Portfólio de personagens é obrigatório na candidatura.</p>
-      <div class="job-tags">
-        <span class="tag">ZBrush</span><span class="tag">Maya</span><span class="tag">Substance Painter</span><span class="tag">Unreal Engine</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Character Artist 2D/3D','Design')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="desenvolvimento">
-      <div class="job-header">
-        <div class="job-title">QA Engineer — Gameplay</div>
-        <div class="job-dept">Desenvolvimento</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Remoto (Europa)</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Júnior / Pleno</span></div>
-        <div class="job-meta-item">💶 <span>€24 000 – €35 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Testes manuais e automatizados de novas funcionalidades, relatórios de bugs e validação de patches antes de cada update. Colaboração diária com a equipa de Franquia do Jogo.</p>
-      <div class="job-tags">
-        <span class="tag">Python</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag orange">Remoto</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('QA Engineer — Gameplay','Desenvolvimento')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="marketing">
-      <div class="job-header">
-        <div class="job-title">Social Media Manager</div>
-        <div class="job-dept">Marketing</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto, Portugal</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Pleno (2+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€26 000 – €36 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Gestão das redes sociais da ManyGames e do Kill of Reason (Twitter/X, Instagram, Facebook, Reddit, TikTok). Criação de conteúdo, gestão de comunidade e análise de métricas. Reporta a Mario Santos (Marketing).</p>
-      <div class="job-tags">
-        <span class="tag">Community Management</span><span class="tag">Copywriting</span><span class="tag">Analytics</span><span class="tag">Adobe Suite</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Social Media Manager','Marketing')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="operacoes">
-      <div class="job-header">
-        <div class="job-title">Técnico de Operações de Estúdio</div>
-        <div class="job-dept">Operações</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto, Portugal</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Júnior</span></div>
-        <div class="job-meta-item">💶 <span>€20 000 – €26 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Apoio às operações do dia a dia do estúdio sede no Porto — gestão de instalações, logística de equipamentos, suporte administrativo e coordenação com fornecedores. Reporta a Eduardo Ribeiro.</p>
-      <div class="job-tags">
-        <span class="tag">Gestão de Facilities</span><span class="tag">Microsoft 365</span><span class="tag">Logística</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Técnico de Operações de Estúdio','Operações')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="marketing">
-      <div class="job-header">
-        <div class="job-title">Event Coordinator — E-Sports</div>
-        <div class="job-dept">Marketing</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto + Viagens</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Pleno (3+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€30 000 – €40 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Organização de torneios, LAN parties e eventos de lançamento do Kill of Reason a nível nacional e internacional. Coordenação com patrocinadores, equipas e fornecedores. Reporta a Hugo Pires (Eventos).</p>
-      <div class="job-tags">
-        <span class="tag">Event Management</span><span class="tag">E-Sports</span><span class="tag">Inglês C1</span><span class="tag orange">Viagens frequentes</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Event Coordinator — E-Sports','Marketing')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="design">
-      <div class="job-header">
-        <div class="job-title">UI/UX Designer — In-Game</div>
-        <div class="job-dept">Design</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto / Híbrido</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Pleno (2+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€28 000 – €40 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Design da interface do Kill of Reason — HUD, menus, lobby, loja in-game e onboarding. Foco em acessibilidade e experiência de jogo fluida. Colaboração estreita com a equipa de desenvolvimento.</p>
-      <div class="job-tags">
-        <span class="tag">Figma</span><span class="tag">Unreal Motion Graphics</span><span class="tag">Prototyping</span><span class="tag">Usability Testing</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('UI/UX Designer — In-Game','Design')">Candidatar-me</button></div>
-    </div>
-
-    <div class="job-card reveal" data-dept="operacoes">
-      <div class="job-header">
-        <div class="job-title">Técnico de Recursos Humanos</div>
-        <div class="job-dept">Operações</div>
-      </div>
-      <div class="job-meta">
-        <div class="job-meta-item">📍 <span>Porto, Portugal</span></div>
-        <div class="job-meta-item">🕐 <span>Full-time</span></div>
-        <div class="job-meta-item">💼 <span>Pleno (2+ anos)</span></div>
-        <div class="job-meta-item">💶 <span>€24 000 – €32 000 / ano</span></div>
-      </div>
-      <p class="job-desc">Apoio ao departamento de RH liderado por Iuri Mota — recrutamento, onboarding, formação e gestão administrativa de colaboradores em Portugal e Europa. Conhecimentos de direito laboral português são valorizados.</p>
-      <div class="job-tags">
-        <span class="tag">Recrutamento</span><span class="tag">Gestão de Pessoas</span><span class="tag">SAP HR</span><span class="tag">Direito Laboral</span>
-      </div>
-      <div style="margin-top:20px;"><button class="btn-primary" onclick="openModal('Técnico de Recursos Humanos','Operações')">Candidatar-me</button></div>
-    </div>
-
+    <div class="jobs-empty"><div class="ei">💼</div>A carregar vagas...</div>
   </div>
 
   <div class="card reveal" style="margin-top:24px;text-align:center;padding:36px;">
     <div style="font-size:2rem;margin-bottom:12px;">📩</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">Não encontraste a vaga certa?</div>
     <p style="margin:0 auto 20px;max-width:480px;">Envia uma candidatura espontânea. Guardamos o teu perfil e contactamos quando surgir a oportunidade ideal.</p>
-    <button class="btn-primary" onclick="openModal('Candidatura Espontânea','Geral')">Enviar Candidatura Espontânea</button>
+    <button class="btn-primary" onclick="openModal('Candidatura Espontânea','Geral','')">Enviar Candidatura Espontânea</button>
   </div>
 </section>
 
@@ -338,36 +175,12 @@
     <div class="section-line"></div>
   </div>
   <div class="grid-3">
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">🏥</div>
-      <div class="benefit-title">Saúde & Bem-Estar</div>
-      <p class="benefit-desc">Seguro de saúde completo para o colaborador e família, acesso a psicologia e programa de bem-estar integrado.</p>
-    </div>
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">📚</div>
-      <div class="benefit-title">Desenvolvimento Profissional</div>
-      <p class="benefit-desc">Budget anual de formação, acesso a conferências internacionais de gaming e plano de progressão de carreira personalizado.</p>
-    </div>
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">🏠</div>
-      <div class="benefit-title">Flexibilidade</div>
-      <p class="benefit-desc">Horário flexível, opções de trabalho remoto e híbrido consoante a função, e política de dias extra de férias.</p>
-    </div>
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">🎮</div>
-      <div class="benefit-title">Acesso Total ao Kill of Reason</div>
-      <p class="benefit-desc">Todos os colaboradores têm acesso completo ao jogo com conteúdos exclusivos, skins e moeda in-game mensal.</p>
-    </div>
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">🌍</div>
-      <div class="benefit-title">Ambiente Internacional</div>
-      <p class="benefit-desc">Equipa diversa de mais de 30 nacionalidades, com oportunidades de mobilidade entre os 24 escritórios globais.</p>
-    </div>
-    <div class="benefit-card reveal">
-      <div class="benefit-icon">🏆</div>
-      <div class="benefit-title">Eventos & Competição</div>
-      <p class="benefit-desc">Participação em torneios internos, bilhetes para eventos de e-sports e acesso a feiras e conferências da indústria.</p>
-    </div>
+    <div class="benefit-card reveal"><div class="benefit-icon">🏥</div><div class="benefit-title">Saúde & Bem-Estar</div><p class="benefit-desc">Seguro de saúde completo para o colaborador e família, acesso a psicologia e programa de bem-estar integrado.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">📚</div><div class="benefit-title">Desenvolvimento Profissional</div><p class="benefit-desc">Budget anual de formação, acesso a conferências internacionais de gaming e plano de progressão de carreira personalizado.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">🏠</div><div class="benefit-title">Flexibilidade</div><p class="benefit-desc">Horário flexível, opções de trabalho remoto e híbrido consoante a função, e política de dias extra de férias.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">🎮</div><div class="benefit-title">Acesso Total ao Kill of Reason</div><p class="benefit-desc">Todos os colaboradores têm acesso completo ao jogo com conteúdos exclusivos, skins e moeda in-game mensal.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">🌍</div><div class="benefit-title">Ambiente Internacional</div><p class="benefit-desc">Equipa diversa de mais de 30 nacionalidades, com oportunidades de mobilidade entre os 24 escritórios globais.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">🏆</div><div class="benefit-title">Eventos & Competição</div><p class="benefit-desc">Participação em torneios internos, bilhetes para eventos de e-sports e acesso a feiras e conferências da indústria.</p></div>
   </div>
 </section>
 
@@ -378,37 +191,12 @@
       <h2>PROCESSO DE SELEÇÃO</h2>
       <div class="section-line"></div>
       <div>
-        <div class="process-step">
-          <div class="step-num">01</div>
-          <div>
-            <div class="step-title">Candidatura Online</div>
-            <p class="step-desc">Submete o teu CV e carta de motivação através do formulário. Para vagas de Design, inclui o teu portfólio.</p>
-          </div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">02</div>
-          <div>
-            <div class="step-title">Triagem pelo RH</div>
-            <p class="step-desc">A equipa de Recursos Humanos (Iuri Mota) analisa as candidaturas e contacta os perfis selecionados em até 5 dias úteis.</p>
-          </div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">03</div>
-          <div>
-            <div class="step-title">Entrevista Técnica</div>
-            <p class="step-desc">Conversa com o responsável do departamento — pode incluir um desafio técnico ou apresentação de portfólio consoante a vaga.</p>
-          </div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">04</div>
-          <div>
-            <div class="step-title">Entrevista Final & Oferta</div>
-            <p class="step-desc">Reunião com a direção. Se houver fit mútuo, recebes a proposta salarial em 48h.</p>
-          </div>
-        </div>
+        <div class="process-step"><div class="step-num">01</div><div><div class="step-title">Candidatura Online</div><p class="step-desc">Submete o teu CV e carta de motivação através do formulário. Para vagas de Design, inclui o teu portfólio.</p></div></div>
+        <div class="process-step"><div class="step-num">02</div><div><div class="step-title">Triagem pelo RH</div><p class="step-desc">A equipa de Recursos Humanos analisa as candidaturas e contacta os perfis selecionados em até 5 dias úteis.</p></div></div>
+        <div class="process-step"><div class="step-num">03</div><div><div class="step-title">Entrevista Técnica</div><p class="step-desc">Conversa com o responsável do departamento — pode incluir um desafio técnico ou apresentação de portfólio consoante a vaga.</p></div></div>
+        <div class="process-step"><div class="step-num">04</div><div><div class="step-title">Entrevista Final & Oferta</div><p class="step-desc">Reunião com a direção. Se houver fit mútuo, recebes a proposta salarial em 48h.</p></div></div>
       </div>
     </div>
-
     <div class="reveal">
       <div class="info-card">
         <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;">// Contacto de RH</div>
@@ -427,17 +215,27 @@
   </div>
 </section>
 
+<!-- MODAL DE CANDIDATURA -->
 <div class="modal-overlay" id="apply-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title">CANDIDATURA</div>
     <div class="modal-subtitle" id="modal-job-label">// VAGA</div>
-    <div class="form-group"><label>Nome Completo</label><input type="text" id="f-name" placeholder="O teu nome"/></div>
-    <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="email@exemplo.com"/></div>
-    <div class="form-group"><label>Telefone</label><input type="tel" id="f-phone" placeholder="+351 9XX XXX XXX"/></div>
+    <div class="form-group"><label>Nome Completo *</label><input type="text" id="f-name" placeholder="O teu nome"/></div>
+    <div class="form-group"><label>Email *</label><input type="email" id="f-email" placeholder="email@exemplo.com" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"/><small class="field-error">Introduz um email válido</small></div>
+    <div class="form-group">
+      <label>Telefone</label>
+      <div class="phone-row">
+        <div class="phone-country" id="f_phone_country" data-input="f-phone">
+          <span class="flag">🇵🇹</span><span class="ddi">+351</span><span class="arrow">▼</span>
+          <div class="phone-country-list" id="f_phone_list"></div>
+        </div>
+        <input type="tel" id="f-phone" class="phone-number-input" placeholder="912 345 678" inputmode="numeric" maxlength="9"/>
+      </div>
+    </div>
     <div class="form-group"><label>Vaga</label><input type="text" id="f-vaga" readonly style="opacity:0.7;"/></div>
     <div class="form-group"><label>LinkedIn / Portfólio (URL)</label><input type="url" id="f-url" placeholder="https://"/></div>
-    <div class="form-group"><label>Carta de Motivação</label><textarea id="f-msg" placeholder="Porque é que queres fazer parte da ManyGames?"></textarea></div>
+    <div class="form-group"><label>Carta de Motivação *</label><textarea id="f-msg" placeholder="Porque é que queres fazer parte da ManyGames?"></textarea></div>
     <button class="btn-primary" style="width:100%;text-align:center;" onclick="submitForm()">Enviar Candidatura</button>
     <div class="form-success" id="form-success">✔ Candidatura enviada com sucesso! A equipa de RH irá contactar-te em até 5 dias úteis.</div>
   </div>
@@ -445,57 +243,256 @@
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
-      <nav class="footer-nav">
-    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html" class="active">Carreiras</a><a href="videos.html">Vídeos</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
+  <nav class="footer-nav">
+    <a href="index.html">Início</a><a href="sobre.html">Sobre</a><a href="jogo.html">Jogo</a><a href="equipa.html">Equipa</a><a href="loja.html">Loja</a><a href="rh.html" class="active">Carreiras</a><a href="regulamento.html">Regulamento</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a>
   </nav>
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
 
 <script src="shared.js"></script>
-<script>
-  function filterJobs(dept, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.job-card').forEach(card => {
-      card.style.display = (dept === 'todos' || card.dataset.dept === dept) ? '' : 'none';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
+  authDomain: "manygames-2f8a7.firebaseapp.com",
+  projectId: "manygames-2f8a7",
+  storageBucket: "manygames-2f8a7.firebasestorage.app",
+  messagingSenderId: "1053374536523",
+  appId: "1:1053374536523:web:e46fde896a25179f0d66ce"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── COUNTRY PHONE CODES ──────────────────────────────────────────────────
+var COUNTRIES = [
+  { flag: "🇵🇹", name: "Portugal", ddi: "+351" },
+  { flag: "🇪🇸", name: "Espanha", ddi: "+34" },
+  { flag: "🇫🇷", name: "França", ddi: "+33" },
+  { flag: "🇩🇪", name: "Alemanha", ddi: "+49" },
+  { flag: "🇬🇧", name: "Reino Unido", ddi: "+44" },
+  { flag: "🇮🇹", name: "Itália", ddi: "+39" },
+  { flag: "🇳🇱", name: "Países Baixos", ddi: "+31" },
+  { flag: "🇧🇪", name: "Bélgica", ddi: "+32" },
+  { flag: "🇨🇭", name: "Suíça", ddi: "+41" },
+  { flag: "🇮🇪", name: "Irlanda", ddi: "+353" },
+  { flag: "🇱🇺", name: "Luxemburgo", ddi: "+352" },
+  { flag: "🇧🇷", name: "Brasil", ddi: "+55" },
+  { flag: "🇺🇸", name: "Estados Unidos", ddi: "+1" },
+  { flag: "🇨🇦", name: "Canadá", ddi: "+1" },
+  { flag: "🇦🇴", name: "Angola", ddi: "+244" },
+  { flag: "🇲🇿", name: "Moçambique", ddi: "+258" },
+  { flag: "🇨🇻", name: "Cabo Verde", ddi: "+238" }
+];
+
+function setupPhoneSelector(countryId, listId, inputId) {
+  var countryEl = document.getElementById(countryId);
+  var listEl    = document.getElementById(listId);
+  var inputEl   = document.getElementById(inputId);
+  if (!countryEl || !listEl || !inputEl) return;
+
+  listEl.innerHTML = COUNTRIES.map(function(c) {
+    return '<div class="phone-country-item" data-ddi="' + c.ddi + '" data-flag="' + c.flag + '">' +
+      '<span>' + c.flag + '</span><span>' + c.name + '</span><span class="ddi">' + c.ddi + '</span></div>';
+  }).join('');
+
+  countryEl.addEventListener('click', function(e) {
+    if (e.target.closest('.phone-country-item')) return;
+    document.querySelectorAll('.phone-country-list.open').forEach(function(l) {
+      if (l !== listEl) l.classList.remove('open');
     });
-  }
-  function openModal(jobTitle, dept) {
-    document.getElementById('modal-job-label').textContent = '// ' + dept.toUpperCase();
-    document.getElementById('f-vaga').value = jobTitle;
-    document.getElementById('form-success').style.display = 'none';
-    document.getElementById('apply-modal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeModal() {
-    document.getElementById('apply-modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  document.getElementById('apply-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+    listEl.classList.toggle('open');
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  function submitForm() {
-    const name = document.getElementById('f-name').value.trim();
-    const email = document.getElementById('f-email').value.trim();
-    if (!name || !email) { alert('Por favor preenche pelo menos o nome e email.'); return; }
-    // Save to localStorage
-    const entry = {
-      id: Date.now(),
-      data: new Date().toLocaleString('pt-PT'),
-      nome: name,
-      email: email,
-      telefone: document.getElementById('f-phone').value.trim(),
-      vaga: document.getElementById('f-vaga').value.trim(),
-      linkedin: document.getElementById('f-url').value.trim(),
-      motivacao: document.getElementById('f-msg').value.trim()
-    };
-    const existing = JSON.parse(localStorage.getItem('mg_candidaturas') || '[]');
-    existing.push(entry);
-    localStorage.setItem('mg_candidaturas', JSON.stringify(existing));
-    document.getElementById('form-success').style.display = 'block';
-    setTimeout(closeModal, 2200);
+
+  listEl.querySelectorAll('.phone-country-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      countryEl.querySelector('.flag').textContent = item.getAttribute('data-flag');
+      countryEl.querySelector('.ddi').textContent  = item.getAttribute('data-ddi');
+      listEl.classList.remove('open');
+      inputEl.focus();
+    });
+  });
+
+  inputEl.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!countryEl.contains(e.target)) listEl.classList.remove('open');
+  });
+}
+
+function getPhoneDDI(countryId) {
+  var el = document.getElementById(countryId);
+  if (!el) return '+351';
+  var span = el.querySelector('.ddi');
+  return span ? span.textContent : '+351';
+}
+
+setupPhoneSelector('f_phone_country', 'f_phone_list', 'f-phone');
+
+function isValidEmail(email) {
+  return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+
+document.getElementById('f-email').addEventListener('blur', function() {
+  var group = this.closest('.form-group');
+  var ok = !this.value.trim() || isValidEmail(this.value.trim());
+  if (group) group.classList.toggle('has-error', !ok);
+});
+
+let allVagas = [];
+
+// ── CARREGAR VAGAS ─────────────────────────────────────────────────
+async function loadVagas() {
+  const list = document.getElementById('jobs-list');
+  try {
+    const snap = await getDocs(query(collection(db, 'vagas'), orderBy('timestamp', 'asc')));
+    allVagas = snap.docs.map(d => ({ _id: d.id, ...d.data() }))
+      .filter(v => v.estado !== 'Fechada'); // hide closed jobs from public
+    renderVagas(allVagas);
+    buildFilters();
+    document.getElementById('stat-vagas').textContent = allVagas.filter(v => v.estado === 'Aberta').length;
+  } catch(e) {
+    console.error(e);
+    list.innerHTML = '<div class="jobs-empty"><div class="ei">⚠️</div>Erro ao carregar vagas.</div>';
   }
+}
+
+function buildFilters() {
+  const deptos = [...new Set(allVagas.map(v => v.depto).filter(Boolean))];
+  const bar = document.getElementById('filter-bar');
+  deptos.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = d;
+    btn.onclick = function() { filterJobs(d, this); };
+    bar.appendChild(btn);
+  });
+}
+
+window.filterJobs = function(dept, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = dept === 'todos' ? allVagas : allVagas.filter(v => v.depto === dept);
+  renderVagas(filtered);
+};
+
+function estadoClass(estado) {
+  if (estado === 'Aberta') return 'job-estado-aberta';
+  if (estado === 'Em análise') return 'job-estado-analise';
+  return 'job-estado-fechada';
+}
+
+function renderVagas(vagas) {
+  const list = document.getElementById('jobs-list');
+  if (!vagas.length) {
+    list.innerHTML = '<div class="jobs-empty"><div class="ei">💼</div>Sem vagas nesta categoria de momento. Consulta mais tarde ou envia uma candidatura espontânea!</div>';
+    return;
+  }
+
+  list.innerHTML = vagas.map(v => {
+    const reqLines = (v.requisitos || '').split('\n').filter(Boolean);
+    const ofLines  = (v.oferecemos || '').split('\n').filter(Boolean);
+    const reqHtml  = reqLines.length ? `
+      <div class="job-list-title">Requisitos</div>
+      <ul class="job-list">${reqLines.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '';
+    const ofHtml   = ofLines.length ? `
+      <div class="job-list-title">O que oferecemos</div>
+      <ul class="job-list">${ofLines.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '';
+
+    return `
+    <div class="job-card reveal" data-dept="${esc(v.depto||'')}">
+      <div class="job-header">
+        <div class="job-title">${esc(v.titulo)}</div>
+        <div class="job-dept ${estadoClass(v.estado)}">${esc(v.depto||'—')} · ${esc(v.estado||'Aberta')}</div>
+      </div>
+      <div class="job-meta">
+        ${v.local ? `<div class="job-meta-item">📍 <span>${esc(v.local)}</span></div>` : ''}
+        ${v.tipo  ? `<div class="job-meta-item">🕐 <span>${esc(v.tipo)}</span></div>`  : ''}
+        ${v.prazo ? `<div class="job-meta-item">📅 <span>Prazo: ${esc(v.prazo)}</span></div>` : ''}
+      </div>
+      ${v.desc ? `<p class="job-desc">${esc(v.desc)}</p>` : ''}
+      ${reqHtml}
+      ${ofHtml}
+      <div style="margin-top:20px;">
+        <button class="btn-primary" onclick="openModal('${esc(v.titulo)}','${esc(v.depto||'')}','${esc(v.titulo)}')">Candidatar-me</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // trigger reveal
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 80);
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────
+window.openModal = function(jobTitle, dept, vagaId) {
+  document.getElementById('modal-job-label').textContent = '// ' + (dept||'GERAL').toUpperCase();
+  document.getElementById('f-vaga').value = jobTitle;
+  document.getElementById('form-success').style.display = 'none';
+  document.getElementById('apply-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // clear form
+  ['f-name','f-email','f-phone','f-url','f-msg'].forEach(id => document.getElementById(id).value = '');
+};
+
+window.closeModal = function() {
+  document.getElementById('apply-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+document.getElementById('apply-modal').addEventListener('click', function(e) {
+  if (e.target === this) window.closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeModal(); });
+
+// ── SUBMETER CANDIDATURA → FIREBASE ───────────────────────────────
+window.submitForm = async function() {
+  const nome      = document.getElementById('f-name').value.trim();
+  const email     = document.getElementById('f-email').value.trim();
+  const motivacao = document.getElementById('f-msg').value.trim();
+  if (!nome || !email || !motivacao) {
+    alert('Por favor preenche pelo menos o nome, email e carta de motivação.');
+    return;
+  }
+  const emailGroup = document.getElementById('f-email').closest('.form-group');
+  if (!isValidEmail(email)) {
+    if (emailGroup) emailGroup.classList.add('has-error');
+    document.getElementById('f-email').focus();
+    return;
+  }
+  if (emailGroup) emailGroup.classList.remove('has-error');
+  const phoneRaw = document.getElementById('f-phone').value.trim();
+  const telefone = phoneRaw ? (getPhoneDDI('f_phone_country') + ' ' + phoneRaw) : '';
+  const btn = document.querySelector('#apply-modal .btn-primary');
+  btn.textContent = 'A enviar...';
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, 'candidaturas'), {
+      nome,
+      email,
+      telefone,
+      vaga:      document.getElementById('f-vaga').value,
+      linkedin:  document.getElementById('f-url').value.trim(),
+      motivacao,
+      data: new Date().toLocaleDateString('pt-PT'),
+      timestamp: serverTimestamp()
+    });
+    document.getElementById('form-success').style.display = 'block';
+    setTimeout(window.closeModal, 2400);
+  } catch(e) {
+    console.error(e);
+    alert('Erro ao enviar candidatura. Tenta novamente.');
+  } finally {
+    btn.textContent = 'Enviar Candidatura';
+    btn.disabled = false;
+  }
+};
+
+loadVagas();
 </script>
 </body>
 </html>
