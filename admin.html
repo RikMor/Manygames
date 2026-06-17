@@ -65,6 +65,12 @@
     margin-left: auto; background: var(--accent); color: #fff;
     font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700;
   }
+  .nav-badge-count.badge-flash { animation: badgeFlash 1.1s ease; }
+  @keyframes badgeFlash {
+    0%   { transform: scale(1);   box-shadow: 0 0 0 0 rgba(0,230,118,0.7); background: var(--green); }
+    30%  { transform: scale(1.35); box-shadow: 0 0 0 6px rgba(0,230,118,0); background: var(--green); }
+    100% { transform: scale(1);   box-shadow: 0 0 0 0 rgba(0,230,118,0); background: var(--accent); }
+  }
   .sidebar-logout {
     margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border);
     cursor: pointer; color: var(--muted); font-size: 0.82rem;
@@ -110,6 +116,17 @@
     padding: 8px 12px; background: var(--panel); border: 1px solid var(--border);
     color: var(--text); font-size: 0.82rem; outline: none; cursor: pointer;
   }
+  .toolbar input[type="date"] {
+    flex: none; min-width: 0; width: 150px; padding: 8px 12px;
+    background: var(--panel); border: 1px solid var(--border);
+    color: var(--text); font-size: 0.82rem; outline: none; cursor: pointer;
+  }
+  .toolbar input[type="date"]:focus { border-color: var(--accent); }
+  .sel-count {
+    font-size: 0.75rem; color: var(--accent2); letter-spacing: 1px;
+    padding: 4px 10px; border: 1px solid rgba(255,159,28,0.3); background: rgba(255,159,28,0.08);
+    white-space: nowrap;
+  }
   .btn-sm {
     padding: 8px 16px; font-size: 0.75rem; font-weight: 700;
     letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
@@ -117,6 +134,8 @@
   }
   .btn-export { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
   .btn-export:hover { background: rgba(0,230,118,0.22); }
+  .btn-excel { background: rgba(33,150,83,0.15); color: #21a366; border: 1px solid rgba(33,150,83,0.4); }
+  .btn-excel:hover { background: rgba(33,150,83,0.28); }
   .btn-clear { background: rgba(230,57,70,0.1); color: var(--accent); border: 1px solid rgba(230,57,70,0.3); }
   .btn-clear:hover { background: rgba(230,57,70,0.2); }
 
@@ -127,6 +146,8 @@
   tr:hover td { background: rgba(255,255,255,0.02); }
   .td-muted { color: var(--muted); font-size: 0.8rem; }
   .td-wrap { max-width: 280px; white-space: pre-wrap; word-break: break-word; }
+  .row-check, .head-check { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+  th.th-check, td.td-check { width: 36px; text-align: center; }
 
   /* BADGES */
   .badge { display: inline-block; padding: 3px 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 2px; }
@@ -200,6 +221,7 @@
     .stats-row{grid-template-columns:1fr 1fr;}
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -298,15 +320,18 @@
       <div class="table-wrap">
         <div class="toolbar">
           <input type="text" id="search-enc" placeholder="🔍  Pesquisar nome, email, produto..." oninput="renderEncomendas()"/>
+          <input type="date" id="filter-enc-data" onchange="renderEncomendas()" title="Filtrar por dia"/>
           <select id="filter-enc-estado" onchange="renderEncomendas()">
             <option value="">Todos os estados</option>
             <option>Pendente</option><option>Enviado</option><option>Entregue</option><option>Cancelado</option>
           </select>
-          <button class="btn-sm btn-export" onclick="exportCSV('encomendas')">⬇ Exportar CSV</button>
+          <span class="sel-count" id="selcount-enc" style="display:none;"></span>
+          <button class="btn-sm btn-excel" onclick="exportExcel('enc')">📊 Exportar Excel</button>
           <button class="btn-sm btn-clear" onclick="clearData('encomendas','encomendas')">🗑 Limpar</button>
         </div>
         <table>
           <thead><tr>
+            <th class="th-check"><input type="checkbox" class="head-check" id="headcheck-enc" onchange="toggleSelectAll('enc',this.checked)"/></th>
             <th>#</th><th>Data</th><th>Nome</th><th>Email</th><th>Produto</th>
             <th>Qtd</th><th>Total</th><th>Estado</th><th>Ação</th>
           </tr></thead>
@@ -393,11 +418,14 @@
       <div class="table-wrap">
         <div class="toolbar">
           <input type="text" id="search-cand" placeholder="🔍  Pesquisar nome, email, vaga..." oninput="renderCandidaturas()"/>
-          <button class="btn-sm btn-export" onclick="exportCSV('candidaturas')">⬇ Exportar CSV</button>
+          <input type="date" id="filter-cand-data" onchange="renderCandidaturas()" title="Filtrar por dia"/>
+          <span class="sel-count" id="selcount-cand" style="display:none;"></span>
+          <button class="btn-sm btn-excel" onclick="exportExcel('cand')">📊 Exportar Excel</button>
           <button class="btn-sm btn-clear" onclick="clearData('candidaturas','candidaturas')">🗑 Limpar</button>
         </div>
         <table>
           <thead><tr>
+            <th class="th-check"><input type="checkbox" class="head-check" id="headcheck-cand" onchange="toggleSelectAll('cand',this.checked)"/></th>
             <th>Data</th><th>Nome</th><th>Email</th><th>Telefone</th>
             <th>Vaga</th><th>LinkedIn</th><th>Ação</th>
           </tr></thead>
@@ -416,11 +444,14 @@
       <div class="table-wrap">
         <div class="toolbar">
           <input type="text" id="search-cont" placeholder="🔍  Pesquisar nome, email, assunto..." oninput="renderContactos()"/>
-          <button class="btn-sm btn-export" onclick="exportCSV('contactos')">⬇ Exportar CSV</button>
+          <input type="date" id="filter-cont-data" onchange="renderContactos()" title="Filtrar por dia"/>
+          <span class="sel-count" id="selcount-cont" style="display:none;"></span>
+          <button class="btn-sm btn-excel" onclick="exportExcel('cont')">📊 Exportar Excel</button>
           <button class="btn-sm btn-clear" onclick="clearData('contactos','contactos')">🗑 Limpar</button>
         </div>
         <table>
           <thead><tr>
+            <th class="th-check"><input type="checkbox" class="head-check" id="headcheck-cont" onchange="toggleSelectAll('cont',this.checked)"/></th>
             <th>Data</th><th>Nome</th><th>Email</th><th>Assunto</th><th>Mensagem</th><th>Ação</th>
           </tr></thead>
           <tbody id="tbody-cont"></tbody>
@@ -438,11 +469,14 @@
       <div class="table-wrap">
         <div class="toolbar">
           <input type="text" id="search-news" placeholder="🔍  Pesquisar email..." oninput="renderNewsletter()"/>
-          <button class="btn-sm btn-export" onclick="exportCSV('newsletter')">⬇ Exportar CSV</button>
+          <input type="date" id="filter-news-data" onchange="renderNewsletter()" title="Filtrar por dia"/>
+          <span class="sel-count" id="selcount-news" style="display:none;"></span>
+          <button class="btn-sm btn-excel" onclick="exportExcel('news')">📊 Exportar Excel</button>
           <button class="btn-sm btn-clear" onclick="clearData('newsletter','newsletter')">🗑 Limpar</button>
         </div>
         <table>
           <thead><tr>
+            <th class="th-check"><input type="checkbox" class="head-check" id="headcheck-news" onchange="toggleSelectAll('news',this.checked)"/></th>
             <th>Data</th><th>Email</th><th>Ação</th>
           </tr></thead>
           <tbody id="tbody-news"></tbody>
@@ -870,7 +904,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, query, orderBy, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
@@ -913,40 +947,114 @@ let candsCache  = [];
 let contsCache  = [];
 let newsCache   = [];
 
-async function loadAll() {
-  try {
-    const [oSnap, cSnap, ctSnap, nSnap] = await Promise.all([
-      getDocs(query(collection(db, 'encomendas'), orderBy('timestamp', 'asc'))),
-      getDocs(query(collection(db, 'candidaturas'), orderBy('timestamp', 'asc'))),
-      getDocs(query(collection(db, 'contactos'), orderBy('timestamp', 'asc'))),
-      getDocs(query(collection(db, 'newsletter'), orderBy('timestamp', 'asc')))
-    ]);
-    ordersCache = oSnap.docs.map((d,i) => ({ _id: d.id, id: String(i+1).padStart(3,'0'), ...d.data() }));
-    candsCache  = cSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
-    contsCache  = ctSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
-    newsCache   = nSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
-  } catch(e) {
-    console.error('Erro ao carregar dados:', e);
+// ── SELECTION STATE (for Excel export) ──────────────────────────────
+const selectedIds = { enc: new Set(), cand: new Set(), cont: new Set(), news: new Set() };
+const lastFiltered = { enc: [], cand: [], cont: [], news: [] };
+
+function dateInputToPt(value) {
+  if (!value) return '';
+  const [y, m, d] = value.split('-');
+  return d + '/' + m + '/' + y;
+}
+
+window.toggleRowSelect = function(type, id, checked) {
+  if (checked) selectedIds[type].add(id);
+  else selectedIds[type].delete(id);
+  updateSelCount(type);
+};
+
+window.toggleSelectAll = function(type, checked) {
+  lastFiltered[type].forEach(item => {
+    if (checked) selectedIds[type].add(item._id);
+    else selectedIds[type].delete(item._id);
+  });
+  // re-render checkboxes to reflect new state
+  const renderFns = { enc: renderEncomendas, cand: renderCandidaturas, cont: renderContactos, news: renderNewsletter };
+  renderFns[type]();
+};
+
+function updateSelCount(type) {
+  const count = selectedIds[type].size;
+  const badge = document.getElementById('selcount-' + type);
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = count + ' selecionado' + (count > 1 ? 's' : '');
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
   }
+  const headCheck = document.getElementById('headcheck-' + type);
+  if (headCheck) {
+    const visibleIds = lastFiltered[type].map(i => i._id);
+    headCheck.checked = visibleIds.length > 0 && visibleIds.every(id => selectedIds[type].has(id));
+  }
+}
+
+// ── REALTIME LISTENERS ───────────────────────────────────────────
+// Em vez de carregar os dados uma vez (getDocs), escutamos as coleções
+// em tempo real (onSnapshot) para que novas encomendas, candidaturas,
+// contactos e subscrições à newsletter apareçam automaticamente,
+// sem precisar de atualizar a página (F5).
+let listenersStarted = false;
+
+function setupRealtimeListeners() {
+  if (listenersStarted) return; // evita duplicar listeners se initApp for chamado de novo
+  listenersStarted = true;
+
+  onSnapshot(query(collection(db, 'encomendas'), orderBy('timestamp', 'asc')), (snap) => {
+    ordersCache = snap.docs.map((d,i) => ({ _id: d.id, id: String(i+1).padStart(3,'0'), ...d.data() }));
+    updateBadges();
+    renderDashboard();
+    renderEncomendas();
+  }, (err) => console.error('Erro realtime encomendas:', err));
+
+  onSnapshot(query(collection(db, 'candidaturas'), orderBy('timestamp', 'asc')), (snap) => {
+    candsCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    updateBadges();
+    renderDashboard();
+    renderCandidaturas();
+  }, (err) => console.error('Erro realtime candidaturas:', err));
+
+  onSnapshot(query(collection(db, 'contactos'), orderBy('timestamp', 'asc')), (snap) => {
+    contsCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    updateBadges();
+    renderDashboard();
+    renderContactos();
+  }, (err) => console.error('Erro realtime contactos:', err));
+
+  onSnapshot(query(collection(db, 'newsletter'), orderBy('timestamp', 'asc')), (snap) => {
+    newsCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    updateBadges();
+    renderNewsletter();
+  }, (err) => console.error('Erro realtime newsletter:', err));
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
 async function initApp() {
   document.getElementById('dash-date').textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  await loadAll();
-  updateBadges();
-  renderDashboard();
-  renderEncomendas();
-  renderCandidaturas();
-  renderContactos();
-  renderNewsletter();
+  setupRealtimeListeners();
+}
+
+const prevCounts = { enc: -1, cand: -1, cont: -1, news: -1 };
+
+function flashBadge(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('badge-flash');
+  // restart animation
+  void el.offsetWidth;
+  el.classList.add('badge-flash');
 }
 
 function updateBadges() {
-  document.getElementById('badge-enc').textContent  = ordersCache.length;
-  document.getElementById('badge-cand').textContent = candsCache.length;
-  document.getElementById('badge-cont').textContent = contsCache.length;
-  document.getElementById('badge-news').textContent = newsCache.length;
+  const counts = { enc: ordersCache.length, cand: candsCache.length, cont: contsCache.length, news: newsCache.length };
+  Object.keys(counts).forEach(key => {
+    const el = document.getElementById('badge-' + key);
+    if (el) el.textContent = counts[key];
+    if (prevCounts[key] !== -1 && counts[key] > prevCounts[key]) flashBadge('badge-' + key);
+    prevCounts[key] = counts[key];
+  });
 }
 
 // ── NAV ───────────────────────────────────────────────────────────
@@ -1005,14 +1113,18 @@ function renderEncomendas() {
   let orders = ordersCache.slice();
   const q = document.getElementById('search-enc').value.toLowerCase();
   const estado = document.getElementById('filter-enc-estado').value;
+  const dataFiltro = dateInputToPt(document.getElementById('filter-enc-data').value);
   if (q) orders = orders.filter(o => (o.nome+' '+o.email+' '+o.produto).toLowerCase().includes(q));
   if (estado) orders = orders.filter(o => (o.estado||'Pendente') === estado);
+  if (dataFiltro) orders = orders.filter(o => o.data === dataFiltro);
+  lastFiltered.enc = orders;
 
   const tbody = document.getElementById('tbody-enc');
   document.getElementById('empty-enc').style.display = orders.length ? 'none' : 'block';
 
   tbody.innerHTML = orders.slice().reverse().map(o => `
     <tr>
+      <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.enc.has(o._id)?'checked':''} onchange="toggleRowSelect('enc','${o._id}',this.checked)"/></td>
       <td class="td-muted">#${o.id}</td>
       <td class="td-muted">${o.data}</td>
       <td><strong>${esc(o.nome)}</strong></td>
@@ -1030,6 +1142,7 @@ function renderEncomendas() {
         <button class="btn-sm btn-del" onclick="deleteEncomenda('${o._id}')" title="Eliminar encomenda">🗑</button>
       </td>
     </tr>`).join('');
+  updateSelCount('enc');
 }
 window.renderEncomendas = renderEncomendas;
 
@@ -1038,6 +1151,7 @@ async function deleteEncomenda(id) {
   try {
     await deleteDoc(doc(db, 'encomendas', id));
     ordersCache = ordersCache.filter(o => o._id !== id);
+    selectedIds.enc.delete(id);
     renderEncomendas();
     renderDashboard();
     updateBadges();
@@ -1049,13 +1163,17 @@ window.deleteEncomenda = deleteEncomenda;
 function renderCandidaturas() {
   let cands = candsCache.slice();
   const q = document.getElementById('search-cand').value.toLowerCase();
+  const dataFiltro = dateInputToPt(document.getElementById('filter-cand-data').value);
   if (q) cands = cands.filter(c => (c.nome+' '+c.email+' '+c.vaga).toLowerCase().includes(q));
+  if (dataFiltro) cands = cands.filter(c => c.data === dataFiltro);
+  lastFiltered.cand = cands;
 
   const tbody = document.getElementById('tbody-cand');
   document.getElementById('empty-cand').style.display = cands.length ? 'none' : 'block';
 
   tbody.innerHTML = cands.slice().reverse().map(c => `
     <tr>
+      <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.cand.has(c._id)?'checked':''} onchange="toggleRowSelect('cand','${c._id}',this.checked)"/></td>
       <td class="td-muted">${c.data}</td>
       <td><strong>${esc(c.nome)}</strong></td>
       <td class="td-muted">${esc(c.email)}</td>
@@ -1067,6 +1185,7 @@ function renderCandidaturas() {
         <button class="btn-sm btn-del" onclick="deleteCandidatura('${c._id}')" title="Eliminar candidatura">🗑</button>
       </td>
     </tr>`).join('');
+  updateSelCount('cand');
 }
 window.renderCandidaturas = renderCandidaturas;
 
@@ -1075,6 +1194,7 @@ async function deleteCandidatura(id) {
   try {
     await deleteDoc(doc(db, 'candidaturas', id));
     candsCache = candsCache.filter(c => c._id !== id);
+    selectedIds.cand.delete(id);
     renderCandidaturas();
     renderDashboard();
     updateBadges();
@@ -1086,10 +1206,13 @@ window.deleteCandidatura = deleteCandidatura;
 function renderContactos() {
   let conts = contsCache.slice();
   const q = document.getElementById('search-cont').value.toLowerCase();
+  const dataFiltro = dateInputToPt(document.getElementById('filter-cont-data').value);
   if (q) conts = conts.filter(c => {
     const mens = c.mensagem || c.msg || '';
     return (c.nome+' '+c.email+' '+(c.assunto||'')+' '+mens).toLowerCase().includes(q);
   });
+  if (dataFiltro) conts = conts.filter(c => c.data === dataFiltro);
+  lastFiltered.cont = conts;
 
   const tbody = document.getElementById('tbody-cont');
   document.getElementById('empty-cont').style.display = conts.length ? 'none' : 'block';
@@ -1098,6 +1221,7 @@ function renderContactos() {
     const mens = c.mensagem || c.msg || '';
     return `
     <tr>
+      <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.cont.has(c._id)?'checked':''} onchange="toggleRowSelect('cont','${c._id}',this.checked)"/></td>
       <td class="td-muted">${c.data || '—'}</td>
       <td><strong>${esc(c.nome)}</strong></td>
       <td class="td-muted">${esc(c.email)}</td>
@@ -1109,6 +1233,7 @@ function renderContactos() {
       </td>
     </tr>`;
   }).join('');
+  updateSelCount('cont');
 }
 window.renderContactos = renderContactos;
 
@@ -1117,6 +1242,7 @@ async function deleteContacto(id) {
   try {
     await deleteDoc(doc(db, 'contactos', id));
     contsCache = contsCache.filter(c => c._id !== id);
+    selectedIds.cont.delete(id);
     renderContactos();
     renderDashboard();
     updateBadges();
@@ -1128,19 +1254,24 @@ window.deleteContacto = deleteContacto;
 function renderNewsletter() {
   let subs = newsCache.slice();
   const q = document.getElementById('search-news').value.toLowerCase();
+  const dataFiltro = dateInputToPt(document.getElementById('filter-news-data').value);
   if (q) subs = subs.filter(s => (s.email||'').toLowerCase().includes(q));
+  if (dataFiltro) subs = subs.filter(s => s.data === dataFiltro);
+  lastFiltered.news = subs;
 
   const tbody = document.getElementById('tbody-news');
   document.getElementById('empty-news').style.display = subs.length ? 'none' : 'block';
 
   tbody.innerHTML = subs.slice().reverse().map(s => `
     <tr>
+      <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.news.has(s._id)?'checked':''} onchange="toggleRowSelect('news','${s._id}',this.checked)"/></td>
       <td class="td-muted">${s.data || '—'}</td>
       <td><strong>${esc(s.email)}</strong></td>
       <td>
         <button class="btn-sm btn-del" onclick="deleteNewsletter('${s._id}')" title="Eliminar subscrição">🗑</button>
       </td>
     </tr>`).join('');
+  updateSelCount('news');
 }
 window.renderNewsletter = renderNewsletter;
 
@@ -1149,6 +1280,7 @@ async function deleteNewsletter(id) {
   try {
     await deleteDoc(doc(db, 'newsletter', id));
     newsCache = newsCache.filter(s => s._id !== id);
+    selectedIds.news.delete(id);
     renderNewsletter();
     updateBadges();
   } catch(e) { console.error(e); alert('Erro ao eliminar.'); }
@@ -1245,6 +1377,66 @@ function exportCSV(type) {
   a.click();
 }
 window.exportCSV = exportCSV;
+
+// ── EXCEL EXPORT (.xlsx) — respects selection / current filter ─────
+const EXCEL_CONFIG = {
+  enc: {
+    label: 'encomendas',
+    headers: ['ID','Data','Nome','Email','Telefone','Produto','Quantidade','Morada','CP','Cidade','Nota','Total (€)','Estado'],
+    row: o => [o.id, o.data, o.nome, o.email, o.telefone, o.produto, o.quantidade, o.morada, o.cp, o.cidade, o.msg, o.total, o.estado]
+  },
+  cand: {
+    label: 'candidaturas',
+    headers: ['Data','Nome','Email','Telefone','Vaga','LinkedIn','Motivação'],
+    row: c => [c.data, c.nome, c.email, c.telefone, c.vaga, c.linkedin, c.motivacao]
+  },
+  cont: {
+    label: 'contactos',
+    headers: ['Data','Nome','Email','Assunto','Mensagem'],
+    row: c => [c.data, c.nome, c.email, c.assunto, c.mensagem || c.msg]
+  },
+  news: {
+    label: 'newsletter',
+    headers: ['Data','Email'],
+    row: s => [s.data, s.email]
+  }
+};
+
+function exportExcel(type) {
+  const config = EXCEL_CONFIG[type];
+  if (!config) return;
+
+  // Use selected rows if any are checked, otherwise use the currently filtered/visible list
+  const hasSelection = selectedIds[type].size > 0;
+  const sourceList = hasSelection
+    ? lastFiltered[type].filter(item => selectedIds[type].has(item._id)).concat(
+        // include selected items that may not be in the current filtered view
+        Array.from(selectedIds[type]).filter(id => !lastFiltered[type].some(i => i._id === id))
+          .map(id => {
+            const fullCache = { enc: ordersCache, cand: candsCache, cont: contsCache, news: newsCache }[type];
+            return fullCache.find(i => i._id === id);
+          }).filter(Boolean)
+      )
+    : lastFiltered[type];
+
+  if (!sourceList.length) {
+    alert('Não há registos para exportar.');
+    return;
+  }
+
+  const sheetData = [config.headers, ...sourceList.map(config.row)];
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  // auto column width based on content length
+  ws['!cols'] = config.headers.map((h, i) => {
+    const maxLen = Math.max(h.length, ...sourceList.map(item => String(config.row(item)[i] || '').length));
+    return { wch: Math.min(Math.max(maxLen + 2, 10), 50) };
+  });
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, config.label.substring(0, 31));
+  const suffix = hasSelection ? `_selecionados_${sourceList.length}` : '';
+  XLSX.writeFile(wb, `manygames_${config.label}${suffix}_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+window.exportExcel = exportExcel;
 
 // ── CLEAR DATA ────────────────────────────────────────────────────
 function clearData(col, page) {
