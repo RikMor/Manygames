@@ -14,32 +14,76 @@
     }
     .news-filter-btn:hover, .news-filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
 
-    .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .news-card {
-      background: var(--card); border: 1px solid var(--border);
-      overflow: hidden; cursor: pointer; transition: border-color .3s, transform .2s;
-      display: flex; flex-direction: column;
+    /* RETÂNGULO ESTILO FAQ */
+    .news-item {
+      border: 1px solid var(--border-dim);
+      margin-bottom: 8px;
+      position: relative;
+      transition: border-color .25s;
     }
-    .news-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-    .news-card-img { width: 100%; aspect-ratio: 16/9; background: var(--panel); overflow: hidden; position: relative; }
-    .news-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .news-card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-    .news-cat-badge {
-      position: absolute; top: 10px; left: 10px;
+    .news-item.open { border-color: rgba(230,57,70,0.4); }
+    .news-item::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      opacity: 0; transition: opacity .25s;
+    }
+    .news-item.open::before { opacity: 1; }
+
+    .news-question {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px;
+      cursor: pointer;
+      background: var(--card);
+      transition: background .2s;
+      user-select: none;
+      gap: 16px;
+    }
+    .news-question:hover { background: rgba(230,57,70,0.05); }
+    .news-question-main { display: flex; align-items: center; gap: 14px; min-width: 0; flex: 1; }
+    .news-thumb { width: 56px; height: 56px; flex-shrink: 0; overflow: hidden; background: var(--panel); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .news-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .news-question-text-wrap { min-width: 0; }
+    .news-question-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      color: var(--text); line-height: 1.4;
+    }
+    .news-question-meta { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; margin-top: 4px; display: flex; gap: 10px; align-items: center; }
+    .news-cat-pill {
       font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; letter-spacing: 1px;
-      padding: 4px 10px; text-transform: uppercase; font-weight: 700;
+      padding: 3px 9px; text-transform: uppercase; font-weight: 700;
     }
     .cat-anuncio   { background: var(--accent); color: #fff; }
     .cat-evento    { background: var(--accent2); color: #000; }
     .cat-imprensa  { background: #4da3ff; color: #fff; }
     .cat-atualizacao { background: #00e676; color: #000; }
     .cat-geral     { background: rgba(255,255,255,0.15); color: #fff; }
-    .news-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-    .news-card-date { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
-    .news-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 1px; color: #fff; margin-bottom: 10px; line-height: 1.2; }
-    .news-card-excerpt { color: var(--muted); font-size: 0.88rem; line-height: 1.6; flex: 1; }
-    .news-card-readmore { margin-top: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); }
-    .news-empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+
+    .news-icon {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1rem; color: var(--accent);
+      transition: transform .3s, border-color .2s, background .2s;
+    }
+    .news-item.open .news-icon {
+      transform: rotate(45deg);
+      border-color: var(--accent);
+      background: rgba(230,57,70,0.12);
+    }
+
+    .news-answer { max-height: 0; overflow: hidden; transition: max-height .4s ease; background: var(--card); }
+    .news-item.open .news-answer { max-height: 2000px; }
+    .news-answer-inner { padding: 18px 24px 24px; border-top: 1px solid var(--border-dim); }
+    .news-answer-layout { display: flex; gap: 24px; align-items: flex-start; }
+    .news-answer-img { width: 280px; flex-shrink: 0; max-height: 320px; object-fit: cover; display: block; }
+    .news-answer-inner p { font-size: 0.97rem; color: #ffffff; line-height: 1.8; white-space: pre-line; margin: 0; flex: 1; min-width: 0; }
+    @media(max-width:700px){ .news-answer-layout{flex-direction:column;} .news-answer-img{width:100%;max-height:240px;} }
+
+    .news-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
     .news-empty .ei { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
 
     .news-featured {
@@ -54,22 +98,10 @@
     .news-featured-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; color: var(--accent2); margin-bottom: 10px; text-transform: uppercase; }
     .news-featured-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 1px; color: #fff; margin-bottom: 14px; line-height: 1.15; }
     .news-featured-excerpt { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 18px; }
+    .news-card-readmore { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); }
 
-    /* MODAL */
-    .news-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.92); z-index: 500; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
-    .news-modal-overlay.open { display: flex; }
-    .news-modal-box { background: var(--panel); border: 1px solid var(--border); max-width: 720px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; }
-    .news-modal-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.5); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; line-height: 1; width: 36px; height: 36px; border-radius: 50%; z-index: 10; }
-    .news-modal-close:hover { background: rgba(0,0,0,0.8); }
-    .news-modal-img { width: 100%; aspect-ratio: 16/9; background: var(--card); overflow: hidden; }
-    .news-modal-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .news-modal-content { padding: 32px; }
-    .news-modal-date { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; }
-    .news-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1px; color: #fff; margin-bottom: 18px; line-height: 1.2; }
-    .news-modal-text { color: var(--text); font-size: 0.98rem; line-height: 1.8; white-space: pre-line; }
-
-    @media(max-width:900px){ .news-grid{grid-template-columns:1fr 1fr;} .news-featured{grid-template-columns:1fr;} .news-featured-body{padding:28px;} }
-    @media(max-width:600px){ .news-grid{grid-template-columns:1fr;} }
+    @media(max-width:900px){ .news-featured{grid-template-columns:1fr;} .news-featured-body{padding:28px;} }
+    @media(max-width:600px){ .news-thumb{display:none;} }
   </style>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 </head>
@@ -78,17 +110,36 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-  <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
-    <li><a href="sobre.html">Sobre</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
-    <li><a href="equipa.html">Equipa</a></li>
     <li><a href="loja.html">Loja</a></li>
-    <li><a href="rh.html">Carreiras</a></li>
-    <li><a href="regulamento.html">Regulamento</a></li>
-    <li><a href="faq.html">FAQ</a></li>
     <li><a href="noticias.html" class="active">Notícias</a></li>
-    <li><a href="contacto.html">Contacto</a></li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-trigger" type="button">Recursos Humanos <span class="caret">▼</span></button>
+      <div class="nav-dropdown-menu">
+        <a href="equipa.html">Equipa</a>
+        <a href="rh.html">Carreiras</a>
+        <a href="regulamento.html">Regulamento</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-trigger" type="button">Suporte <span class="caret">▼</span></button>
+      <div class="nav-dropdown-menu">
+        <a href="sobre.html">Sobre</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <button class="nav-dropdown-trigger" type="button">Redes Sociais <span class="caret">▼</span></button>
+      <div class="nav-dropdown-menu">
+        <a href="instagram.html">Instagram</a>
+        <a href="facebook.html">Facebook</a>
+        <a href="reddit.html">Reddit</a>
+        <a href="twitter.html">Twitter / X</a>
+      </div>
+    </li>
   </ul>
 </nav>
 
@@ -111,24 +162,11 @@
     <button class="news-filter-btn active" onclick="filterNews('todos',this)">Todas</button>
   </div>
 
-  <!-- GRID -->
-  <div class="news-grid" id="news-grid">
+  <!-- LISTA EM ACCORDION -->
+  <div id="news-list">
     <div class="news-empty"><div class="ei">📰</div>A carregar notícias...</div>
   </div>
 </section>
-
-<!-- MODAL -->
-<div class="news-modal-overlay" id="news-modal">
-  <div class="news-modal-box">
-    <button class="news-modal-close" onclick="closeNewsModal()">✕</button>
-    <div class="news-modal-img" id="news-modal-img" style="display:none;"></div>
-    <div class="news-modal-content">
-      <div class="news-modal-date" id="news-modal-date"></div>
-      <div class="news-modal-title" id="news-modal-title"></div>
-      <div class="news-modal-text" id="news-modal-text"></div>
-    </div>
-  </div>
-</div>
 
 <footer>
   <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
@@ -170,7 +208,7 @@ const CAT_CLASS = {
 let allNews = [];
 
 async function loadNews() {
-  const grid = document.getElementById('news-grid');
+  const list = document.getElementById('news-list');
   try {
     let snap;
     try {
@@ -181,10 +219,10 @@ async function loadNews() {
     allNews = snap.docs.map(d => ({ _id: d.id, ...d.data() })).reverse();
     renderFeatured();
     buildFilters();
-    renderGrid(allNews.filter(n => !(n.destaque === true || n.destaque === 'true')));
+    renderList(allNews);
   } catch(e) {
     console.error('Erro ao carregar notícias:', e);
-    grid.innerHTML = '<div class="news-empty"><div class="ei">⚠️</div>Erro ao carregar notícias.</div>';
+    list.innerHTML = '<div class="news-empty"><div class="ei">⚠️</div>Erro ao carregar notícias.</div>';
   }
 }
 
@@ -196,7 +234,7 @@ function renderFeatured() {
     ? `<img src="${esc(destaque.imagem)}" alt="${esc(destaque.titulo)}"/>`
     : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">📰</div>`;
   wrap.innerHTML = `
-    <div class="news-featured reveal" onclick="openNewsModal('${destaque._id}')">
+    <div class="news-featured reveal" onclick="scrollToNews('${destaque._id}')">
       <div class="news-featured-img">${imgHtml}</div>
       <div class="news-featured-body">
         <div class="news-featured-tag">${CAT_LABELS[destaque.categoria] || '📌 Geral'} · ${esc(destaque.data||'')}</div>
@@ -223,36 +261,46 @@ function buildFilters() {
 window.filterNews = function(cat, btn) {
   document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const nonFeatured = allNews.filter(n => !(n.destaque === true || n.destaque === 'true'));
-  const filtered = cat === 'todos' ? nonFeatured : nonFeatured.filter(n => n.categoria === cat);
-  renderGrid(filtered);
+  const filtered = cat === 'todos' ? allNews : allNews.filter(n => n.categoria === cat);
+  renderList(filtered);
 };
 
-function renderGrid(items) {
-  const grid = document.getElementById('news-grid');
+function renderList(items) {
+  const list = document.getElementById('news-list');
   if (!items.length) {
-    grid.innerHTML = '<div class="news-empty"><div class="ei">📰</div>Sem notícias nesta categoria de momento.</div>';
+    list.innerHTML = '<div class="news-empty"><div class="ei">📰</div>Sem notícias nesta categoria de momento.</div>';
     return;
   }
-  grid.innerHTML = items.map(n => {
+  list.innerHTML = items.map(n => {
     try {
-      const imgHtml = n.imagem
-        ? `<img src="${esc(n.imagem)}" alt="${esc(n.titulo)}" loading="lazy"/>`
-        : `<div class="news-card-img-placeholder">📰</div>`;
       const catClass = CAT_CLASS[n.categoria] || 'cat-geral';
       const catLabel = CAT_LABELS[n.categoria] || '📌 Geral';
-      const excerpt = (n.resumo || n.texto || '').substring(0,110);
+      const thumbHtml = n.imagem
+        ? `<img src="${esc(n.imagem)}" alt="${esc(n.titulo)}" loading="lazy"/>`
+        : `📰`;
+      const imgFullHtml = n.imagem ? `<img class="news-answer-img" src="${esc(n.imagem)}" alt="${esc(n.titulo)}"/>` : '';
       return `
-      <div class="news-card reveal" onclick="openNewsModal('${n._id}')">
-        <div class="news-card-img">
-          ${imgHtml}
-          <span class="news-cat-badge ${catClass}">${catLabel}</span>
+      <div class="news-item reveal" id="news-item-${n._id}">
+        <div class="news-question" onclick="toggleNewsItem('${n._id}')">
+          <div class="news-question-main">
+            <div class="news-thumb">${thumbHtml}</div>
+            <div class="news-question-text-wrap">
+              <div class="news-question-text">${esc(n.titulo||'Sem título')}</div>
+              <div class="news-question-meta">
+                <span class="news-cat-pill ${catClass}">${catLabel}</span>
+                <span>${esc(n.data||'')}</span>
+              </div>
+            </div>
+          </div>
+          <span class="news-icon">+</span>
         </div>
-        <div class="news-card-body">
-          <div class="news-card-date">${esc(n.data||'')}</div>
-          <div class="news-card-title">${esc(n.titulo||'Sem título')}</div>
-          <p class="news-card-excerpt">${esc(excerpt)}${(n.resumo||n.texto||'').length>110?'…':''}</p>
-          <span class="news-card-readmore">LER MAIS →</span>
+        <div class="news-answer">
+          <div class="news-answer-inner">
+            <div class="news-answer-layout">
+              ${imgFullHtml}
+              <p>${esc(n.texto || n.resumo || '')}</p>
+            </div>
+          </div>
         </div>
       </div>`;
     } catch(err) {
@@ -263,32 +311,27 @@ function renderGrid(items) {
   setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 80);
 }
 
-window.openNewsModal = function(id) {
-  const n = allNews.find(x => x._id === id);
-  if (!n) return;
-  const imgWrap = document.getElementById('news-modal-img');
-  if (n.imagem) {
-    imgWrap.innerHTML = `<img src="${esc(n.imagem)}" alt="${esc(n.titulo)}"/>`;
-    imgWrap.style.display = 'block';
-  } else {
-    imgWrap.style.display = 'none';
-  }
-  document.getElementById('news-modal-date').textContent = (CAT_LABELS[n.categoria] || '📌 Geral') + ' · ' + (n.data || '');
-  document.getElementById('news-modal-title').textContent = n.titulo || '';
-  document.getElementById('news-modal-text').textContent = n.texto || n.resumo || '';
-  document.getElementById('news-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+window.toggleNewsItem = function(id) {
+  const item = document.getElementById('news-item-' + id);
+  if (!item) return;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.news-item.open').forEach(el => el.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
 };
 
-window.closeNewsModal = function() {
-  document.getElementById('news-modal').classList.remove('open');
-  document.body.style.overflow = '';
+window.scrollToNews = function(id) {
+  document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('.news-filter-btn');
+  if (allBtn) allBtn.classList.add('active');
+  renderList(allNews);
+  setTimeout(() => {
+    const item = document.getElementById('news-item-' + id);
+    if (item) {
+      item.classList.add('open');
+      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
 };
-
-document.getElementById('news-modal').addEventListener('click', function(e) {
-  if (e.target === this) window.closeNewsModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeNewsModal(); });
 
 loadNews();
 </script>

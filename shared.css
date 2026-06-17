@@ -64,6 +64,35 @@ nav {
 
 .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
 
+/* NAV DROPDOWNS */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  color: var(--muted); text-decoration: none;
+  font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 13px; transition: color .2s;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  background: none; border: none; font-family: 'Rajdhani', sans-serif;
+}
+.nav-dropdown-trigger:hover { color: #fff; }
+.nav-dropdown-trigger .caret { font-size: 0.6rem; transition: transform .2s; display: inline-block; }
+.nav-dropdown.open .nav-dropdown-trigger .caret { transform: rotate(180deg); }
+.nav-dropdown-trigger.active-parent { color: var(--accent) !important; }
+.nav-dropdown-menu {
+  display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: rgba(10,10,14,0.98); border: 1px solid var(--border);
+  min-width: 190px; padding: 6px; backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+.nav-dropdown.open .nav-dropdown-menu { display: block; }
+.nav-dropdown-menu a {
+  display: block; color: var(--muted); text-decoration: none;
+  font-weight: 700; font-size: 0.74rem; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 10px 14px; transition: background .2s, color .2s;
+}
+.nav-dropdown-menu a:hover { background: rgba(230,57,70,0.1); color: #fff; }
+.nav-dropdown-menu a.active { color: var(--accent) !important; }
+
 
 /* PAGE HERO */
 .page-hero {
@@ -184,4 +213,15 @@ footer p { color: var(--muted); font-size: 0.78rem; }
   .nav-links a.active { color: var(--accent) !important; }
   .nav-mobile-toggle { display: block; }
   .btn-outline { margin-left: 0; margin-top: 12px; display: block; text-align: center; }
+
+  /* Mobile dropdowns become inline expandable groups */
+  .nav-dropdown { width: 100%; }
+  .nav-dropdown-trigger { width: 100%; justify-content: space-between; padding: 10px 4px; }
+  .nav-dropdown-menu {
+    display: none; position: static; transform: none; width: 100%;
+    background: rgba(255,255,255,0.03); border: none; box-shadow: none;
+    padding: 0 0 0 14px; margin-top: 4px;
+  }
+  .nav-dropdown.open .nav-dropdown-menu { display: block; }
+  .nav-dropdown-menu a { padding: 10px 4px; }
 }
