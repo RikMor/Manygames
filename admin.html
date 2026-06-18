@@ -230,7 +230,7 @@
   <div class="login-box">
     <div class="login-logo">MANY<span>GAMES</span></div>
     <div class="login-sub">Backoffice · Acesso Restrito</div>
-    <input type="text" id="login-user" placeholder="Utilizador" autocomplete="off"/>
+    <input type="email" id="login-email" placeholder="Email" autocomplete="email"/>
     <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-error">Credenciais inválidas.</div>
@@ -905,6 +905,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, setDoc, query, orderBy, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w",
@@ -916,27 +917,43 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // ── AUTH ──────────────────────────────────────────────────────────
-const CREDENTIALS = { user: 'admin', pass: 'admin' };
-
-function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
   } else {
-    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
   }
+});
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const btn   = document.querySelector('.login-btn');
+  const err   = document.getElementById('login-error');
+  err.style.display = 'none';
+  btn.textContent = 'A entrar...';
+  btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    // onAuthStateChanged handles the rest
+  } catch (e) {
+    err.style.display = 'block';
+    err.textContent = 'Email ou password incorretos.';
+  }
+  btn.textContent = 'Entrar';
+  btn.disabled = false;
 }
 window.doLogin = doLogin;
 
-function doLogout() {
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-user').value = '';
+async function doLogout() {
+  await signOut(auth);
+  document.getElementById('login-email').value = '';
   document.getElementById('login-pass').value = '';
 }
 window.doLogout = doLogout;
@@ -1090,21 +1107,21 @@ function renderDashboard() {
   rEnc.innerHTML = orders.slice(-5).reverse().map(o => `
     <div class="recent-item">
       <div><div class="recent-name">${esc(o.nome)}</div><div class="recent-sub">${esc(o.produto)} · ${o.quantidade}x · ${o.total}€</div></div>
-      <div style="text-align:right"><span class="badge badge-${(o.estado||'Pendente').toLowerCase()}">${o.estado||'Pendente'}</span><div class="td-muted" style="margin-top:4px;font-size:0.75rem;">${o.data}</div></div>
+      <div style="text-align:right"><span class="badge badge-${(o.estado||'Pendente').toLowerCase()}">${o.estado||'Pendente'}</span><div class="td-muted" style="margin-top:4px;font-size:0.75rem;">${dataHora(o)}</div></div>
     </div>`).join('') || '<div class="empty"><div class="empty-icon">📦</div>Sem encomendas.</div>';
 
   const rCand = document.getElementById('recent-cand');
   rCand.innerHTML = cands.slice(-5).reverse().map(c => `
     <div class="recent-item">
       <div><div class="recent-name">${esc(c.nome)}</div><div class="recent-sub">${esc(c.vaga)}</div></div>
-      <div class="td-muted" style="font-size:0.75rem;">${c.data}</div>
+      <div class="td-muted" style="font-size:0.75rem;">${dataHora(c)}</div>
     </div>`).join('') || '<div class="empty"><div class="empty-icon">💼</div>Sem candidaturas.</div>';
 
   const rCont = document.getElementById('recent-cont');
   rCont.innerHTML = conts.slice(-5).reverse().map(c => `
     <div class="recent-item">
       <div><div class="recent-name">${esc(c.nome)}</div><div class="recent-sub">${esc(c.assunto||'—')}</div></div>
-      <div class="td-muted" style="font-size:0.75rem;">${c.data}</div>
+      <div class="td-muted" style="font-size:0.75rem;">${dataHora(c)}</div>
     </div>`).join('') || '<div class="empty"><div class="empty-icon">✉️</div>Sem mensagens.</div>';
 }
 
@@ -1126,7 +1143,7 @@ function renderEncomendas() {
     <tr>
       <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.enc.has(o._id)?'checked':''} onchange="toggleRowSelect('enc','${o._id}',this.checked)"/></td>
       <td class="td-muted">#${o.id}</td>
-      <td class="td-muted">${o.data}</td>
+      <td class="td-muted" style="white-space:nowrap;">${dataHora(o)}</td>
       <td><strong>${esc(o.nome)}</strong></td>
       <td class="td-muted">${esc(o.email)}</td>
       <td>${esc(o.produto)}</td>
@@ -1174,7 +1191,7 @@ function renderCandidaturas() {
   tbody.innerHTML = cands.slice().reverse().map(c => `
     <tr>
       <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.cand.has(c._id)?'checked':''} onchange="toggleRowSelect('cand','${c._id}',this.checked)"/></td>
-      <td class="td-muted">${c.data}</td>
+      <td class="td-muted" style="white-space:nowrap;">${dataHora(c)}</td>
       <td><strong>${esc(c.nome)}</strong></td>
       <td class="td-muted">${esc(c.email)}</td>
       <td class="td-muted">${esc(c.telefone||'—')}</td>
@@ -1222,7 +1239,7 @@ function renderContactos() {
     return `
     <tr>
       <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.cont.has(c._id)?'checked':''} onchange="toggleRowSelect('cont','${c._id}',this.checked)"/></td>
-      <td class="td-muted">${c.data || '—'}</td>
+      <td class="td-muted" style="white-space:nowrap;">${dataHora(c)}</td>
       <td><strong>${esc(c.nome)}</strong></td>
       <td class="td-muted">${esc(c.email)}</td>
       <td>${esc(c.assunto||'—')}</td>
@@ -1265,7 +1282,7 @@ function renderNewsletter() {
   tbody.innerHTML = subs.slice().reverse().map(s => `
     <tr>
       <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.news.has(s._id)?'checked':''} onchange="toggleRowSelect('news','${s._id}',this.checked)"/></td>
-      <td class="td-muted">${s.data || '—'}</td>
+      <td class="td-muted" style="white-space:nowrap;">${dataHora(s)}</td>
       <td><strong>${esc(s.email)}</strong></td>
       <td>
         <button class="btn-sm btn-del" onclick="deleteNewsletter('${s._id}')" title="Eliminar subscrição">🗑</button>
@@ -1290,10 +1307,11 @@ window.deleteNewsletter = deleteNewsletter;
 // ── DETAIL MODAL ──────────────────────────────────────────────────
 function showDetail(type, data) {
   const o = typeof data === 'string' ? JSON.parse(data) : data;
+  const dh = dataHora(o);
   let html = '';
   if (type === 'enc') {
     html = `<h2 style="margin-bottom:6px;font-size:1.3rem;">Encomenda #${o.id}</h2>
-    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">${o.data}</p>
+    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">📅 ${dh}</p>
     <div class="detail-grid">
       <div class="detail-item"><label>Nome</label><p>${esc(o.nome)}</p></div>
       <div class="detail-item"><label>Email</label><p>${esc(o.email)}</p></div>
@@ -1308,7 +1326,7 @@ function showDetail(type, data) {
     </div>`;
   } else if (type === 'cand') {
     html = `<h2 style="margin-bottom:6px;font-size:1.3rem;">Candidatura</h2>
-    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">${o.data}</p>
+    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">📅 ${dh}</p>
     <div class="detail-grid">
       <div class="detail-item"><label>Nome</label><p>${esc(o.nome)}</p></div>
       <div class="detail-item"><label>Email</label><p>${esc(o.email)}</p></div>
@@ -1319,7 +1337,7 @@ function showDetail(type, data) {
     </div>`;
   } else {
     html = `<h2 style="margin-bottom:6px;font-size:1.3rem;">Mensagem de Contacto</h2>
-    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">${o.data}</p>
+    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">📅 ${dh}</p>
     <div class="detail-grid">
       <div class="detail-item"><label>Nome</label><p>${esc(o.nome)}</p></div>
       <div class="detail-item"><label>Email</label><p>${esc(o.email)}</p></div>
@@ -1382,23 +1400,23 @@ window.exportCSV = exportCSV;
 const EXCEL_CONFIG = {
   enc: {
     label: 'encomendas',
-    headers: ['ID','Data','Nome','Email','Telefone','Produto','Quantidade','Morada','CP','Cidade','Nota','Total (€)','Estado'],
-    row: o => [o.id, o.data, o.nome, o.email, o.telefone, o.produto, o.quantidade, o.morada, o.cp, o.cidade, o.msg, o.total, o.estado]
+    headers: ['ID','Data','Hora','Nome','Email','Telefone','Produto','Quantidade','Morada','CP','Cidade','Nota','Total (€)','Estado'],
+    row: o => [o.id, o.data, hora(o.timestamp), o.nome, o.email, o.telefone, o.produto, o.quantidade, o.morada, o.cp, o.cidade, o.msg, o.total, o.estado]
   },
   cand: {
     label: 'candidaturas',
-    headers: ['Data','Nome','Email','Telefone','Vaga','LinkedIn','Motivação'],
-    row: c => [c.data, c.nome, c.email, c.telefone, c.vaga, c.linkedin, c.motivacao]
+    headers: ['Data','Hora','Nome','Email','Telefone','Vaga','LinkedIn','Motivação'],
+    row: c => [c.data, hora(c.timestamp), c.nome, c.email, c.telefone, c.vaga, c.linkedin, c.motivacao]
   },
   cont: {
     label: 'contactos',
-    headers: ['Data','Nome','Email','Assunto','Mensagem'],
-    row: c => [c.data, c.nome, c.email, c.assunto, c.mensagem || c.msg]
+    headers: ['Data','Hora','Nome','Email','Assunto','Mensagem'],
+    row: c => [c.data, hora(c.timestamp), c.nome, c.email, c.assunto, c.mensagem || c.msg]
   },
   news: {
     label: 'newsletter',
-    headers: ['Data','Email'],
-    row: s => [s.data, s.email]
+    headers: ['Data','Hora','Email'],
+    row: s => [s.data, hora(s.timestamp), s.email]
   }
 };
 
@@ -1447,6 +1465,23 @@ window.clearData = clearData;
 // ── UTILS ─────────────────────────────────────────────────────────
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Extract HH:MM from a Firestore timestamp object or return ''
+function hora(ts) {
+  if (!ts) return '';
+  try {
+    const d = ts.toDate ? ts.toDate() : new Date(ts.seconds * 1000);
+    return d.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+  } catch(e) { return ''; }
+}
+
+// Full date+time string
+function dataHora(item) {
+  const h = hora(item.timestamp);
+  const d = item.data || '';
+  if (d && h) return d + ' ' + h;
+  return d || h || '—';
 }
 
 // Login on Enter
