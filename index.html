@@ -5,6 +5,44 @@
   <title>ManyGames – Home</title>
   <link rel="stylesheet" href="shared.css?v=4"/>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
+<style>
+.mg-dd{position:relative;}
+.mg-dd-btn{
+  color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.78rem;
+  letter-spacing:2px;text-transform:uppercase;padding:8px 13px;
+  transition:color .2s;cursor:pointer;display:flex;align-items:center;gap:5px;
+  background:none;border:none;font-family:'Rajdhani',sans-serif;
+}
+.mg-dd-btn:hover{color:#fff;}
+.mg-dd-caret{font-size:0.6rem;transition:transform .2s;display:inline-block;}
+.mg-dd.is-open .mg-dd-caret{transform:rotate(180deg);}
+.mg-dd-btn.mg-active{color:#e63946 !important;}
+.mg-dd-panel{
+  display:none;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:rgba(10,10,14,0.98);border:1px solid rgba(230,57,70,0.25);
+  min-width:190px;padding:6px;backdrop-filter:blur(14px);
+  box-shadow:0 16px 40px rgba(0,0,0,0.5);z-index:10000;
+}
+.mg-dd.is-open .mg-dd-panel{display:block;}
+.mg-dd-panel a{
+  display:block;color:#b0b0cc;text-decoration:none;font-weight:700;
+  font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:10px 14px;transition:background .2s,color .2s;
+}
+.mg-dd-panel a:hover{background:rgba(230,57,70,0.1);color:#fff;}
+.mg-dd-panel a.mg-active{color:#e63946 !important;}
+@media (max-width:600px){
+  .mg-dd{width:100%;}
+  .mg-dd-btn{width:100%;justify-content:space-between;padding:10px 4px;}
+  .mg-dd-panel{
+    display:none;position:static;transform:none;width:100%;
+    background:rgba(255,255,255,0.03);border:none;box-shadow:none;
+    padding:0 0 0 14px;margin-top:4px;
+  }
+  .mg-dd.is-open .mg-dd-panel{display:block;}
+  .mg-dd-panel a{padding:10px 4px;}
+}
+</style>
 </head>
 <body>
 
@@ -12,29 +50,29 @@
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
       <ul class="nav-links">
-    <li><a href="index.html" class="active">Início</a></li>
+    <li><a href="index.html" class="mg-active">Início</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="noticias.html">Notícias</a></li>
-    <li class="nav-dropdown">
-      <button class="nav-dropdown-trigger" type="button">Recursos Humanos <span class="caret">▼</span></button>
-      <div class="nav-dropdown-menu">
+    <li class="mg-dd">
+      <button class="mg-dd-btn" type="button">Recursos Humanos <span class="mg-dd-caret">▼</span></button>
+      <div class="mg-dd-panel">
         <a href="equipa.html">Equipa</a>
         <a href="rh.html">Carreiras</a>
         <a href="regulamento.html">Regulamento</a>
       </div>
     </li>
-    <li class="nav-dropdown">
-      <button class="nav-dropdown-trigger" type="button">Suporte <span class="caret">▼</span></button>
-      <div class="nav-dropdown-menu">
+    <li class="mg-dd">
+      <button class="mg-dd-btn" type="button">Suporte <span class="mg-dd-caret">▼</span></button>
+      <div class="mg-dd-panel">
         <a href="sobre.html">Sobre</a>
         <a href="faq.html">FAQ</a>
         <a href="contacto.html">Contacto</a>
       </div>
     </li>
-    <li class="nav-dropdown">
-      <button class="nav-dropdown-trigger" type="button">Redes Sociais <span class="caret">▼</span></button>
-      <div class="nav-dropdown-menu">
+    <li class="mg-dd">
+      <button class="mg-dd-btn" type="button">Redes Sociais <span class="mg-dd-caret">▼</span></button>
+      <div class="mg-dd-panel">
         <a href="instagram.html">Instagram</a>
         <a href="facebook.html">Facebook</a>
         <a href="reddit.html">Reddit</a>
@@ -140,5 +178,33 @@
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
 <script src="shared.js?v=4"></script>
+<script>
+(function(){
+  function initMgDropdowns(){
+    document.querySelectorAll('.mg-dd-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var dd = btn.closest('.mg-dd');
+        var wasOpen = dd.classList.contains('is-open');
+        document.querySelectorAll('.mg-dd.is-open').forEach(function(d){
+          if(d!==dd) d.classList.remove('is-open');
+        });
+        dd.classList.toggle('is-open', !wasOpen);
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!e.target.closest('.mg-dd')){
+        document.querySelectorAll('.mg-dd.is-open').forEach(function(d){ d.classList.remove('is-open'); });
+      }
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initMgDropdowns);
+  } else {
+    initMgDropdowns();
+  }
+})();
+</script>
 </body>
 </html>

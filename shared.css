@@ -82,7 +82,7 @@ nav {
   display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
   background: rgba(10,10,14,0.98); border: 1px solid var(--border);
   min-width: 190px; padding: 6px; backdrop-filter: blur(14px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5); z-index: 10000;
 }
 .nav-dropdown.open .nav-dropdown-menu { display: block; }
 .nav-dropdown-menu a {
