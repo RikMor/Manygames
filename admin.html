@@ -1467,6 +1467,11 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// Like esc() but also converts newlines to <br> for display in HTML
+function escNl(s) {
+  return esc(s).replace(/\n/g,'<br>');
+}
+
 // Extract HH:MM from a Firestore timestamp object or return ''
 function hora(ts) {
   if (!ts) return '';
@@ -1506,7 +1511,7 @@ function renderIgAdmin() {
   }
   grid.innerHTML = igCache.slice().reverse().map(p => `
     <div class="item-card">
-      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;">${esc(p.caption||'').substring(0,80)}${(p.caption||'').length>80?'…':''}</div>
+      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;white-space:pre-line;">${escNl((p.caption||'').substring(0,120))}${(p.caption||'').length>120?'…':''}</div>
       <div class="item-card-sub">${p.img ? '🖼 '+esc(p.img) : '🔗 link externo'} · ${esc(p.likes||'')}</div>
       <div class="item-card-actions">
         <button class="btn-edit" onclick='editIgPost(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Editar</button>
@@ -1578,7 +1583,7 @@ function renderFbAdmin() {
   }
   grid.innerHTML = fbCache.slice().reverse().map(p => `
     <div class="item-card">
-      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;">${esc(p.body||'').substring(0,80)}${(p.body||'').length>80?'…':''}</div>
+      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;white-space:pre-line;">${escNl((p.body||'').substring(0,120))}${(p.body||'').length>120?'…':''}</div>
       <div class="item-card-sub">${p.img ? '🖼 '+esc(p.img) : '🔗 link externo'} · ${esc(p.tempo||'')}</div>
       <div class="item-card-actions">
         <button class="btn-edit" onclick='editFbPost(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Editar</button>
@@ -2055,7 +2060,7 @@ function renderTwAdmin() {
   }
   grid.innerHTML = twCache.slice().reverse().map(t => `
     <div class="item-card">
-      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;">${esc(t.body||'').substring(0,80)}${(t.body||'').length>80?'…':''}</div>
+      <div class="item-card-title" style="font-size:0.85rem;font-family:sans-serif;font-weight:normal;line-height:1.4;white-space:pre-line;">${escNl((t.body||'').substring(0,120))}${(t.body||'').length>120?'…':''}</div>
       <div class="item-card-sub">${esc(t.tempo||'—')} · ❤️ ${esc(t.likes||'0')} · 🔁 ${esc(t.retweets||'0')}</div>
       <div class="item-card-actions">
         <button class="btn-edit" onclick='editTwPost(${JSON.stringify(t).replace(/'/g,"&#39;")})'>✏️ Editar</button>
