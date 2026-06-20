@@ -172,41 +172,35 @@
   </style>
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 <style>
-.mg-dd{position:relative;}
-.mg-dd-btn{
-  color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.78rem;
+.gdd{position:relative;display:inline-block;}
+.gdd-btn{
+  background:transparent;color:#b0b0cc;border:none;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;
   letter-spacing:2px;text-transform:uppercase;padding:8px 13px;
-  transition:color .2s;cursor:pointer;display:flex;align-items:center;gap:5px;
-  background:none;border:none;font-family:'Rajdhani',sans-serif;
+  cursor:pointer;display:inline-flex;align-items:center;gap:5px;
 }
-.mg-dd-btn:hover{color:#fff;}
-.mg-dd-caret{font-size:0.6rem;transition:transform .2s;display:inline-block;}
-.mg-dd.is-open .mg-dd-caret{transform:rotate(180deg);}
-.mg-dd-btn.mg-active{color:#e63946 !important;}
-.mg-dd-panel{
-  display:none;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
-  background:rgba(10,10,14,0.98);border:1px solid rgba(230,57,70,0.25);
-  min-width:190px;padding:6px;backdrop-filter:blur(14px);
-  box-shadow:0 16px 40px rgba(0,0,0,0.5);z-index:10000;
+.gdd-btn:hover{color:#fff;}
+.gdd-btn.gactive{color:#e63946;}
+.gdd-c{font-size:0.6rem;}
+.gdd.gopen .gdd-c{transform:rotate(180deg);}
+.gdd-menu{
+  display:none;position:absolute;top:100%;left:0;
+  background:#0d0d14;border:1px solid rgba(230,57,70,0.4);
+  min-width:190px;padding:6px;margin-top:8px;
 }
-.mg-dd.is-open .mg-dd-panel{display:block;}
-.mg-dd-panel a{
+.gdd.gopen .gdd-menu{display:block;}
+.gdd-menu a{
   display:block;color:#b0b0cc;text-decoration:none;font-weight:700;
   font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;
-  padding:10px 14px;transition:background .2s,color .2s;
+  padding:10px 14px;
 }
-.mg-dd-panel a:hover{background:rgba(230,57,70,0.1);color:#fff;}
-.mg-dd-panel a.mg-active{color:#e63946 !important;}
+.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}
+.gdd-menu a.gactive{color:#e63946;}
 @media (max-width:600px){
-  .mg-dd{width:100%;}
-  .mg-dd-btn{width:100%;justify-content:space-between;padding:10px 4px;}
-  .mg-dd-panel{
-    display:none;position:static;transform:none;width:100%;
-    background:rgba(255,255,255,0.03);border:none;box-shadow:none;
-    padding:0 0 0 14px;margin-top:4px;
-  }
-  .mg-dd.is-open .mg-dd-panel{display:block;}
-  .mg-dd-panel a{padding:10px 4px;}
+  .gdd{width:100%;display:block;}
+  .gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}
+  .gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}
+  .gdd-menu a{padding:10px 4px;}
 }
 </style>
 </head>
@@ -220,25 +214,25 @@
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="loja.html">Loja</a></li>
     <li><a href="noticias.html">Notícias</a></li>
-    <li class="mg-dd">
-      <button class="mg-dd-btn" type="button">Recursos Humanos <span class="mg-dd-caret">▼</span></button>
-      <div class="mg-dd-panel">
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Recursos Humanos <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
         <a href="equipa.html">Equipa</a>
         <a href="rh.html">Carreiras</a>
         <a href="regulamento.html">Regulamento</a>
       </div>
     </li>
-    <li class="mg-dd">
-      <button class="mg-dd-btn mg-active" type="button">Suporte <span class="mg-dd-caret">▼</span></button>
-      <div class="mg-dd-panel">
+    <li class="gdd">
+      <button class="gdd-btn gactive" type="button">Suporte <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
         <a href="sobre.html">Sobre</a>
-        <a href="faq.html" class="mg-active">FAQ</a>
+        <a href="faq.html" class="gactive">FAQ</a>
         <a href="contacto.html">Contacto</a>
       </div>
     </li>
-    <li class="mg-dd">
-      <button class="mg-dd-btn" type="button">Redes Sociais <span class="mg-dd-caret">▼</span></button>
-      <div class="mg-dd-panel">
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Redes Sociais <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
         <a href="instagram.html">Instagram</a>
         <a href="facebook.html">Facebook</a>
         <a href="reddit.html">Reddit</a>
@@ -704,29 +698,30 @@
 </script>
 <script>
 (function(){
-  function initMgDropdowns(){
-    document.querySelectorAll('.mg-dd-btn').forEach(function(btn){
-      btn.addEventListener('click', function(e){
+  function start(){
+    var btns = document.querySelectorAll('.gdd-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function(e){
         e.preventDefault();
         e.stopPropagation();
-        var dd = btn.closest('.mg-dd');
-        var wasOpen = dd.classList.contains('is-open');
-        document.querySelectorAll('.mg-dd.is-open').forEach(function(d){
-          if(d!==dd) d.classList.remove('is-open');
-        });
-        dd.classList.toggle('is-open', !wasOpen);
+        var dd = this.parentElement;
+        var wasOpen = dd.classList.contains('gopen');
+        var all = document.querySelectorAll('.gdd.gopen');
+        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
+        if (!wasOpen) { dd.classList.add('gopen'); }
       });
-    });
+    }
     document.addEventListener('click', function(e){
-      if(!e.target.closest('.mg-dd')){
-        document.querySelectorAll('.mg-dd.is-open').forEach(function(d){ d.classList.remove('is-open'); });
+      if (!e.target.closest('.gdd')) {
+        var all = document.querySelectorAll('.gdd.gopen');
+        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
       }
     });
   }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initMgDropdowns);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
   } else {
-    initMgDropdowns();
+    start();
   }
 })();
 </script>
