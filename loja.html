@@ -369,34 +369,6 @@
     @keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:none} }
 
 
-    /* NAV DEAL PILL */
-    .nav-deal {
-      display: flex; align-items: center; gap: 12px;
-      padding: 6px 14px 6px 8px;
-      background: rgba(255,159,28,0.08);
-      border: 1px solid rgba(255,159,28,0.35);
-      text-decoration: none;
-      transition: background .2s, border-color .2s;
-      flex-shrink: 0;
-    }
-    .nav-deal:hover { background: rgba(255,159,28,0.15); border-color: var(--accent2); }
-    .nav-deal-img {
-      width: 38px; height: 38px; object-fit: cover;
-      border: 1px solid rgba(255,159,28,0.3);
-    }
-    .nav-deal-text { line-height: 1.2; }
-    .nav-deal-label { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 2px; color: var(--accent2); text-transform: uppercase; }
-    .nav-deal-name { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 2px; color: #fff; }
-    .nav-deal-prices { display: flex; align-items: baseline; gap: 7px; }
-    .nav-deal-old { font-size: 0.72rem; color: var(--muted); text-decoration: line-through; font-family: 'Rajdhani', sans-serif; }
-    .nav-deal-new { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--accent2); letter-spacing: 1px; }
-    .nav-deal-badge {
-      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
-      letter-spacing: 1px; background: var(--accent); color: #fff;
-      padding: 2px 7px; margin-left: 4px;
-    }
-    @media (max-width: 900px) { .nav-deal { display: none; } }
-
     /* NEWSLETTER */
     #newsletter { scroll-margin-top: 80px; }
     .newsletter-wrapper {
@@ -504,20 +476,6 @@
   <a href="index.html" class="nav-logo">
     <img src="logo.png" alt="ManyGames logo"/>
     <span class="nav-logo-text">MANY<span>GAMES</span></span>
-  </a>
-  <a href="#produtos" class="nav-deal" id="nav-deal-destaque" style="display:none;">
-    <img src="" alt="" class="nav-deal-img" id="nav-deal-img"/>
-    <div class="nav-deal-text">
-      <div class="nav-deal-label">⭐ Destaque</div>
-      <div class="nav-deal-name" id="nav-deal-nome"></div>
-      <div class="nav-deal-prices">
-        <span class="nav-deal-old" id="nav-deal-old" style="display:none;"></span>
-        <span class="nav-deal-new" id="nav-deal-new"></span>
-        <span class="nav-deal-badge" id="nav-deal-badge" style="display:none;"></span>
-      </div>
-    </div>
-      </div>
-    </div>
   </a>
     <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
       <ul class="nav-links">
@@ -908,7 +866,6 @@ async function loadProducts() {
     renderProductGrid(prods);
     renderProductSelect(prods);
     try { renderDestaqueHero(prods); } catch(e) { console.error('Erro destaque hero:', e); }
-    try { renderNavDeal(prods); } catch(e) { console.error('Erro nav deal:', e); }
   } catch(e) {
     console.error('Erro ao carregar produtos:', e);
     document.getElementById('products-grid').innerHTML =
@@ -997,28 +954,6 @@ function renderDestaqueHero(prods) {
   wrap.style.display = 'block';
 }
 
-function renderNavDeal(prods) {
-  const destaque = prods.find(p => p.destaque === true || p.destaque === 'true');
-  if (!destaque) return;
-  const precoBase = parseFloat(destaque.preco) || 0;
-  const desconto = parseInt(destaque.desconto) || 0;
-  const preco = desconto > 0 ? (parseFloat(destaque.precoFinal) || precoBase) : precoBase;
-  const navEl = document.getElementById('nav-deal-destaque');
-  if (!navEl) return;
-  navEl.onclick = function(e) { e.preventDefault(); openModal(destaque._id); };
-  document.getElementById('nav-deal-img').src = destaque.imagem || '';
-  document.getElementById('nav-deal-nome').textContent = destaque.nome || '';
-  document.getElementById('nav-deal-new').textContent = preco.toFixed(2) + '€';
-  if (desconto > 0) {
-    const old = document.getElementById('nav-deal-old');
-    old.textContent = precoBase.toFixed(2) + '€';
-    old.style.display = '';
-    const badge = document.getElementById('nav-deal-badge');
-    badge.textContent = '-' + desconto + '%';
-    badge.style.display = '';
-  }
-  navEl.style.display = 'flex';
-}
 
 // FIREBASE SAVE ORDER
 async function saveOrder(order) {
