@@ -7,16 +7,16 @@
   <style>
     .tw-page { padding-top: 68px; }
     .tw-header { background: #0f1923; border-bottom: 1px solid var(--border-dim); }
-    .profile-banner { width: 100%; height: 200px; position: relative; overflow: hidden; background: linear-gradient(135deg,#1a0005,#e63946,#ff9f1c); }
+    .profile-banner { width: 100%; height: 200px; position: relative; overflow: visible; background: linear-gradient(135deg,#1a0005,#e63946,#ff9f1c); }
     .profile-banner-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
       display: flex; align-items: flex-end; padding: 16px 20px;
     }
     .profile-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 5px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
-    .tw-profile-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 24px 0; gap: 12px; }
-    .profile-avatar-wrap { margin-top: -44px; }
-    .profile-avatar { width: 88px; height: 88px; border: 4px solid #0f1923; border-radius: 50%; overflow: hidden; background: #fff; }
+    .tw-profile-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 24px 0; gap: 12px; }
+    .profile-avatar-wrap { margin-top: 0; }
+    .profile-avatar { width: 88px; height: 88px; border: 4px solid #0f1923; border-radius: 50%; overflow: hidden; background: #fff; position: relative; top: -52px; }
     .profile-avatar img { width: 100%; height: 100%; object-fit: contain; }
     .profile-follow-btn { padding: 10px 24px; border: 1px solid #fff; color: #fff; background: transparent; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; transition: background .2s, color .2s; flex-shrink: 0; }
     .profile-follow-btn:hover, .profile-follow-btn.following { background: #fff; color: #000; }
@@ -141,7 +141,7 @@
       <div class="profile-avatar-wrap">
         <div class="profile-avatar"><img src="logo.png" alt="logo"/></div>
       </div>
-      <button class="profile-follow-btn" id="tw-follow" onclick="this.classList.toggle('following');this.textContent=this.classList.contains('following')?'✓ A seguir':'Seguir'">Seguir</button>
+      <button class="profile-follow-btn" id="tw-follow" style="margin-top:12px;" onclick="this.classList.toggle('following');this.textContent=this.classList.contains('following')?'✓ A seguir':'Seguir'">Seguir</button>
     </div>
     <div class="profile-info">
       <div class="profile-name">ManyGames <span style="color:#4da3ff;font-size:1rem;">✓</span></div>
