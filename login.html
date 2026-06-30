@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames – Login</title>
+  <link rel="stylesheet" href="shared.css?v=5"/>
+  <style>
+    .auth-wrap {
+      max-width: 440px; margin: 0 auto; padding: 140px 5vw 100px;
+    }
+    .auth-tabs { display:flex; border:1px solid var(--border); margin-bottom:32px; }
+    .auth-tab {
+      flex:1; text-align:center; padding:14px; cursor:pointer;
+      font-family:'Share Tech Mono', monospace; font-size:0.75rem;
+      letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+      background:transparent; border:none; transition:background .2s,color .2s;
+    }
+    .auth-tab.active { background:var(--accent); color:#fff; }
+    .auth-panel { display:none; }
+    .auth-panel.active { display:block; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 3px;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%; padding: 13px 16px;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem; outline: none;
+      transition: border-color .2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus { border-color: var(--cyan); }
+    .auth-error {
+      display:none; padding:13px 16px; margin-bottom:20px;
+      background:rgba(230,57,70,0.1); border:1px solid var(--accent);
+      color:var(--accent); font-size:0.85rem; font-family:'Share Tech Mono',monospace;
+    }
+    .auth-success {
+      display:none; padding:13px 16px; margin-bottom:20px;
+      background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.3);
+      color:var(--cyan); font-size:0.85rem; font-family:'Share Tech Mono',monospace;
+      text-align:center;
+    }
+    .auth-btn {
+      width:100%; padding:15px; background:var(--accent); color:#fff;
+      border:none; font-family:'Bebas Neue',sans-serif; font-size:1.05rem;
+      letter-spacing:3px; cursor:pointer; transition:opacity .2s;
+    }
+    .auth-btn:hover { opacity:0.85; }
+    .auth-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .auth-userbox {
+      display:none; text-align:center;
+      border:1px solid var(--border); padding:40px 28px;
+    }
+    .auth-userbox .greet { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; margin-bottom:8px; }
+    .auth-userbox .email { color:var(--muted); font-size:0.9rem; margin-bottom:28px; }
+  </style>
+  <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
+<style>
+.gdd{position:relative;display:inline-block;}
+.gdd-btn{
+  background:transparent;color:#b0b0cc;border:none;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;
+  letter-spacing:2px;text-transform:uppercase;padding:8px 13px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+}
+.gdd-btn:hover{color:#fff;}
+.gdd-btn.gactive{color:#e63946;}
+.gdd-c{font-size:0.6rem;}
+.gdd.gopen .gdd-c{transform:rotate(180deg);}
+.gdd-menu{
+  display:none;position:absolute;top:100%;left:0;
+  background:#0d0d14;border:1px solid rgba(230,57,70,0.4);
+  min-width:190px;padding:6px;margin-top:8px;
+}
+.gdd.gopen .gdd-menu{display:block;}
+.gdd-menu a{
+  display:block;color:#b0b0cc;text-decoration:none;font-weight:700;
+  font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:10px 14px;
+}
+.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}
+.gdd-menu a.gactive{color:#e63946;}
+@media (max-width:600px){
+  .gdd{width:100%;display:block;}
+  .gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}
+  .gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}
+  .gdd-menu a{padding:10px 4px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <button class="nav-mobile-toggle">☰</button>
+      <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="noticias.html">Notícias</a></li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Recursos Humanos <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
+        <a href="equipa.html">Equipa</a>
+        <a href="rh.html">Carreiras</a>
+        <a href="regulamento.html">Regulamento</a>
+      </div>
+    </li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Suporte <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
+        <a href="sobre.html">Sobre</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+    </li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Redes Sociais <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu">
+        <a href="instagram.html">Instagram</a>
+        <a href="facebook.html">Facebook</a>
+        <a href="reddit.html">Reddit</a>
+        <a href="twitter.html">Twitter / X</a>
+        <a href="videos.html">Vídeos</a>
+      </div>
+    </li>
+    <li><a href="login.html" class="gactive">Login</a></li>
+  </ul>
+</nav>
+
+<div class="auth-wrap">
+  <div class="section-tag" style="text-align:center;">// Conta</div>
+  <h2 style="text-align:center;">ACEDE À TUA CONTA</h2>
+  <div class="section-line" style="margin:12px auto 36px;"></div>
+
+  <!-- Caixa mostrada quando já está autenticado -->
+  <div class="auth-userbox" id="userbox">
+    <div class="greet">Bem-vindo, <span id="userbox-name"></span>!</div>
+    <div class="email" id="userbox-email"></div>
+    <button class="auth-btn" id="logout-btn" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">Terminar Sessão</button>
+  </div>
+
+  <!-- Formulários de login/registo -->
+  <div id="auth-forms">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" type="button">Entrar</button>
+      <button class="auth-tab" id="tab-register" type="button">Registar</button>
+    </div>
+
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+
+    <!-- LOGIN -->
+    <form class="auth-panel active" id="panel-login">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Palavra-passe</label>
+        <input type="password" id="login-password" required autocomplete="current-password"/>
+      </div>
+      <button type="submit" class="auth-btn" id="login-submit">Entrar</button>
+    </form>
+
+    <!-- REGISTO -->
+    <form class="auth-panel" id="panel-register">
+      <div class="form-group">
+        <label for="reg-name">Nome</label>
+        <input type="text" id="reg-name" required autocomplete="name"/>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Palavra-passe</label>
+        <input type="password" id="reg-password" required minlength="6" autocomplete="new-password"/>
+      </div>
+      <div class="form-group">
+        <label for="reg-password2">Confirmar Palavra-passe</label>
+        <input type="password" id="reg-password2" required minlength="6" autocomplete="new-password"/>
+      </div>
+      <div class="form-group">
+        <label for="reg-country">Nacionalidade</label>
+        <select id="reg-country" required>
+          <option value="">— Seleciona —</option>
+          <option value="PT">Portugal</option>
+          <option value="BR">Brasil</option>
+          <option value="AO">Angola</option>
+          <option value="MZ">Moçambique</option>
+          <option value="CV">Cabo Verde</option>
+          <option value="GW">Guiné-Bissau</option>
+          <option value="ST">São Tomé e Príncipe</option>
+          <option value="TL">Timor-Leste</option>
+          <option value="ES">Espanha</option>
+          <option value="FR">França</option>
+          <option value="DE">Alemanha</option>
+          <option value="GB">Reino Unido</option>
+          <option value="IT">Itália</option>
+          <option value="US">Estados Unidos</option>
+          <option value="OUTRO">Outra</option>
+        </select>
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
+        <input type="checkbox" id="reg-age" required style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <label for="reg-age" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Confirmo que tenho pelo menos 13 anos de idade.</label>
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
+        <input type="checkbox" id="reg-privacy" required style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <label for="reg-privacy" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Li e aceito a <a href="privacidade.html" target="_blank" style="color:var(--cyan);">Política de Privacidade</a>.</label>
+      </div>
+      <button type="submit" class="auth-btn" id="register-submit">Criar Conta</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+  <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
+</footer>
+<script src="shared.js?v=5"></script>
+<script>
+(function(){
+  function start(){
+    var btns = document.querySelectorAll('.gdd-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var dd = this.parentElement;
+        var wasOpen = dd.classList.contains('gopen');
+        var all = document.querySelectorAll('.gdd.gopen');
+        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
+        if (!wasOpen) { dd.classList.add('gopen'); }
+      });
+    }
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.gdd')) {
+        var all = document.querySelectorAll('.gdd.gopen');
+        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+<script>
+  // Lógica dos separadores Entrar/Registar — independente do Firebase,
+  // para funcionar mesmo que o módulo do Firebase falhe a carregar.
+  (function(){
+    var tabLogin = document.getElementById('tab-login');
+    var tabRegister = document.getElementById('tab-register');
+    var panelLogin = document.getElementById('panel-login');
+    var panelRegister = document.getElementById('panel-register');
+    var errorBox = document.getElementById('auth-error');
+    var successBox = document.getElementById('auth-success');
+
+    function clearMessages() {
+      errorBox.style.display = 'none';
+      successBox.style.display = 'none';
+    }
+
+    tabLogin.addEventListener('click', function(){
+      tabLogin.classList.add('active'); tabRegister.classList.remove('active');
+      panelLogin.classList.add('active'); panelRegister.classList.remove('active');
+      clearMessages();
+    });
+    tabRegister.addEventListener('click', function(){
+      tabRegister.classList.add('active'); tabLogin.classList.remove('active');
+      panelRegister.classList.add('active'); panelLogin.classList.remove('active');
+      clearMessages();
+    });
+  })();
+</script>
+
+<script type="module">
+  import { auth, db, doc, setDoc } from "./firebase.js";
+  import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const errorBox = document.getElementById('auth-error');
+  const successBox = document.getElementById('auth-success');
+  const authForms = document.getElementById('auth-forms');
+  const userbox = document.getElementById('userbox');
+  const userboxName = document.getElementById('userbox-name');
+  const userboxEmail = document.getElementById('userbox-email');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = 'block';
+    successBox.style.display = 'none';
+  }
+  function showSuccess(msg) {
+    successBox.textContent = msg;
+    successBox.style.display = 'block';
+    errorBox.style.display = 'none';
+  }
+  function clearMessages() {
+    errorBox.style.display = 'none';
+    successBox.style.display = 'none';
+  }
+
+  function translateError(code) {
+    var map = {
+      'auth/email-already-in-use': 'Este email já está registado. Tenta entrar.',
+      'auth/invalid-email': 'Email inválido.',
+      'auth/weak-password': 'A palavra-passe deve ter pelo menos 6 caracteres.',
+      'auth/user-not-found': 'Não existe conta com este email.',
+      'auth/wrong-password': 'Palavra-passe incorreta.',
+      'auth/invalid-credential': 'Email ou palavra-passe incorretos.',
+      'auth/too-many-requests': 'Demasiadas tentativas. Tenta novamente mais tarde.'
+    };
+    return map[code] || 'Ocorreu um erro. Tenta novamente.';
+  }
+
+  document.getElementById('panel-login').addEventListener('submit', function(e){
+    e.preventDefault();
+    clearMessages();
+    var email = document.getElementById('login-email').value.trim();
+    var password = document.getElementById('login-password').value;
+    var btn = document.getElementById('login-submit');
+    btn.disabled = true;
+    signInWithEmailAndPassword(auth, email, password)
+      .catch(function(err){ showError(translateError(err.code)); })
+      .finally(function(){ btn.disabled = false; });
+  });
+
+  document.getElementById('panel-register').addEventListener('submit', function(e){
+    e.preventDefault();
+    clearMessages();
+    var name = document.getElementById('reg-name').value.trim();
+    var email = document.getElementById('reg-email').value.trim();
+    var password = document.getElementById('reg-password').value;
+    var password2 = document.getElementById('reg-password2').value;
+    var country = document.getElementById('reg-country').value;
+    var ageOk = document.getElementById('reg-age').checked;
+    var privacyOk = document.getElementById('reg-privacy').checked;
+    var btn = document.getElementById('register-submit');
+
+    if (password !== password2) {
+      showError('As palavras-passe não coincidem.');
+      return;
+    }
+    if (!country) {
+      showError('Seleciona a tua nacionalidade.');
+      return;
+    }
+    if (!ageOk) {
+      showError('Tens de confirmar que tens pelo menos 13 anos.');
+      return;
+    }
+    if (!privacyOk) {
+      showError('Tens de aceitar a Política de Privacidade para criar conta.');
+      return;
+    }
+
+    btn.disabled = true;
+    var newUser = null;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(function(cred){
+        newUser = cred.user;
+        return updateProfile(cred.user, { displayName: name });
+      })
+      .then(function(){
+        return setDoc(doc(db, 'users', newUser.uid), {
+          name: name,
+          email: email,
+          country: country,
+          ageConfirmed: true,
+          privacyAccepted: true,
+          createdAt: new Date().toISOString()
+        });
+      })
+      .catch(function(err){ showError(translateError(err.code)); })
+      .finally(function(){ btn.disabled = false; });
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', function(){
+    signOut(auth);
+  });
+
+  onAuthStateChanged(auth, function(user){
+    if (user) {
+      authForms.style.display = 'none';
+      userbox.style.display = 'block';
+      userboxName.textContent = user.displayName || 'Jogador';
+      userboxEmail.textContent = user.email;
+    } else {
+      authForms.style.display = 'block';
+      userbox.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
