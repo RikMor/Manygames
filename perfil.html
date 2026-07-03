@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames – Perfil</title>
+  <link rel="stylesheet" href="shared.css?v=5"/>
+  <style>
+    .perfil-wrap { max-width:900px; margin:0 auto; padding:130px 5vw 100px; }
+    .perfil-banner { height:180px; background:linear-gradient(135deg,#0d0d14 0%,#1a0a0f 40%,#2a0d0d 100%); border:1px solid var(--border); position:relative; }
+    .perfil-banner::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(230,57,70,0.04) 40px,rgba(230,57,70,0.04) 41px),repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(230,57,70,0.04) 40px,rgba(230,57,70,0.04) 41px); pointer-events:none; }
+    .perfil-avatar-wrap { position:absolute; bottom:-44px; left:36px; }
+    .perfil-avatar { width:90px; height:90px; border-radius:50%; border:3px solid var(--accent); object-fit:cover; background:var(--card); display:block; }
+    .perfil-avatar-edit { position:absolute; bottom:0; right:0; width:26px; height:26px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.7rem; border:2px solid var(--bg); }
+    #avatar-input { display:none; }
+    .perfil-header { margin-top:56px; padding:0 4px 28px; display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; border-bottom:1px solid var(--border); }
+    .perfil-nick { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:2px; line-height:1; }
+    .perfil-name { color:var(--muted); font-size:0.9rem; margin-top:4px; }
+    .perfil-country { color:var(--muted); font-size:0.82rem; margin-top:2px; }
+    .perfil-since { font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--accent); letter-spacing:2px; margin-top:4px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin:32px 0; }
+    .stat-box { background:var(--card); padding:24px 16px; text-align:center; }
+    .stat-value { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:2px; line-height:1; color:var(--text); }
+    .stat-value.green { color:#00e676; } .stat-value.red { color:var(--accent); } .stat-value.cyan { color:var(--cyan); }
+    .stat-label { font-family:'Share Tech Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--muted); margin-top:6px; text-transform:uppercase; }
+    .badges-grid { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; }
+    .badge-item { background:var(--card); border:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:10px; font-size:0.82rem; color:var(--muted); }
+    .badge-item.earned { border-color:rgba(230,57,70,0.4); color:var(--text); }
+    .badge-item .badge-icon { font-size:1.3rem; }
+    .edit-section { margin-top:40px; border:1px solid var(--border); padding:28px; }
+    .edit-section-title { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:2px; margin-bottom:24px; color:var(--accent); }
+    .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .edit-grid .full { grid-column:1/-1; }
+    .form-group { margin-bottom:0; }
+    .form-group label { display:block; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+    .form-group input, .form-group select { width:100%; padding:12px 14px; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:0.95rem; outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .form-group input:focus, .form-group select:focus { border-color:var(--cyan); }
+    .save-btn { margin-top:24px; padding:13px 36px; background:var(--accent); color:#fff; border:none; font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:3px; cursor:pointer; transition:opacity .2s; }
+    .save-btn:hover { opacity:0.85; } .save-btn:disabled { opacity:0.45; cursor:not-allowed; }
+    .edit-msg { display:none; margin-top:14px; padding:12px 16px; font-family:'Share Tech Mono',monospace; font-size:0.78rem; letter-spacing:1px; }
+    .edit-msg.ok { background:rgba(0,230,118,0.08); border:1px solid rgba(0,230,118,0.3); color:#00e676; }
+    .edit-msg.err { background:rgba(230,57,70,0.08); border:1px solid var(--accent); color:var(--accent); }
+    .not-logged { text-align:center; padding:80px 20px; }
+    .not-logged p { color:var(--muted); margin-bottom:28px; }
+    @media(max-width:600px){ .stats-grid{grid-template-columns:repeat(2,1fr);} .edit-grid{grid-template-columns:1fr;} .edit-grid .full{grid-column:1;} .perfil-header{flex-direction:column;align-items:flex-start;} }
+  </style>
+  <style>.nav-links a.active{color:#e63946!important;}</style>
+<style>
+.gdd{position:relative;display:inline-block;}
+.gdd-btn{background:transparent;color:#b0b0cc;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.gdd-btn:hover{color:#fff;}.gdd-btn.gactive{color:#e63946;}.gdd-c{font-size:0.6rem;}.gdd.gopen .gdd-c{transform:rotate(180deg);}
+.gdd-menu{display:none;position:absolute;top:100%;left:0;background:#0d0d14;border:1px solid rgba(230,57,70,0.4);min-width:190px;padding:6px;margin-top:8px;}
+.gdd.gopen .gdd-menu{display:block;}
+.gdd-menu a{display:block;color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;}
+.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}.gdd-menu a.gactive{color:#e63946;}
+@media(max-width:600px){.gdd{width:100%;display:block;}.gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}.gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}.gdd-menu a{padding:10px 4px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <button class="nav-mobile-toggle">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="noticias.html">Notícias</a></li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Recursos Humanos <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu"><a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a></div>
+    </li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Suporte <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu"><a href="sobre.html">Sobre</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a><a href="privacidade.html">Política de Privacidade</a></div>
+    </li>
+    <li class="gdd">
+      <button class="gdd-btn" type="button">Redes Sociais <span class="gdd-c">▼</span></button>
+      <div class="gdd-menu"><a href="instagram.html">Instagram</a><a href="facebook.html">Facebook</a><a href="reddit.html">Reddit</a><a href="twitter.html">Twitter / X</a><a href="videos.html">Vídeos</a></div>
+    </li>
+    <li id="nav-user-area"><a href="login.html">Login</a></li>
+  </ul>
+</nav>
+
+<div class="perfil-wrap">
+  <div class="not-logged" id="not-logged">
+    <div class="section-tag">// Perfil</div>
+    <h2>ACESSO RESTRITO</h2>
+    <div class="section-line" style="margin:12px auto 24px;"></div>
+    <p>Tens de iniciar sessão para veres o teu perfil.</p>
+    <a href="login.html"><button class="save-btn">Fazer Login</button></a>
+  </div>
+
+  <div id="perfil-content" style="display:none;">
+    <div class="perfil-banner">
+      <div class="perfil-avatar-wrap">
+        <img class="perfil-avatar" id="perfil-avatar-img" src="https://api.dicebear.com/8.x/pixel-art/svg?seed=default" alt="Avatar"/>
+        <label class="perfil-avatar-edit" for="avatar-input" title="Mudar avatar">✏️</label>
+        <input type="file" id="avatar-input" accept="image/*"/>
+      </div>
+    </div>
+    <div class="perfil-header">
+      <div>
+        <div class="perfil-nick" id="ph-nick">—</div>
+        <div class="perfil-name" id="ph-name">—</div>
+        <div class="perfil-country" id="ph-country">—</div>
+        <div class="perfil-since" id="ph-since">—</div>
+      </div>
+      <button class="save-btn" id="logout-perfil-btn" style="padding:10px 24px;font-size:0.85rem;">Terminar Sessão</button>
+    </div>
+    <div class="section-tag" style="margin-top:32px;">// Estatísticas</div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-value" id="stat-jogos">0</div><div class="stat-label">Jogos</div></div>
+      <div class="stat-box"><div class="stat-value green" id="stat-vitorias">0</div><div class="stat-label">Vitórias</div></div>
+      <div class="stat-box"><div class="stat-value red" id="stat-derrotas">0</div><div class="stat-label">Derrotas</div></div>
+      <div class="stat-box"><div class="stat-value cyan" id="stat-mvp">0</div><div class="stat-label">MVP</div></div>
+    </div>
+    <div class="section-tag">// Conquistas</div>
+    <div class="badges-grid" id="badges-grid"></div>
+    <div class="edit-section">
+      <div class="edit-section-title">✏️ EDITAR PERFIL</div>
+      <div class="edit-grid">
+        <div class="form-group"><label for="edit-nick">Nickname</label><input type="text" id="edit-nick" maxlength="24"/></div>
+        <div class="form-group"><label for="edit-name">Nome completo</label><input type="text" id="edit-name"/></div>
+        <div class="form-group full">
+          <label for="edit-country">Nacionalidade</label>
+          <select id="edit-country">
+            <option value="">— Seleciona —</option>
+            <optgroup label="🌍 África"><option value="AO">Angola</option><option value="CV">Cabo Verde</option><option value="GW">Guiné-Bissau</option><option value="GQ">Guiné Equatorial</option><option value="MG">Madagáscar</option><option value="MA">Marrocos</option><option value="MZ">Moçambique</option><option value="NA">Namíbia</option><option value="NG">Nigéria</option><option value="KE">Quénia</option><option value="ZA">África do Sul</option><option value="ST">São Tomé e Príncipe</option><option value="SN">Senegal</option><option value="TZ">Tanzânia</option></optgroup>
+            <optgroup label="🌎 América do Norte"><option value="CA">Canadá</option><option value="MX">México</option><option value="US">Estados Unidos</option></optgroup>
+            <optgroup label="🌎 América do Sul"><option value="AR">Argentina</option><option value="BO">Bolívia</option><option value="BR">Brasil</option><option value="CL">Chile</option><option value="CO">Colômbia</option><option value="EC">Equador</option><option value="PY">Paraguai</option><option value="PE">Peru</option><option value="UY">Uruguai</option><option value="VE">Venezuela</option></optgroup>
+            <optgroup label="🌏 Ásia"><option value="SA">Arábia Saudita</option><option value="CN">China</option><option value="KR">Coreia do Sul</option><option value="AE">Emirados Árabes Unidos</option><option value="PH">Filipinas</option><option value="IN">Índia</option><option value="ID">Indonésia</option><option value="JP">Japão</option><option value="MY">Malásia</option><option value="PK">Paquistão</option><option value="SG">Singapura</option><option value="TH">Tailândia</option><option value="TL">Timor-Leste</option><option value="TR">Turquia</option><option value="VN">Vietname</option></optgroup>
+            <optgroup label="🌍 Europa"><option value="DE">Alemanha</option><option value="AT">Áustria</option><option value="BE">Bélgica</option><option value="BY">Bielorrússia</option><option value="HR">Croácia</option><option value="DK">Dinamarca</option><option value="SK">Eslováquia</option><option value="SI">Eslovénia</option><option value="ES">Espanha</option><option value="EE">Estónia</option><option value="FI">Finlândia</option><option value="FR">França</option><option value="GR">Grécia</option><option value="HU">Hungria</option><option value="IE">Irlanda</option><option value="IS">Islândia</option><option value="IT">Itália</option><option value="LV">Letónia</option><option value="LT">Lituânia</option><option value="LU">Luxemburgo</option><option value="MK">Macedónia do Norte</option><option value="MT">Malta</option><option value="NO">Noruega</option><option value="NL">Países Baixos</option><option value="PL">Polónia</option><option value="PT">Portugal</option><option value="GB">Reino Unido</option><option value="CZ">República Checa</option><option value="RO">Roménia</option><option value="RU">Rússia</option><option value="RS">Sérvia</option><option value="SE">Suécia</option><option value="CH">Suíça</option><option value="UA">Ucrânia</option></optgroup>
+            <optgroup label="🌏 Oceânia"><option value="AU">Austrália</option><option value="NZ">Nova Zelândia</option></optgroup>
+          </select>
+        </div>
+      </div>
+      <button class="save-btn" id="save-perfil-btn">Guardar Alterações</button>
+      <div class="edit-msg" id="perfil-msg"></div>
+    </div>
+    <div class="edit-section" style="margin-top:20px;">
+      <div class="edit-section-title">🔒 ALTERAR PALAVRA-PASSE</div>
+      <div class="edit-grid">
+        <div class="form-group"><label for="edit-pass1">Nova palavra-passe</label><input type="password" id="edit-pass1" minlength="6"/></div>
+        <div class="form-group"><label for="edit-pass2">Confirmar nova palavra-passe</label><input type="password" id="edit-pass2" minlength="6"/></div>
+      </div>
+      <button class="save-btn" id="save-pass-btn">Alterar Palavra-passe</button>
+      <div class="edit-msg" id="pass-msg"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+  <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
+</footer>
+<script src="shared.js?v=5"></script>
+<script>
+(function(){
+  function start(){
+    var btns=document.querySelectorAll('.gdd-btn');
+    for(var i=0;i<btns.length;i++){btns[i].addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var dd=this.parentElement;var wasOpen=dd.classList.contains('gopen');var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}if(!wasOpen){dd.classList.add('gopen');}});}
+    document.addEventListener('click',function(e){if(!e.target.closest('.gdd')){var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}}});
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
+})();
+</script>
+<script type="module">
+import { auth, db, doc, setDoc } from './firebase.js';
+import { getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { onAuthStateChanged, signOut, updatePassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const COUNTRIES = {PT:'Portugal',BR:'Brasil',AO:'Angola',CV:'Cabo Verde',GW:'Guiné-Bissau',GQ:'Guiné Equatorial',MG:'Madagáscar',MA:'Marrocos',MZ:'Moçambique',NA:'Namíbia',NG:'Nigéria',KE:'Quénia',ZA:'África do Sul',ST:'São Tomé e Príncipe',SN:'Senegal',TZ:'Tanzânia',CA:'Canadá',MX:'México',US:'Estados Unidos',AR:'Argentina',BO:'Bolívia',CL:'Chile',CO:'Colômbia',EC:'Equador',PY:'Paraguai',PE:'Peru',UY:'Uruguai',VE:'Venezuela',SA:'Arábia Saudita',CN:'China',KR:'Coreia do Sul',AE:'Emirados Árabes Unidos',PH:'Filipinas',IN:'Índia',ID:'Indonésia',JP:'Japão',MY:'Malásia',PK:'Paquistão',SG:'Singapura',TH:'Tailândia',TL:'Timor-Leste',TR:'Turquia',VN:'Vietname',DE:'Alemanha',AT:'Áustria',BE:'Bélgica',BY:'Bielorrússia',HR:'Croácia',DK:'Dinamarca',SK:'Eslováquia',SI:'Eslovénia',ES:'Espanha',EE:'Estónia',FI:'Finlândia',FR:'França',GR:'Grécia',HU:'Hungria',IE:'Irlanda',IS:'Islândia',IT:'Itália',LV:'Letónia',LT:'Lituânia',LU:'Luxemburgo',MK:'Macedónia do Norte',MT:'Malta',NO:'Noruega',NL:'Países Baixos',PL:'Polónia',GB:'Reino Unido',CZ:'República Checa',RO:'Roménia',RU:'Rússia',RS:'Sérvia',SE:'Suécia',CH:'Suíça',UA:'Ucrânia',AU:'Austrália',NZ:'Nova Zelândia'};
+const BADGES=[{id:'first_login',icon:'🎮',label:'Primeiro Login',desc:'Bem-vindo à ManyGames!',cond:u=>true},{id:'kor_player',icon:'⚔️',label:'Guerreiro KOR',desc:'Jogaste Kill of Reason.',cond:u=>(u.stats?.jogos||0)>=1},{id:'ten_games',icon:'🔟',label:'Veterano',desc:'10 jogos disputados.',cond:u=>(u.stats?.jogos||0)>=10},{id:'first_win',icon:'🏆',label:'Primeira Vitória',desc:'Ganhaste o teu primeiro jogo.',cond:u=>(u.stats?.vitorias||0)>=1},{id:'five_wins',icon:'⭐',label:'Em Forma',desc:'5 vitórias consecutivas.',cond:u=>(u.stats?.vitorias||0)>=5},{id:'mvp',icon:'👑',label:'MVP',desc:'Foste eleito MVP numa partida.',cond:u=>(u.stats?.mvp||0)>=1}];
+
+let currentUser=null, userData={};
+
+onAuthStateChanged(auth, async function(user){
+  if(!user){ document.getElementById('not-logged').style.display='block'; return; }
+  currentUser=user;
+  document.getElementById('not-logged').style.display='none';
+  document.getElementById('perfil-content').style.display='block';
+  const snap=await getDoc(doc(db,'users',user.uid));
+  userData=snap.exists()?snap.data():{};
+  renderPerfil();
+});
+
+function renderPerfil(){
+  var u=userData;
+  var nick=u.nickname||currentUser.displayName||'—';
+  var name=u.name||'—';
+  var country=COUNTRIES[u.country]||u.country||'—';
+  var since=u.createdAt?'// membro desde '+new Date(u.createdAt).toLocaleDateString('pt-PT',{year:'numeric',month:'long'}):'';
+  var stats=u.stats||{jogos:0,vitorias:0,derrotas:0,mvp:0};
+  var avatar=u.avatarUrl||('https://api.dicebear.com/8.x/pixel-art/svg?seed='+encodeURIComponent(nick));
+  document.getElementById('ph-nick').textContent=nick;
+  document.getElementById('ph-name').textContent=name;
+  document.getElementById('ph-country').textContent='🌍 '+country;
+  document.getElementById('ph-since').textContent=since;
+  document.getElementById('perfil-avatar-img').src=avatar;
+  document.getElementById('stat-jogos').textContent=stats.jogos||0;
+  document.getElementById('stat-vitorias').textContent=stats.vitorias||0;
+  document.getElementById('stat-derrotas').textContent=stats.derrotas||0;
+  document.getElementById('stat-mvp').textContent=stats.mvp||0;
+  document.getElementById('edit-nick').value=u.nickname||'';
+  document.getElementById('edit-name').value=u.name||'';
+  document.getElementById('edit-country').value=u.country||'';
+  document.getElementById('badges-grid').innerHTML=BADGES.map(function(b){
+    var earned=b.cond(u);
+    return '<div class="badge-item '+(earned?'earned':'')+'" title="'+b.desc+'"><span class="badge-icon" style="'+(earned?'':'filter:grayscale(1);opacity:0.35')+'">'+b.icon+'</span><div><div style="font-size:0.82rem;font-weight:700;'+(earned?'':'color:var(--muted)')+'">'+b.label+'</div><div style="font-size:0.72rem;color:var(--muted)">'+b.desc+'</div></div></div>';
+  }).join('');
+}
+
+document.getElementById('avatar-input').addEventListener('change',async function(e){
+  var file=e.target.files[0]; if(!file) return;
+  if(file.size>2*1024*1024){alert('Imagem demasiado grande (máx. 2 MB).');return;}
+  var reader=new FileReader();
+  reader.onload=async function(ev){
+    var dataUrl=ev.target.result;
+    document.getElementById('perfil-avatar-img').src=dataUrl;
+    userData.avatarUrl=dataUrl;
+    await updateDoc(doc(db,'users',currentUser.uid),{avatarUrl:dataUrl});
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('save-perfil-btn').addEventListener('click',async function(){
+  var btn=this;
+  var nick=document.getElementById('edit-nick').value.trim();
+  var name=document.getElementById('edit-name').value.trim();
+  var country=document.getElementById('edit-country').value;
+  var msgEl=document.getElementById('perfil-msg');
+  if(!nick){showMsg(msgEl,'O nickname não pode estar vazio.',true);return;}
+  if(!country){showMsg(msgEl,'Seleciona uma nacionalidade.',true);return;}
+  btn.disabled=true;
+  try{
+    await updateProfile(currentUser,{displayName:nick});
+    await updateDoc(doc(db,'users',currentUser.uid),{nickname:nick,name:name,country:country});
+    userData={...userData,nickname:nick,name:name,country:country};
+    renderPerfil();
+    showMsg(msgEl,'✓ Perfil atualizado com sucesso!',false);
+  }catch(e){showMsg(msgEl,'Erro ao guardar: '+e.message,true);}
+  finally{btn.disabled=false;}
+});
+
+document.getElementById('save-pass-btn').addEventListener('click',async function(){
+  var btn=this;
+  var pass1=document.getElementById('edit-pass1').value;
+  var pass2=document.getElementById('edit-pass2').value;
+  var msgEl=document.getElementById('pass-msg');
+  if(!pass1||pass1.length<6){showMsg(msgEl,'A palavra-passe deve ter pelo menos 6 caracteres.',true);return;}
+  if(pass1!==pass2){showMsg(msgEl,'As palavras-passe não coincidem.',true);return;}
+  btn.disabled=true;
+  try{
+    await updatePassword(currentUser,pass1);
+    document.getElementById('edit-pass1').value='';
+    document.getElementById('edit-pass2').value='';
+    showMsg(msgEl,'✓ Palavra-passe alterada com sucesso!',false);
+  }catch(e){
+    if(e.code==='auth/requires-recent-login'){showMsg(msgEl,'Por segurança, faz logout e login novamente antes de alterar a palavra-passe.',true);}
+    else{showMsg(msgEl,'Erro: '+e.message,true);}
+  }finally{btn.disabled=false;}
+});
+
+document.getElementById('logout-perfil-btn').addEventListener('click',function(){
+  signOut(auth).then(function(){window.location.href='login.html';});
+});
+
+function showMsg(el,text,isErr){
+  el.textContent=text; el.className='edit-msg '+(isErr?'err':'ok'); el.style.display='block';
+  setTimeout(function(){el.style.display='none';},4000);
+}
+</script>
+<script type="module" src="nav-auth.js"></script>
+</body>
+</html>

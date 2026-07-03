@@ -106,35 +106,13 @@
 <style>.nav-links a.active{color:#e63946!important;font-weight:900!important;text-shadow:0 0 8px rgba(230,57,70,0.8)!important;}</style>
 <style>
 .gdd{position:relative;display:inline-block;}
-.gdd-btn{
-  background:transparent;color:#b0b0cc;border:none;
-  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;
-  letter-spacing:2px;text-transform:uppercase;padding:8px 13px;
-  cursor:pointer;display:inline-flex;align-items:center;gap:5px;
-}
-.gdd-btn:hover{color:#fff;}
-.gdd-btn.gactive{color:#e63946;}
-.gdd-c{font-size:0.6rem;}
-.gdd.gopen .gdd-c{transform:rotate(180deg);}
-.gdd-menu{
-  display:none;position:absolute;top:100%;left:0;
-  background:#0d0d14;border:1px solid rgba(230,57,70,0.4);
-  min-width:190px;padding:6px;margin-top:8px;
-}
+.gdd-btn{background:transparent;color:#b0b0cc;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.gdd-btn:hover{color:#fff;}.gdd-btn.gactive{color:#e63946;}.gdd-c{font-size:0.6rem;}.gdd.gopen .gdd-c{transform:rotate(180deg);}
+.gdd-menu{display:none;position:absolute;top:100%;left:0;background:#0d0d14;border:1px solid rgba(230,57,70,0.4);min-width:190px;padding:6px;margin-top:8px;}
 .gdd.gopen .gdd-menu{display:block;}
-.gdd-menu a{
-  display:block;color:#b0b0cc;text-decoration:none;font-weight:700;
-  font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;
-  padding:10px 14px;
-}
-.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}
-.gdd-menu a.gactive{color:#e63946;}
-@media (max-width:600px){
-  .gdd{width:100%;display:block;}
-  .gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}
-  .gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}
-  .gdd-menu a{padding:10px 4px;}
-}
+.gdd-menu a{display:block;color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;}
+.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}.gdd-menu a.gactive{color:#e63946;}
+@media(max-width:600px){.gdd{width:100%;display:block;}.gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}.gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}.gdd-menu a{padding:10px 4px;}}
 </style>
 </head>
 <body>
@@ -142,7 +120,7 @@
 <nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
   <button class="nav-mobile-toggle">☰</button>
-      <ul class="nav-links">
+        <ul class="nav-links">
     <li><a href="index.html">Início</a></li>
     <li><a href="jogo.html">Kill of Reason</a></li>
     <li><a href="loja.html">Loja</a></li>
@@ -161,6 +139,7 @@
         <a href="sobre.html">Sobre</a>
         <a href="faq.html">FAQ</a>
         <a href="contacto.html">Contacto</a>
+        <a href="privacidade.html">Política de Privacidade</a>
       </div>
     </li>
     <li class="gdd">
@@ -173,7 +152,7 @@
         <a href="videos.html">Vídeos</a>
       </div>
     </li>
-    <li><a href="login.html">Login</a></li>
+    <li id="nav-user-area"><a href="login.html">Login</a></li>
   </ul>
 </nav>
 
@@ -369,31 +348,13 @@ loadNews();
 <script>
 (function(){
   function start(){
-    var btns = document.querySelectorAll('.gdd-btn');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        var dd = this.parentElement;
-        var wasOpen = dd.classList.contains('gopen');
-        var all = document.querySelectorAll('.gdd.gopen');
-        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
-        if (!wasOpen) { dd.classList.add('gopen'); }
-      });
-    }
-    document.addEventListener('click', function(e){
-      if (!e.target.closest('.gdd')) {
-        var all = document.querySelectorAll('.gdd.gopen');
-        for (var j = 0; j < all.length; j++) { all[j].classList.remove('gopen'); }
-      }
-    });
+    var btns=document.querySelectorAll('.gdd-btn');
+    for(var i=0;i<btns.length;i++){btns[i].addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var dd=this.parentElement;var wasOpen=dd.classList.contains('gopen');var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}if(!wasOpen){dd.classList.add('gopen');}});}
+    document.addEventListener('click',function(e){if(!e.target.closest('.gdd')){var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}}});
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
-  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
 })();
 </script>
+<script type="module" src="nav-auth.js"></script>
 </body>
 </html>

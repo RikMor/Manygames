@@ -228,7 +228,7 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">MANY<span>GAMES</span></div>
+    <a href="index.html" style="text-decoration:none;"><div class="login-logo">MANY<span>GAMES</span></div></a>
     <div class="login-sub">Backoffice · Acesso Restrito</div>
     <input type="email" id="login-email" placeholder="Email" autocomplete="email"/>
     <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
@@ -280,6 +280,10 @@
     </div>
     <div class="nav-item" onclick="showPage('noticias')">
       <span class="icon">📰</span><span>Notícias</span>
+    </div>
+    <div class="nav-item" onclick="showPage('utilizadores')">
+      <span class="icon">👥</span><span>Utilizadores</span>
+      <span class="nav-badge-count" id="badge-users">0</span>
     </div>
     <div class="sidebar-logout" onclick="doLogout()">
       <span>🚪</span><span>Sair</span>
@@ -891,6 +895,40 @@
       </div>
     </div>
 
+    <!-- UTILIZADORES -->
+    <div class="page" id="page-utilizadores">
+      <div class="page-header">
+        <h1>👥 Utilizadores</h1>
+        <p>Contas registadas no site via Firebase Authentication</p>
+      </div>
+      <div class="table-wrap">
+        <div class="toolbar">
+          <input type="text" id="search-users" placeholder="🔍  Pesquisar nome, email, país..." oninput="renderUtilizadores()"/>
+          <select id="filter-users-continente" onchange="renderUtilizadores()">
+            <option value="">🌐 Todos os continentes</option>
+            <option value="africa">🌍 África</option>
+            <option value="america_norte">🌎 América do Norte</option>
+            <option value="america_sul">🌎 América do Sul</option>
+            <option value="asia">🌏 Ásia</option>
+            <option value="europa">🌍 Europa</option>
+            <option value="oceania">🌏 Oceânia</option>
+          </select>
+          <input type="date" id="filter-users-data" onchange="renderUtilizadores()" title="Filtrar por data de registo"/>
+          <span class="sel-count" id="selcount-users" style="display:none;"></span>
+          <button class="btn-sm btn-excel" onclick="exportExcel('users')">📊 Exportar Excel</button>
+          <button class="btn-sm btn-clear" onclick="clearData('users','utilizadores')">🗑 Limpar tudo</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th class="th-check"><input type="checkbox" class="head-check" id="headcheck-users" onchange="toggleSelectAll('users',this.checked)"/></th>
+            <th>Registo</th><th>Nickname</th><th>Nome</th><th>Email</th><th>País</th><th>Ação</th>
+          </tr></thead>
+          <tbody id="tbody-users"></tbody>
+        </table>
+        <div id="empty-users" class="empty" style="display:none"><div class="empty-icon">👥</div>Sem utilizadores registados ainda.</div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
@@ -920,12 +958,21 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // ── AUTH ──────────────────────────────────────────────────────────
+const ADMIN_EMAIL = 'adm@manygames.com';
+
 onAuthStateChanged(auth, (user) => {
-  if (user) {
+  if (user && user.email === ADMIN_EMAIL) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
   } else {
+    if (user && user.email !== ADMIN_EMAIL) {
+      // Utilizador comum — fazer logout e mostrar erro
+      signOut(auth);
+      const err = document.getElementById('login-error');
+      err.style.display = 'block';
+      err.textContent = 'Acesso negado. Esta área é restrita a administradores.';
+    }
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
   }
@@ -960,13 +1007,14 @@ window.doLogout = doLogout;
 
 // ── DATA ──────────────────────────────────────────────────────────
 let ordersCache = [];
+let usersCache  = [];
 let candsCache  = [];
 let contsCache  = [];
 let newsCache   = [];
 
 // ── SELECTION STATE (for Excel export) ──────────────────────────────
-const selectedIds = { enc: new Set(), cand: new Set(), cont: new Set(), news: new Set() };
-const lastFiltered = { enc: [], cand: [], cont: [], news: [] };
+const selectedIds = { enc: new Set(), cand: new Set(), cont: new Set(), news: new Set(), users: new Set() };
+const lastFiltered = { enc: [], cand: [], cont: [], news: [], users: [] };
 
 function dateInputToPt(value) {
   if (!value) return '';
@@ -1045,6 +1093,12 @@ function setupRealtimeListeners() {
     updateBadges();
     renderNewsletter();
   }, (err) => console.error('Erro realtime newsletter:', err));
+
+  onSnapshot(collection(db, 'users'), (snap) => {
+    usersCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    updateBadges();
+    renderUtilizadores();
+  }, (err) => console.error('Erro realtime users:', err));
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
@@ -1053,7 +1107,7 @@ async function initApp() {
   setupRealtimeListeners();
 }
 
-const prevCounts = { enc: -1, cand: -1, cont: -1, news: -1 };
+const prevCounts = { enc: -1, cand: -1, cont: -1, news: -1, users: -1 };
 
 function flashBadge(id) {
   const el = document.getElementById(id);
@@ -1065,7 +1119,7 @@ function flashBadge(id) {
 }
 
 function updateBadges() {
-  const counts = { enc: ordersCache.length, cand: candsCache.length, cont: contsCache.length, news: newsCache.length };
+  const counts = { enc: ordersCache.length, cand: candsCache.length, cont: contsCache.length, news: newsCache.length, users: usersCache.length };
   Object.keys(counts).forEach(key => {
     const el = document.getElementById('badge-' + key);
     if (el) el.textContent = counts[key];
@@ -1302,7 +1356,63 @@ async function deleteNewsletter(id) {
     updateBadges();
   } catch(e) { console.error(e); alert('Erro ao eliminar.'); }
 }
+
 window.deleteNewsletter = deleteNewsletter;
+
+// ── UTILIZADORES ──────────────────────────────────────────────────
+const COUNTRIES = {PT:'Portugal',BR:'Brasil',AO:'Angola',CV:'Cabo Verde',GW:'Guiné-Bissau',GQ:'Guiné Equatorial',MG:'Madagáscar',MA:'Marrocos',MZ:'Moçambique',NA:'Namíbia',NG:'Nigéria',KE:'Quénia',ZA:'África do Sul',ST:'São Tomé e Príncipe',SN:'Senegal',TZ:'Tanzânia',CA:'Canadá',MX:'México',US:'Estados Unidos',AR:'Argentina',BO:'Bolívia',CL:'Chile',CO:'Colômbia',EC:'Equador',PY:'Paraguai',PE:'Peru',UY:'Uruguai',VE:'Venezuela',SA:'Arábia Saudita',CN:'China',KR:'Coreia do Sul',AE:'Emirados Árabes Unidos',PH:'Filipinas',IN:'Índia',ID:'Indonésia',JP:'Japão',MY:'Malásia',PK:'Paquistão',SG:'Singapura',TH:'Tailândia',TL:'Timor-Leste',TR:'Turquia',VN:'Vietname',DE:'Alemanha',AT:'Áustria',BE:'Bélgica',BY:'Bielorrússia',HR:'Croácia',DK:'Dinamarca',SK:'Eslováquia',SI:'Eslovénia',ES:'Espanha',EE:'Estónia',FI:'Finlândia',FR:'França',GR:'Grécia',HU:'Hungria',IE:'Irlanda',IS:'Islândia',IT:'Itália',LV:'Letónia',LT:'Lituânia',LU:'Luxemburgo',MK:'Macedónia do Norte',MT:'Malta',NO:'Noruega',NL:'Países Baixos',PL:'Polónia',PT:'Portugal',GB:'Reino Unido',CZ:'República Checa',RO:'Roménia',RU:'Rússia',RS:'Sérvia',SE:'Suécia',CH:'Suíça',UA:'Ucrânia',AU:'Austrália',NZ:'Nova Zelândia'};
+const COUNTRY_CONTINENT = {
+  africa:        ['AO','CV','GW','GQ','MG','MA','MZ','NA','NG','KE','ZA','ST','SN','TZ'],
+  america_norte: ['CA','MX','US'],
+  america_sul:   ['AR','BO','BR','CL','CO','EC','PY','PE','UY','VE'],
+  asia:          ['SA','CN','KR','AE','PH','IN','ID','JP','MY','PK','SG','TH','TL','TR','VN'],
+  europa:        ['DE','AT','BE','BY','HR','DK','SK','SI','ES','EE','FI','FR','GR','HU','IE','IS','IT','LV','LT','LU','MK','MT','NO','NL','PL','PT','GB','CZ','RO','RU','RS','SE','CH','UA'],
+  oceania:       ['AU','NZ']
+};
+
+function renderUtilizadores() {
+  let users = usersCache.slice();
+  const q = (document.getElementById('search-users')?.value || '').toLowerCase();
+  const dataFiltro = dateInputToPt(document.getElementById('filter-users-data')?.value || '');
+  const continente = document.getElementById('filter-users-continente')?.value || '';
+  if (q) users = users.filter(u => ((u.nickname||'') + ' ' + (u.name||'') + ' ' + (u.email||'') + ' ' + (COUNTRIES[u.country]||u.country||'')).toLowerCase().includes(q));
+  if (dataFiltro) users = users.filter(u => (u.createdAt||'').startsWith(dataFiltro.split('/').reverse().join('-')));
+  if (continente && COUNTRY_CONTINENT[continente]) users = users.filter(u => COUNTRY_CONTINENT[continente].includes(u.country));
+  lastFiltered.users = users;
+  const tbody = document.getElementById('tbody-users');
+  if (!tbody) return;
+  document.getElementById('empty-users').style.display = users.length ? 'none' : 'block';
+  tbody.innerHTML = users.slice().reverse().map(u => {
+    const dataCriacao = u.createdAt ? new Date(u.createdAt).toLocaleString('pt-PT') : '—';
+    const pais = COUNTRIES[u.country] || u.country || '—';
+    return `<tr>
+      <td class="td-check"><input type="checkbox" class="row-check" ${selectedIds.users.has(u._id)?'checked':''} onchange="toggleRowSelect('users','${u._id}',this.checked)"/></td>
+      <td class="td-muted" style="white-space:nowrap;">${dataCriacao}</td>
+      <td><strong>${esc(u.nickname||'—')}</strong></td>
+      <td class="td-muted">${esc(u.name||'—')}</td>
+      <td class="td-muted">${esc(u.email||'—')}</td>
+      <td>${esc(pais)}</td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn-sm btn-export" onclick='showDetail("user",${JSON.stringify(u).replace(/'/g,"&#39;")})'>Ver</button>
+        <button class="btn-sm btn-del" onclick="deleteUtilizador('${u._id}')" title="Eliminar">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateSelCount('users');
+}
+window.renderUtilizadores = renderUtilizadores;
+
+async function deleteUtilizador(id) {
+  if (!confirm('Eliminar este utilizador do Firestore?\n(A conta no Firebase Auth tem de ser removida manualmente na Firebase Console.)')) return;
+  try {
+    await deleteDoc(doc(db, 'users', id));
+    usersCache = usersCache.filter(u => u._id !== id);
+    selectedIds.users.delete(id);
+    renderUtilizadores();
+    updateBadges();
+  } catch(e) { alert('Erro ao eliminar utilizador.'); }
+}
+window.deleteUtilizador = deleteUtilizador;
 
 // ── DETAIL MODAL ──────────────────────────────────────────────────
 function showDetail(type, data) {
@@ -1323,6 +1433,18 @@ function showDetail(type, data) {
       <div class="detail-item"><label>Total</label><p style="color:var(--green);font-weight:700;font-size:1.1rem;">${o.total}€</p></div>
       <div class="detail-item full"><label>Morada</label><p>${esc(o.morada)}, ${esc(o.cp)} ${esc(o.cidade)}</p></div>
       <div class="detail-item full"><label>Nota</label><p>${esc(o.msg||'—')}</p></div>
+    </div>`;
+  } else if (type === 'user') {
+    const pais = COUNTRIES[o.country] || o.country || '—';
+    const dataCriacao = o.createdAt ? new Date(o.createdAt).toLocaleString('pt-PT') : '—';
+    html = `<h2 style="margin-bottom:6px;font-size:1.3rem;">Utilizador</h2>
+    <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">📅 Registado em ${dataCriacao}</p>
+    <div class="detail-grid">
+      <div class="detail-item"><label>Nickname</label><p>${esc(o.nickname||'—')}</p></div>
+      <div class="detail-item"><label>Nome</label><p>${esc(o.name||'—')}</p></div>
+      <div class="detail-item"><label>Email</label><p>${esc(o.email||'—')}</p></div>
+      <div class="detail-item"><label>Nacionalidade</label><p>${esc(pais)}</p></div>
+      <div class="detail-item full"><label>UID Firebase</label><p style="font-family:monospace;font-size:0.75rem;word-break:break-all;">${esc(o._id)}</p></div>
     </div>`;
   } else if (type === 'cand') {
     html = `<h2 style="margin-bottom:6px;font-size:1.3rem;">Candidatura</h2>
@@ -1417,6 +1539,14 @@ const EXCEL_CONFIG = {
     label: 'newsletter',
     headers: ['Data','Hora','Email'],
     row: s => [s.data, hora(s.timestamp), s.email]
+  },
+  users: {
+    label: 'utilizadores',
+    headers: ['Data de Registo','Nickname','Nome','Email','Nacionalidade'],
+    row: u => {
+      const pais = COUNTRIES[u.country] || u.country || '—';
+      return [u.createdAt ? new Date(u.createdAt).toLocaleString('pt-PT') : '—', u.nickname||'—', u.name||'—', u.email||'—', pais];
+    }
   }
 };
 
@@ -1431,7 +1561,7 @@ function exportExcel(type) {
         // include selected items that may not be in the current filtered view
         Array.from(selectedIds[type]).filter(id => !lastFiltered[type].some(i => i._id === id))
           .map(id => {
-            const fullCache = { enc: ordersCache, cand: candsCache, cont: contsCache, news: newsCache }[type];
+            const fullCache = { enc: ordersCache, cand: candsCache, cont: contsCache, news: newsCache, users: usersCache }[type];
             return fullCache.find(i => i._id === id);
           }).filter(Boolean)
       )
