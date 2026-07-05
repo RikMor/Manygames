@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManyGames – Definições</title>
+  <link rel="stylesheet" href="shared.css?v=5"/>
+  <style>
+    .def-wrap { max-width:700px; margin:0 auto; padding:130px 5vw 100px; }
+    .def-section { border:1px solid var(--border); padding:28px; margin-bottom:24px; }
+    .def-title { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:2px; color:var(--accent); margin-bottom:20px; }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+    .form-group input, .form-group select { width:100%; padding:12px 14px; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:0.95rem; outline:none; transition:border-color .2s; box-sizing:border-box; }
+    .form-group input:focus, .form-group select:focus { border-color:var(--cyan); }
+    .save-btn { padding:13px 32px; background:var(--accent); color:#fff; border:none; font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:3px; cursor:pointer; transition:opacity .2s; }
+    .save-btn:hover { opacity:0.85; }
+    .save-btn:disabled { opacity:0.45; cursor:not-allowed; }
+    .btn-danger { background:transparent; border:1px solid var(--accent); color:var(--accent); padding:13px 32px; font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:3px; cursor:pointer; transition:opacity .2s; }
+    .btn-danger:hover { background:rgba(230,57,70,0.1); }
+    .def-msg { display:none; margin-top:14px; padding:12px 16px; font-family:'Share Tech Mono',monospace; font-size:0.78rem; letter-spacing:1px; }
+    .def-msg.ok { background:rgba(0,230,118,0.08); border:1px solid rgba(0,230,118,0.3); color:#00e676; }
+    .def-msg.err { background:rgba(230,57,70,0.08); border:1px solid var(--accent); color:var(--accent); }
+    /* Avatar */
+    .avatar-preview-wrap { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
+    .avatar-preview { width:80px; height:80px; border-radius:50%; border:3px solid var(--accent); object-fit:cover; }
+    #avatar-input { display:none; }
+    .avatar-upload-btn { padding:10px 20px; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:border-color .2s; }
+    .avatar-upload-btn:hover { border-color:var(--cyan); }
+    /* Badges */
+    .badges-selector { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+    .badge-opt { display:flex; align-items:center; gap:8px; padding:10px 14px; border:1px solid var(--border); cursor:pointer; transition:border-color .2s; }
+    .badge-opt.locked { opacity:0.35; cursor:not-allowed; }
+    .badge-opt.selected { border-color:var(--accent); background:rgba(230,57,70,0.08); }
+    .badge-opt input { accent-color:var(--accent); }
+    /* Not logged */
+    .not-logged { text-align:center; padding:80px 20px; }
+    .not-logged p { color:var(--muted); margin-bottom:28px; }
+  </style>
+  <style>.nav-links a.active{color:#e63946!important;}</style>
+  <style>
+  .gdd{position:relative;display:inline-block;}
+  .gdd-btn{background:transparent;color:#b0b0cc;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .gdd-btn:hover{color:#fff;}.gdd-btn.gactive{color:#e63946;}.gdd-c{font-size:0.6rem;}.gdd.gopen .gdd-c{transform:rotate(180deg);}
+  .gdd-menu{display:none;position:absolute;top:100%;left:0;background:#0d0d14;border:1px solid rgba(230,57,70,0.4);min-width:190px;padding:6px;margin-top:8px;}
+  .gdd.gopen .gdd-menu{display:block;}
+  .gdd-menu a{display:block;color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;}
+  .gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}
+  @media(max-width:600px){.gdd{width:100%;display:block;}.gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}.gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}.gdd-menu a{padding:10px 4px;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="ManyGames logo"/><span class="nav-logo-text">MANY<span>GAMES</span></span></a>
+  <button class="nav-mobile-toggle">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="jogo.html">Kill of Reason</a></li>
+    <li><a href="loja.html">Loja</a></li>
+    <li><a href="noticias.html">Notícias</a></li>
+    <li class="gdd"><button class="gdd-btn" type="button">Recursos Humanos <span class="gdd-c">▼</span></button><div class="gdd-menu"><a href="equipa.html">Equipa</a><a href="rh.html">Carreiras</a><a href="regulamento.html">Regulamento</a></div></li>
+    <li class="gdd"><button class="gdd-btn" type="button">Suporte <span class="gdd-c">▼</span></button><div class="gdd-menu"><a href="sobre.html">Sobre</a><a href="faq.html">FAQ</a><a href="contacto.html">Contacto</a><a href="privacidade.html">Política de Privacidade</a></div></li>
+    <li class="gdd"><button class="gdd-btn" type="button">Redes Sociais <span class="gdd-c">▼</span></button><div class="gdd-menu"><a href="instagram.html">Instagram</a><a href="facebook.html">Facebook</a><a href="reddit.html">Reddit</a><a href="twitter.html">Twitter / X</a><a href="videos.html">Vídeos</a></div></li>
+    <li id="nav-user-area"><a href="login.html">Login</a></li>
+  </ul>
+</nav>
+
+<div class="def-wrap">
+
+  <div class="not-logged" id="not-logged">
+    <div class="section-tag">// Definições</div>
+    <h2>ACESSO RESTRITO</h2>
+    <div class="section-line" style="margin:12px auto 24px;"></div>
+    <p>Tens de iniciar sessão para aceder às definições.</p>
+    <a href="login.html"><button class="save-btn">Fazer Login</button></a>
+  </div>
+
+  <div id="def-content" style="display:none;">
+    <div class="section-tag">// Conta</div>
+    <h2>DEFINIÇÕES</h2>
+    <div class="section-line" style="margin:12px 0 36px;"></div>
+
+    <!-- AVATAR -->
+    <div class="def-section">
+      <div class="def-title">🖼️ IMAGEM DE PERFIL (AVATAR)</div>
+      <div class="avatar-preview-wrap">
+        <img class="avatar-preview" id="def-avatar-img" src="" alt="Avatar"/>
+        <div style="flex:1;">
+          <label style="display:block;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">URL da imagem</label>
+          <input type="url" id="def-avatar-url" placeholder="Cola o link directo para a imagem (JPG, PNG, etc.) 200×200 px" style="width:100%;padding:12px 14px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:0.95rem;outline:none;box-sizing:border-box;"/>
+          <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;">Cola o link directo para a imagem (JPG, PNG, etc.)<br/>📐 Dimensão recomendada: <strong style="color:var(--text);">200×200 px</strong> (quadrada)</p>
+        </div>
+      </div>
+      <button class="save-btn" id="btn-avatar">Guardar Avatar</button>
+      <div class="def-msg" id="msg-avatar"></div>
+    </div>
+
+    <!-- BANNER -->
+    <div class="def-section">
+      <div class="def-title">🎨 BANNER DO PERFIL</div>
+      <div style="margin-bottom:16px;">
+        <div id="def-banner-preview" style="height:100px;background:linear-gradient(135deg,#0d0d14,#2a0d0d);border:1px solid var(--border);background-size:cover;background-position:center;"></div>
+      </div>
+      <div class="form-group">
+        <label>URL do banner</label>
+        <input type="url" id="def-banner-url" placeholder="Cola o link directo para a imagem (JPG, PNG, etc.) 1200×300 px"/>
+        <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;">📐 Dimensão recomendada: <strong style="color:var(--text);">1200×300 px</strong> (horizontal)</p>
+      </div>
+      <button class="save-btn" id="btn-banner">Guardar Banner</button>
+      <div class="def-msg" id="msg-banner"></div>
+    </div>
+
+    <!-- NICKNAME -->
+    <div class="def-section">
+      <div class="def-title">✏️ NICKNAME</div>
+      <div class="form-group">
+        <label>Novo nickname</label>
+        <input type="text" id="def-nick" maxlength="24" placeholder="3–24 caracteres"/>
+      </div>
+      <button class="save-btn" id="btn-nick">Guardar Nickname</button>
+      <div class="def-msg" id="msg-nick"></div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="def-section">
+      <div class="def-title">📧 EMAIL</div>
+      <div class="form-group">
+        <label>Novo email</label>
+        <input type="email" id="def-email"/>
+      </div>
+      <div class="form-group">
+        <label>Palavra-passe actual (para confirmar)</label>
+        <input type="password" id="def-email-pass"/>
+      </div>
+      <button class="save-btn" id="btn-email">Guardar Email</button>
+      <div class="def-msg" id="msg-email"></div>
+    </div>
+
+    <!-- ALTERAR SENHA -->
+    <div class="def-section">
+      <div class="def-title">🔑 ALTERAR PALAVRA-PASSE</div>
+      <div class="form-group">
+        <label>Palavra-passe actual</label>
+        <input type="password" id="def-pass-old"/>
+      </div>
+      <div class="form-group">
+        <label>Nova palavra-passe</label>
+        <input type="password" id="def-pass-new" minlength="6"/>
+      </div>
+      <div class="form-group">
+        <label>Confirmar nova palavra-passe</label>
+        <input type="password" id="def-pass-new2" minlength="6"/>
+      </div>
+      <button class="save-btn" id="btn-pass">Alterar Palavra-passe</button>
+      <div class="def-msg" id="msg-pass"></div>
+    </div>
+
+    <!-- TERMINAR SESSÕES -->
+    <div class="def-section">
+      <div class="def-title">🔒 TERMINAR SESSÃO NOUTROS DISPOSITIVOS</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">Termina a sessão em todos os outros browsers e dispositivos. Introduz a tua palavra-passe actual para confirmar.</p>
+      <div class="form-group">
+        <label>Palavra-passe actual</label>
+        <input type="password" id="def-logout-pass"/>
+      </div>
+      <button class="save-btn" id="btn-logout-devices" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">Terminar Sessão em Todos os Dispositivos</button>
+      <div class="def-msg" id="msg-logout-devices"></div>
+    </div>
+
+    <!-- CONQUISTAS VISÍVEIS -->
+    <div class="def-section">
+      <div class="def-title">🏅 CONQUISTAS VISÍVEIS NO PERFIL</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;">Escolhe quais as conquistas desbloqueadas que aparecem no teu perfil público.</p>
+      <div class="badges-selector" id="badges-selector"></div>
+      <button class="save-btn" id="btn-badges">Guardar Seleção</button>
+      <div class="def-msg" id="msg-badges"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></div>
+  <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
+</footer>
+<script src="shared.js?v=5"></script>
+<script>
+(function(){
+  function start(){
+    var btns=document.querySelectorAll('.gdd-btn');
+    for(var i=0;i<btns.length;i++){btns[i].addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var dd=this.parentElement;var wasOpen=dd.classList.contains('gopen');var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}if(!wasOpen){dd.classList.add('gopen');}});}
+    document.addEventListener('click',function(e){if(!e.target.closest('.gdd')){var all=document.querySelectorAll('.gdd.gopen');for(var j=0;j<all.length;j++){all[j].classList.remove('gopen');}}});
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
+})();
+</script>
+
+<script type="module">
+import { auth, db, doc } from './firebase.js';
+import { getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { onAuthStateChanged, signOut, updateEmail, updatePassword,
+         reauthenticateWithCredential, EmailAuthProvider, updateProfile }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const BADGES_DEF = [
+  {id:'first_login', icon:'🎮', label:'Primeiro Login',  cond: u => true},
+  {id:'kor_player',  icon:'⚔️', label:'Guerreiro KOR',   cond: u => (u.stats?.jogos||0)>=1},
+  {id:'ten_games',   icon:'🔟', label:'Veterano',        cond: u => (u.stats?.jogos||0)>=10},
+  {id:'first_win',   icon:'🏆', label:'Primeira Vitória',cond: u => (u.stats?.vitorias||0)>=1},
+  {id:'five_wins',   icon:'⭐', label:'Em Forma',        cond: u => (u.stats?.vitorias||0)>=5},
+  {id:'mvp',         icon:'👑', label:'MVP',             cond: u => (u.stats?.mvp||0)>=1},
+];
+
+function showMsg(id, text, isOk){
+  var el=document.getElementById(id);
+  el.textContent=text; el.className='def-msg '+(isOk?'ok':'err');
+  el.style.display='block';
+  setTimeout(function(){el.style.display='none';}, 4000);
+}
+function setBtn(id, dis, txt){ var b=document.getElementById(id); if(b){b.disabled=dis;b.textContent=txt;} }
+
+let currentUser = null;
+let userData = {};
+
+onAuthStateChanged(auth, async function(user){
+  if(!user){ document.getElementById('not-logged').style.display='block'; return; }
+  currentUser = user;
+  document.getElementById('not-logged').style.display='none';
+  document.getElementById('def-content').style.display='block';
+
+  const snap = await getDoc(doc(db,'users',user.uid));
+  if(!snap.exists()){ await signOut(auth); window.location.href='login.html'; return; }
+  userData = snap.data();
+
+  // Convidados não têm acesso às definições
+  if(user.isAnonymous){ window.location.href='perfil.html'; return; }
+
+  // Avatar e banner
+  var nick = userData.nickname || user.displayName || 'Jogador';
+  var avatarUrl = userData.avatarUrl || ('https://api.dicebear.com/8.x/pixel-art/svg?seed='+encodeURIComponent(nick));
+  document.getElementById('def-avatar-img').src = avatarUrl;
+  document.getElementById('def-avatar-url').value = userData.avatarUrl || '';
+
+  var bannerUrl = userData.bannerUrl || '';
+  document.getElementById('def-banner-url').value = bannerUrl;
+  if(bannerUrl) document.getElementById('def-banner-preview').style.backgroundImage = 'url('+bannerUrl+')';
+
+  // Nickname
+  document.getElementById('def-nick').value = userData.nickname || '';
+
+  // Email (só para contas normais)
+  if(!user.isAnonymous){
+    document.getElementById('def-email').value = user.email || '';
+  } else {
+    document.querySelector('.def-section:nth-child(3)').style.display='none';
+    document.querySelector('.def-section:nth-child(4)').style.display='none';
+  }
+
+  // Badges
+  renderBadgesSelector();
+});
+
+// ── Avatar via URL ───────────────────────────────────────────────
+document.getElementById('btn-avatar').addEventListener('click', async function(){
+  var url = document.getElementById('def-avatar-url').value.trim();
+  if(!url){ showMsg('msg-avatar','Cola o URL da imagem.',false); return; }
+  setBtn('btn-avatar',true,'A guardar...');
+  try{
+    await updateDoc(doc(db,'users',currentUser.uid),{avatarUrl:url});
+    userData.avatarUrl=url;
+    document.getElementById('def-avatar-img').src=url;
+    showMsg('msg-avatar','✓ Avatar atualizado!',true);
+  }catch(e){ showMsg('msg-avatar','Erro ao guardar.',false); }
+  finally{ setBtn('btn-avatar',false,'Guardar Avatar'); }
+});
+
+// ── Banner via URL ────────────────────────────────────────────────
+document.getElementById('def-banner-url').addEventListener('input', function(){
+  var url = this.value.trim();
+  var preview = document.getElementById('def-banner-preview');
+  preview.style.backgroundImage = url ? 'url('+url+')' : '';
+});
+
+document.getElementById('btn-banner').addEventListener('click', async function(){
+  var url = document.getElementById('def-banner-url').value.trim();
+  setBtn('btn-banner',true,'A guardar...');
+  try{
+    await updateDoc(doc(db,'users',currentUser.uid),{bannerUrl:url});
+    userData.bannerUrl=url;
+    showMsg('msg-banner','✓ Banner atualizado!',true);
+  }catch(e){ showMsg('msg-banner','Erro ao guardar.',false); }
+  finally{ setBtn('btn-banner',false,'Guardar Banner'); }
+});
+
+// ── Nickname ────────────────────────────────────────────────────
+document.getElementById('btn-nick').addEventListener('click', async function(){
+  var nick = document.getElementById('def-nick').value.trim();
+  if(!nick||nick.length<3){ showMsg('msg-nick','Nickname deve ter pelo menos 3 caracteres.',false); return; }
+  if(!/^[a-zA-Z0-9_.]{3,24}$/.test(nick)){ showMsg('msg-nick','Só letras, números, _ ou . (3–24 caracteres).',false); return; }
+  setBtn('btn-nick',true,'A guardar...');
+  try{
+    await updateProfile(currentUser,{displayName:nick});
+    await updateDoc(doc(db,'users',currentUser.uid),{nickname:nick,nicknameLower:nick.toLowerCase()});
+    userData.nickname=nick;
+    showMsg('msg-nick','✓ Nickname atualizado!',true);
+  }catch(e){ showMsg('msg-nick','Erro: '+e.message,false); }
+  finally{ setBtn('btn-nick',false,'Guardar Nickname'); }
+});
+
+// ── Email ───────────────────────────────────────────────────────
+document.getElementById('btn-email').addEventListener('click', async function(){
+  var newEmail = document.getElementById('def-email').value.trim();
+  var pass = document.getElementById('def-email-pass').value;
+  if(!newEmail){ showMsg('msg-email','Introduz um email.',false); return; }
+  if(!pass){ showMsg('msg-email','Introduz a tua palavra-passe actual.',false); return; }
+  setBtn('btn-email',true,'A atualizar...');
+  try{
+    var cred = EmailAuthProvider.credential(currentUser.email, pass);
+    await reauthenticateWithCredential(currentUser, cred);
+    await updateEmail(currentUser, newEmail);
+    await updateDoc(doc(db,'users',currentUser.uid),{email:newEmail});
+    showMsg('msg-email','✓ Email atualizado!',true);
+    document.getElementById('def-email-pass').value='';
+  }catch(e){
+    var msgs = {'auth/wrong-password':'Palavra-passe incorreta.','auth/email-already-in-use':'Este email já está em uso.','auth/invalid-email':'Email inválido.'};
+    showMsg('msg-email', msgs[e.code]||('Erro: '+e.message), false);
+  }finally{ setBtn('btn-email',false,'Guardar Email'); }
+});
+
+// ── Alterar palavra-passe ────────────────────────────────────────
+document.getElementById('btn-pass').addEventListener('click', async function(){
+  var old = document.getElementById('def-pass-old').value;
+  var n1  = document.getElementById('def-pass-new').value;
+  var n2  = document.getElementById('def-pass-new2').value;
+  if(!old){ showMsg('msg-pass','Introduz a palavra-passe actual.',false); return; }
+  if(!n1||n1.length<6){ showMsg('msg-pass','A nova palavra-passe deve ter pelo menos 6 caracteres.',false); return; }
+  if(n1!==n2){ showMsg('msg-pass','As novas palavras-passe não coincidem.',false); return; }
+  setBtn('btn-pass',true,'A alterar...');
+  try{
+    var cred = EmailAuthProvider.credential(currentUser.email, old);
+    await reauthenticateWithCredential(currentUser, cred);
+    await updatePassword(currentUser, n1);
+    showMsg('msg-pass','✓ Palavra-passe alterada com sucesso!',true);
+    document.getElementById('def-pass-old').value='';
+    document.getElementById('def-pass-new').value='';
+    document.getElementById('def-pass-new2').value='';
+  }catch(e){
+    var msgs={'auth/wrong-password':'Palavra-passe actual incorreta.','auth/requires-recent-login':'Faz logout e login novamente antes de alterar.'};
+    showMsg('msg-pass', msgs[e.code]||('Erro: '+e.message), false);
+  }finally{ setBtn('btn-pass',false,'Alterar Palavra-passe'); }
+});
+
+// ── Terminar sessão noutros dispositivos ─────────────────────────
+document.getElementById('btn-logout-devices').addEventListener('click', async function(){
+  var pass = document.getElementById('def-logout-pass').value;
+  if(!pass){ showMsg('msg-logout-devices','Introduz a tua palavra-passe actual para confirmar.',false); return; }
+  setBtn('btn-logout-devices',true,'A processar...');
+  try{
+    // Re-autenticar + mudar password para a mesma → invalida todos os refresh tokens
+    var cred = EmailAuthProvider.credential(currentUser.email, pass);
+    await reauthenticateWithCredential(currentUser, cred);
+    await updatePassword(currentUser, pass); // mesma password → só invalida outras sessões
+    showMsg('msg-logout-devices','✓ Todas as outras sessões foram terminadas.',true);
+    document.getElementById('def-logout-pass').value='';
+  }catch(e){
+    var msgs={'auth/wrong-password':'Palavra-passe incorreta.','auth/requires-recent-login':'Faz logout e login novamente.'};
+    showMsg('msg-logout-devices', msgs[e.code]||('Erro: '+e.message), false);
+  }finally{ setBtn('btn-logout-devices',false,'Terminar Sessão em Todos os Dispositivos'); }
+});
+
+// ── Badges ───────────────────────────────────────────────────────
+function renderBadgesSelector(){
+  var selected = userData.visibleBadges || BADGES_DEF.map(function(b){return b.id;});
+  var container = document.getElementById('badges-selector');
+  container.innerHTML = BADGES_DEF.map(function(b){
+    var earned = b.cond(userData);
+    var isSelected = selected.includes(b.id);
+    return '<label class="badge-opt '+(earned?'':'locked')+' '+(isSelected&&earned?'selected':'')+'" title="'+(earned?'':'Conquista ainda não desbloqueada')+'">'
+      +'<input type="checkbox" value="'+b.id+'" '+(isSelected&&earned?'checked':'')+' '+(earned?'':'disabled')+'/>'
+      +'<span>'+b.icon+'</span><span style="font-size:0.82rem;">'+b.label+'</span>'
+      +'</label>';
+  }).join('');
+  container.querySelectorAll('.badge-opt input').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      var opt=this.closest('.badge-opt');
+      opt.classList.toggle('selected',this.checked);
+    });
+  });
+}
+
+document.getElementById('btn-badges').addEventListener('click', async function(){
+  var selected=[];
+  document.querySelectorAll('#badges-selector input:checked').forEach(function(cb){selected.push(cb.value);});
+  setBtn('btn-badges',true,'A guardar...');
+  try{
+    await updateDoc(doc(db,'users',currentUser.uid),{visibleBadges:selected});
+    userData.visibleBadges=selected;
+    showMsg('msg-badges','✓ Seleção guardada!',true);
+  }catch(e){ showMsg('msg-badges','Erro ao guardar.',false); }
+  finally{ setBtn('btn-badges',false,'Guardar Seleção'); }
+});
+</script>
+<script type="module" src="nav-auth.js"></script>
+</body>
+</html>

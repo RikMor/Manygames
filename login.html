@@ -5,9 +5,10 @@
   <title>ManyGames – Login</title>
   <link rel="stylesheet" href="shared.css?v=5"/>
   <style>
-    .auth-wrap { max-width: 440px; margin: 0 auto; padding: 140px 5vw 100px; }
+    .auth-wrap { max-width:440px; margin:0 auto; padding:140px 5vw 100px; }
     .auth-tabs { display:flex; border:1px solid var(--border); margin-bottom:32px; }
-    .auth-tab { flex:1; text-align:center; padding:14px; cursor:pointer; font-family:'Share Tech Mono',monospace; font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); background:transparent; border:none; transition:background .2s,color .2s; }
+    .auth-tab { flex:1; text-align:center; padding:12px 4px; cursor:pointer; font-family:'Share Tech Mono',monospace; font-size:0.62rem; letter-spacing:1px; text-transform:uppercase; color:var(--muted); background:transparent; border:none; border-right:1px solid var(--border); transition:background .2s,color .2s; }
+    .auth-tab:last-child { border-right:none; }
     .auth-tab.active { background:var(--accent); color:#fff; }
     .auth-panel { display:none; }
     .auth-panel.active { display:block; }
@@ -16,25 +17,25 @@
     .form-group input, .form-group select { width:100%; padding:13px 16px; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:1rem; outline:none; transition:border-color .2s; box-sizing:border-box; }
     .form-group input:focus, .form-group select:focus { border-color:var(--cyan); }
     .auth-error { display:none; padding:13px 16px; margin-bottom:20px; background:rgba(230,57,70,0.1); border:1px solid var(--accent); color:var(--accent); font-size:0.85rem; font-family:'Share Tech Mono',monospace; }
-    .auth-success { display:none; padding:13px 16px; margin-bottom:20px; background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.3); color:var(--cyan); font-size:0.85rem; font-family:'Share Tech Mono',monospace; text-align:center; }
     .auth-btn { width:100%; padding:15px; background:var(--accent); color:#fff; border:none; font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:3px; cursor:pointer; transition:opacity .2s; }
     .auth-btn:hover { opacity:0.85; }
     .auth-btn:disabled { opacity:0.5; cursor:not-allowed; }
     .auth-userbox { display:none; text-align:center; border:1px solid var(--border); padding:40px 28px; }
     .auth-userbox .greet { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; margin-bottom:8px; }
     .auth-userbox .email { color:var(--muted); font-size:0.9rem; margin-bottom:28px; }
+    #pass-match-error { display:none; color:var(--accent); font-family:'Share Tech Mono',monospace; font-size:0.75rem; margin-top:6px; letter-spacing:1px; }
   </style>
   <style>.nav-links a.active{color:#e63946!important;}</style>
-<style>
-.gdd{position:relative;display:inline-block;}
-.gdd-btn{background:transparent;color:#b0b0cc;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
-.gdd-btn:hover{color:#fff;}.gdd-btn.gactive{color:#e63946;}.gdd-c{font-size:0.6rem;}.gdd.gopen .gdd-c{transform:rotate(180deg);}
-.gdd-menu{display:none;position:absolute;top:100%;left:0;background:#0d0d14;border:1px solid rgba(230,57,70,0.4);min-width:190px;padding:6px;margin-top:8px;}
-.gdd.gopen .gdd-menu{display:block;}
-.gdd-menu a{display:block;color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;}
-.gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}.gdd-menu a.gactive{color:#e63946;}
-@media(max-width:600px){.gdd{width:100%;display:block;}.gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}.gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}.gdd-menu a{padding:10px 4px;}}
-</style>
+  <style>
+  .gdd{position:relative;display:inline-block;}
+  .gdd-btn{background:transparent;color:#b0b0cc;border:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;padding:8px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .gdd-btn:hover{color:#fff;}.gdd-btn.gactive{color:#e63946;}.gdd-c{font-size:0.6rem;}.gdd.gopen .gdd-c{transform:rotate(180deg);}
+  .gdd-menu{display:none;position:absolute;top:100%;left:0;background:#0d0d14;border:1px solid rgba(230,57,70,0.4);min-width:190px;padding:6px;margin-top:8px;}
+  .gdd.gopen .gdd-menu{display:block;}
+  .gdd-menu a{display:block;color:#b0b0cc;text-decoration:none;font-weight:700;font-size:0.74rem;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;}
+  .gdd-menu a:hover{background:rgba(230,57,70,0.15);color:#fff;}
+  @media(max-width:600px){.gdd{width:100%;display:block;}.gdd-btn{width:100%;justify-content:space-between;padding:10px 4px;}.gdd-menu{position:static;margin-top:4px;border:none;background:rgba(255,255,255,0.03);padding-left:14px;}.gdd-menu a{padding:10px 4px;}}
+  </style>
 </head>
 <body>
 <nav>
@@ -66,6 +67,7 @@
   <h2 style="text-align:center;">ACEDE À TUA CONTA</h2>
   <div class="section-line" style="margin:12px auto 36px;"></div>
 
+  <!-- Caixa pós-login -->
   <div class="auth-userbox" id="userbox">
     <div class="greet">Bem-vindo, <span id="userbox-name"></span>!</div>
     <div class="email" id="userbox-email"></div>
@@ -75,31 +77,36 @@
     <button class="auth-btn" id="logout-btn" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">Terminar Sessão</button>
   </div>
 
+  <!-- Formulários -->
   <div id="auth-forms">
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" type="button">Entrar</button>
-      <button class="auth-tab" id="tab-register" type="button">Registar</button>
+      <button class="auth-tab active" type="button" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" type="button" onclick="switchTab('register')">Registar</button>
+      <button class="auth-tab" type="button" onclick="switchTab('guest')">Convidado</button>
     </div>
     <div class="auth-error" id="auth-error"></div>
-    <div class="auth-success" id="auth-success"></div>
 
     <!-- LOGIN -->
-    <form class="auth-panel active" id="panel-login">
-      <div class="form-group"><label for="login-email">Email</label><input type="email" id="login-email" required autocomplete="email"/></div>
-      <div class="form-group"><label for="login-password">Palavra-passe</label><input type="password" id="login-password" required autocomplete="current-password"/></div>
-      <button type="submit" class="auth-btn" id="login-submit">Entrar</button>
-    </form>
+    <div class="auth-panel active" id="panel-login">
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" autocomplete="email"/></div>
+      <div class="form-group"><label>Palavra-passe</label><input type="password" id="login-password" autocomplete="current-password"/></div>
+      <button type="button" class="auth-btn" id="login-submit">Entrar</button>
+    </div>
 
     <!-- REGISTO -->
-    <form class="auth-panel" id="panel-register" novalidate>
-      <div class="form-group"><label for="reg-name">Nome completo</label><input type="text" id="reg-name" required autocomplete="name"/></div>
-      <div class="form-group"><label for="reg-nickname">Nickname</label><input type="text" id="reg-nickname" required placeholder="Ex: ShadowBlade99" autocomplete="off" maxlength="24"/></div>
-      <div class="form-group"><label for="reg-email">Email</label><input type="email" id="reg-email" required autocomplete="email"/></div>
-      <div class="form-group"><label for="reg-password">Palavra-passe</label><input type="password" id="reg-password" required minlength="6" autocomplete="new-password"/></div>
-      <div class="form-group"><label for="reg-password2">Confirmar Palavra-passe</label><input type="password" id="reg-password2" autocomplete="new-password"/><div id="pass-match-error" style="display:none;color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.75rem;margin-top:6px;letter-spacing:1px;">⚠️ As palavras-passe não coincidem.</div></div>
+    <div class="auth-panel" id="panel-register">
+      <div class="form-group"><label>Nome completo</label><input type="text" id="reg-name" autocomplete="name"/></div>
+      <div class="form-group"><label>Nickname</label><input type="text" id="reg-nickname" placeholder="Ex: ShadowBlade99" maxlength="24"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" autocomplete="email"/></div>
+      <div class="form-group"><label>Palavra-passe</label><input type="password" id="reg-password" autocomplete="new-password"/></div>
       <div class="form-group">
-        <label for="reg-country">Nacionalidade</label>
-        <select id="reg-country" required>
+        <label>Confirmar Palavra-passe</label>
+        <input type="password" id="reg-password2" autocomplete="new-password"/>
+        <div id="pass-match-error">⚠️ As palavras-passe não coincidem.</div>
+      </div>
+      <div class="form-group">
+        <label>Nacionalidade</label>
+        <select id="reg-country">
           <option value="">— Seleciona —</option>
           <optgroup label="🌍 África"><option value="AO">Angola</option><option value="CV">Cabo Verde</option><option value="GW">Guiné-Bissau</option><option value="GQ">Guiné Equatorial</option><option value="MG">Madagáscar</option><option value="MA">Marrocos</option><option value="MZ">Moçambique</option><option value="NA">Namíbia</option><option value="NG">Nigéria</option><option value="KE">Quénia</option><option value="ZA">África do Sul</option><option value="ST">São Tomé e Príncipe</option><option value="SN">Senegal</option><option value="TZ">Tanzânia</option></optgroup>
           <optgroup label="🌎 América do Norte"><option value="CA">Canadá</option><option value="MX">México</option><option value="US">Estados Unidos</option></optgroup>
@@ -110,15 +117,30 @@
         </select>
       </div>
       <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
-        <input type="checkbox" id="reg-age" required style="width:auto;margin-top:4px;flex-shrink:0;"/>
-        <label for="reg-age" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Confirmo que tenho pelo menos 13 anos de idade.</label>
+        <input type="checkbox" id="reg-age" style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <label for="reg-age" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Confirmo que tenho pelo menos 13 anos.</label>
       </div>
       <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
-        <input type="checkbox" id="reg-privacy" required style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <input type="checkbox" id="reg-privacy" style="width:auto;margin-top:4px;flex-shrink:0;"/>
         <label for="reg-privacy" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Li e aceito a <a href="privacidade.html" target="_blank" style="color:var(--cyan);">Política de Privacidade</a>.</label>
       </div>
       <button type="button" class="auth-btn" id="register-submit" disabled style="opacity:0.5;">A carregar...</button>
-    </form>
+    </div>
+
+    <!-- CONVIDADO -->
+    <div class="auth-panel" id="panel-guest">
+      <div class="form-group"><label>Nickname</label><input type="text" id="guest-nickname" placeholder="Ex: Shadow99" maxlength="24"/></div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
+        <input type="checkbox" id="guest-age" style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <label for="guest-age" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Confirmo que tenho pelo menos 13 anos.</label>
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
+        <input type="checkbox" id="guest-privacy" style="width:auto;margin-top:4px;flex-shrink:0;"/>
+        <label for="guest-privacy" style="margin:0;text-transform:none;font-family:'Rajdhani',sans-serif;font-size:0.92rem;letter-spacing:0;color:var(--text);">Li e aceito a <a href="privacidade.html" target="_blank" style="color:var(--cyan);">Política de Privacidade</a>.</label>
+      </div>
+      <p style="color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:1px;margin-bottom:20px;text-align:center;">Sessão temporária — desaparece ao fechar o browser.</p>
+      <button type="button" class="auth-btn" id="guest-btn" disabled style="opacity:0.5;">A carregar...</button>
+    </div>
   </div>
 </div>
 
@@ -126,8 +148,10 @@
   <div class="footer-logo"><a href="admin.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;"><img src="logo.png" alt=""/><span class="footer-logo-text">MANY<span>GAMES</span></span></a></div>
   <p>© 2015–2026 ManyGames · Porto, Portugal · ISO 9001:2015</p>
 </footer>
+
 <script src="shared.js?v=5"></script>
 <script>
+// Dropdowns nav
 (function(){
   function start(){
     var btns=document.querySelectorAll('.gdd-btn');
@@ -136,215 +160,186 @@
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
 })();
-</script>
-<script>
-(function(){
-  var tabLogin=document.getElementById('tab-login');
-  var tabRegister=document.getElementById('tab-register');
-  var panelLogin=document.getElementById('panel-login');
-  var panelRegister=document.getElementById('panel-register');
-  var errorBox=document.getElementById('auth-error');
-  var successBox=document.getElementById('auth-success');
-  function clearMessages(){errorBox.style.display='none';successBox.style.display='none';}
-  tabLogin.addEventListener('click',function(){tabLogin.classList.add('active');tabRegister.classList.remove('active');panelLogin.classList.add('active');panelRegister.classList.remove('active');clearMessages();});
-  tabRegister.addEventListener('click',function(){tabRegister.classList.add('active');tabLogin.classList.remove('active');panelRegister.classList.add('active');panelLogin.classList.remove('active');clearMessages();});
-})();
-</script>
-<script>
-// ── Validação e lógica dos botões — script NORMAL, sempre funciona ──
-(function(){
-  var BLOCKED = [
-    'puta','puto','caralho','merda','foda','foder','cona','cabrao',
-    'arrombado','bunda','buceta','porra','viado','bicha','piroca','treta',
-    'fdp','putaria','safado','prostituta','otario','idiota','imbecil','retardado',
-    'fuck','fucker','fucking','shit','bitch','asshole','cock','dick','pussy',
-    'cunt','bastard','slut','whore','nigger','nigga','faggot','retard',
-    'motherfucker','moron','rape','nazi','hitler'
-  ];
-  function showError(msg){
-    var el=document.getElementById('auth-error');
-    el.textContent=msg; el.style.display='block';
-    document.getElementById('auth-success').style.display='none';
-  }
-  function showPassError(msg){
-    var el=document.getElementById('pass-match-error');
-    el.textContent=msg; el.style.display='block';
-    document.getElementById('reg-password2').style.borderColor='var(--accent)';
-  }
-  function clearMsg(){
-    document.getElementById('auth-error').style.display='none';
-    document.getElementById('auth-success').style.display='none';
-    var pe=document.getElementById('pass-match-error');
-    if(pe){ pe.style.display='none'; }
-    var p2=document.getElementById('reg-password2');
-    if(p2){ p2.style.borderColor=''; }
-  }
-  function isInappropriate(nick){
-    var n=nick.toLowerCase()
-      .replace(/[àáâãä]/g,'a').replace(/[èéêë]/g,'e')
-      .replace(/[ìíîï]/g,'i').replace(/[òóôõö]/g,'o')
-      .replace(/[ùúûü]/g,'u').replace(/[ç]/g,'c')
-      .replace(/[^a-z0-9]/g,'');
-    return BLOCKED.some(function(t){return n.includes(t.replace(/[^a-z0-9]/g,''));});
-  }
 
-  document.addEventListener('DOMContentLoaded', function(){
-
-    // ── Botão Login ─────────────────────────────────────────────
-    document.getElementById('panel-login').addEventListener('submit', function(e){
-      e.preventDefault(); clearMsg();
-      var email    = document.getElementById('login-email').value.trim();
-      var password = document.getElementById('login-password').value;
-      if(!email)    { showError('Introduz o teu email.'); return; }
-      if(!password) { showError('Introduz a palavra-passe.'); return; }
-      if(!window._fbLogin){ showError('A carregar... aguarda um segundo e tenta novamente.'); return; }
-      window._fbLogin(email, password);
-    });
-
-    // ── Botão Criar Conta ────────────────────────────────────────
-    document.getElementById('register-submit').addEventListener('click', function(){
-      clearMsg();
-      var name      = document.getElementById('reg-name').value.trim();
-      var nickname  = document.getElementById('reg-nickname').value.trim();
-      var email     = document.getElementById('reg-email').value.trim();
-      var password  = document.getElementById('reg-password').value;
-      var password2 = document.getElementById('reg-password2').value;
-      var country   = document.getElementById('reg-country').value;
-      var ageOk     = document.getElementById('reg-age').checked;
-      var privacyOk = document.getElementById('reg-privacy').checked;
-
-      if(!name)    { showError('Introduz o teu nome completo.'); return; }
-      if(!nickname){ showError('Escolhe um nickname.'); return; }
-      if(!/^[a-zA-Z0-9_.]{3,24}$/.test(nickname)){
-        showError('Nickname inválido: 3–24 caracteres, só letras, números, _ ou .'); return;
-      }
-      if(isInappropriate(nickname)){
-        showError('Este nickname não é permitido. Escolhe outro.'); return;
-      }
-      if(!email)   { showError('Introduz o teu email.'); return; }
-      if(!password){ showError('Introduz uma palavra-passe.'); return; }
-      if(password.length < 6){
-        showError('A palavra-passe deve ter pelo menos 6 caracteres.'); return;
-      }
-      if(!password2){
-        showPassError('Confirma a palavra-passe no segundo campo.'); return;
-      }
-      if(password !== password2){
-        showPassError('⚠️ As palavras-passe não coincidem.'); return;
-      }
-      if(!country)  { showError('Seleciona a tua nacionalidade.'); return; }
-      if(!ageOk)    { showError('Confirma que tens pelo menos 13 anos.'); return; }
-      if(!privacyOk){ showError('Aceita a Política de Privacidade.'); return; }
-
-      if(!window._fbRegister){
-        // Firebase ainda não carregou — aguarda 2s e tenta
-        var btn2=document.getElementById('register-submit');
-        btn2.textContent='A carregar...'; btn2.disabled=true;
-        setTimeout(function(){
-          if(window._fbRegister){ btn2.disabled=false; btn2.textContent='Criar Conta'; }
-        },2000);
-        return;
-      }
-      window._fbRegister({name:name,nickname:nickname,email:email,
-        password:password,country:country});
-    });
-
-    // ── Botão Logout ─────────────────────────────────────────────
-    document.getElementById('logout-btn').addEventListener('click', function(){
-      if(window._fbLogout) window._fbLogout();
-    });
+// Tabs — função global chamada pelo onclick nos botões
+function switchTab(tab) {
+  ['login','register','guest'].forEach(function(t) {
+    var btn = document.querySelector('[onclick="switchTab(\''+t+'\')"]');
+    var panel = document.getElementById('panel-'+t);
+    if(btn)   btn.classList.toggle('active', t===tab);
+    if(panel) panel.classList.toggle('active', t===tab);
   });
-})();
+  var err = document.getElementById('auth-error');
+  if(err) err.style.display='none';
+  var pe = document.getElementById('pass-match-error');
+  if(pe) pe.style.display='none';
+}
+
+// Validação e botões
+var BLOCKED=['puta','puto','caralho','merda','foda','foder','cona','cabrao','arrombado','bunda','buceta','porra','viado','bicha','piroca','treta','fdp','putaria','safado','prostituta','otario','idiota','imbecil','retardado','fuck','fucker','fucking','shit','bitch','asshole','cock','dick','pussy','cunt','bastard','slut','whore','nigger','nigga','faggot','retard','motherfucker','moron','rape','nazi','hitler'];
+
+function showError(msg){
+  var el=document.getElementById('auth-error');
+  el.textContent=msg; el.style.display='block';
+}
+function isInappropriate(nick){
+  var n=nick.toLowerCase().replace(/[àáâãä]/g,'a').replace(/[èéêë]/g,'e').replace(/[ìíîï]/g,'i').replace(/[òóôõö]/g,'o').replace(/[ùúûü]/g,'u').replace(/[ç]/g,'c').replace(/[^a-z0-9]/g,'');
+  return BLOCKED.some(function(t){return n.includes(t.replace(/[^a-z0-9]/g,''));});
+}
+
+document.getElementById('login-submit').addEventListener('click', function(){
+  var email=document.getElementById('login-email').value.trim();
+  var pass=document.getElementById('login-password').value;
+  document.getElementById('auth-error').style.display='none';
+  if(!email){showError('Introduz o teu email.');return;}
+  if(!pass){showError('Introduz a palavra-passe.');return;}
+  if(!window._fbLogin){showError('A carregar Firebase... aguarda um segundo.');return;}
+  window._fbLogin(email,pass);
+});
+
+document.getElementById('register-submit').addEventListener('click', function(){
+  var name=document.getElementById('reg-name').value.trim();
+  var nick=document.getElementById('reg-nickname').value.trim();
+  var email=document.getElementById('reg-email').value.trim();
+  var pass=document.getElementById('reg-password').value;
+  var pass2=document.getElementById('reg-password2').value;
+  var country=document.getElementById('reg-country').value;
+  var ageOk=document.getElementById('reg-age').checked;
+  var privOk=document.getElementById('reg-privacy').checked;
+  document.getElementById('auth-error').style.display='none';
+  document.getElementById('pass-match-error').style.display='none';
+  document.getElementById('reg-password2').style.borderColor='';
+  if(!name){showError('Introduz o teu nome.');return;}
+  if(!nick){showError('Escolhe um nickname.');return;}
+  if(!/^[a-zA-Z0-9_.]{3,24}$/.test(nick)){showError('Nickname: 3–24 caracteres, letras, números, _ ou .');return;}
+  if(isInappropriate(nick)){showError('Nickname não permitido. Escolhe outro.');return;}
+  if(!email){showError('Introduz o teu email.');return;}
+  if(!pass){showError('Introduz uma palavra-passe.');return;}
+  if(pass.length<6){showError('A palavra-passe deve ter pelo menos 6 caracteres.');return;}
+  if(!pass2){showError('Confirma a palavra-passe.');return;}
+  if(pass!==pass2){
+    var pe=document.getElementById('pass-match-error');
+    pe.style.display='block';
+    document.getElementById('reg-password2').style.borderColor='var(--accent)';
+    return;
+  }
+  if(!country){showError('Seleciona a tua nacionalidade.');return;}
+  if(!ageOk){showError('Confirma que tens pelo menos 13 anos.');return;}
+  if(!privOk){showError('Aceita a Política de Privacidade.');return;}
+  if(!window._fbRegister){showError('A carregar Firebase... aguarda um segundo.');return;}
+  window._fbRegister({name:name,nickname:nick,email:email,password:pass,country:country});
+});
+
+document.getElementById('guest-btn').addEventListener('click', function(){
+  document.getElementById('auth-error').style.display='none';
+  var nick=document.getElementById('guest-nickname').value.trim();
+  var ageOk=document.getElementById('guest-age').checked;
+  var privOk=document.getElementById('guest-privacy').checked;
+  if(!nick){showError('Escolhe um nickname.');return;}
+  if(!/^[a-zA-Z0-9_.]{3,24}$/.test(nick)){showError('Nickname: 3–24 caracteres, letras, números, _ ou .');return;}
+  if(isInappropriate(nick)){showError('Nickname não permitido. Escolhe outro.');return;}
+  if(!ageOk){showError('Confirma que tens pelo menos 13 anos.');return;}
+  if(!privOk){showError('Aceita a Política de Privacidade.');return;}
+  if(!window._fbGuest){showError('A carregar Firebase... aguarda um segundo.');return;}
+  window._fbGuest(nick);
+});
+
+document.getElementById('logout-btn').addEventListener('click', function(){
+  if(window._fbLogout) window._fbLogout();
+});
 </script>
 
 <script type="module">
-  // ── Firebase — só as chamadas ao servidor ─────────────────────
-  import { auth, db, doc, setDoc } from './firebase.js';
-  import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-  import { createUserWithEmailAndPassword, signInWithEmailAndPassword,
-           signOut, onAuthStateChanged, updateProfile }
-    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { auth, db, doc, setDoc } from './firebase.js';
+import { collection, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+         onAuthStateChanged, updateProfile, signInAnonymously,
+         browserSessionPersistence, browserLocalPersistence, setPersistence }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-  var errorBox  = document.getElementById('auth-error');
-  var authForms = document.getElementById('auth-forms');
-  var userbox   = document.getElementById('userbox');
+function showError(msg){var el=document.getElementById('auth-error');el.textContent=msg;el.style.display='block';}
+function setBtn(id,dis,txt){var b=document.getElementById(id);if(b){b.disabled=dis;b.style.opacity=dis?'0.5':'1';b.textContent=txt;}}
+function translateError(code){
+  var map={'auth/email-already-in-use':'Este email já está registado.','auth/invalid-email':'Email inválido.','auth/weak-password':'Palavra-passe com pelo menos 6 caracteres.','auth/user-not-found':'Não existe conta com este email.','auth/wrong-password':'Palavra-passe incorreta.','auth/invalid-credential':'Email ou palavra-passe incorretos.','auth/too-many-requests':'Demasiadas tentativas. Tenta mais tarde.','auth/operation-not-allowed':'Ativa Email/Password na Firebase Console → Authentication → Método de login.','auth/admin-restricted-operation':'Ativa o login Anónimo na Firebase Console → Authentication → Método de login → Anónimo.'};
+  return map[code]||'Erro: '+code;
+}
 
-  function showError(msg){
-    errorBox.textContent=msg; errorBox.style.display='block';
-    document.getElementById('auth-success').style.display='none';
-  }
-  function setBtn(id,disabled,text){
-    var b=document.getElementById(id); if(b){b.disabled=disabled;b.textContent=text;}
-  }
-  function translateError(code){
-    var map={
-      'auth/email-already-in-use':'Este email já está registado. Tenta entrar.',
-      'auth/invalid-email':'Email inválido.',
-      'auth/weak-password':'A palavra-passe deve ter pelo menos 6 caracteres.',
-      'auth/user-not-found':'Não existe conta com este email.',
-      'auth/wrong-password':'Palavra-passe incorreta.',
-      'auth/invalid-credential':'Email ou palavra-passe incorretos.',
-      'auth/too-many-requests':'Demasiadas tentativas. Tenta mais tarde.',
-      'auth/operation-not-allowed':'⚠️ Ativa Email/Password na Firebase Console → Authentication → Método de login.'
-    };
-    return map[code]||'Erro: '+code;
-  }
+async function isNicknameTaken(nick){
+  try{var snap=await getDocs(collection(db,'users'));var l=nick.toLowerCase();return snap.docs.some(function(d){return(d.data().nickname||'').toLowerCase()===l;});}catch(e){return false;}
+}
 
-  async function isNicknameTaken(nick){
-    try{
-      var snap=await getDocs(collection(db,'users'));
-      var lower=nick.toLowerCase();
-      return snap.docs.some(function(d){return(d.data().nickname||'').toLowerCase()===lower;});
-    }catch(e){return false;}
-  }
+window._fbLogin=function(email,pass){
+  setBtn('login-submit',true,'A entrar...');
+  setPersistence(auth,browserLocalPersistence)
+    .then(function(){return signInWithEmailAndPassword(auth,email,pass);})
+    .then(function(){window.location.href='perfil.html';})
+    .catch(function(err){showError(translateError(err.code));})
+    .finally(function(){setBtn('login-submit',false,'Entrar');});
+};
 
-  window._fbLogin=function(email,password){
-    setBtn('login-submit',true,'A entrar...');
-    signInWithEmailAndPassword(auth,email,password)
-      .then(function(){ window.location.href='perfil.html'; })
-      .catch(function(err){showError(translateError(err.code));})
-      .finally(function(){setBtn('login-submit',false,'Entrar');});
-  };
+window._fbRegister=async function(d){
+  setBtn('register-submit',true,'A verificar...');
+  try{
+    var taken=await isNicknameTaken(d.nickname);
+    if(taken){showError('Nickname já em uso. Escolhe outro.');setBtn('register-submit',false,'Criar Conta');return;}
+    setBtn('register-submit',true,'A criar conta...');
+    var cred=await createUserWithEmailAndPassword(auth,d.email,d.password);
+    await updateProfile(cred.user,{displayName:d.nickname});
+    await setDoc(doc(db,'users',cred.user.uid),{name:d.name,nickname:d.nickname,nicknameLower:d.nickname.toLowerCase(),email:d.email,country:d.country,avatarUrl:'',stats:{jogos:0,vitorias:0,derrotas:0,mvp:0},ageConfirmed:true,privacyAccepted:true,createdAt:new Date().toISOString()});
+    window.location.href='perfil.html';
+  }catch(err){showError(translateError(err.code)||('Erro: '+err.message));setBtn('register-submit',false,'Criar Conta');}
+};
 
-  window._fbRegister=async function(d){
-    setBtn('register-submit',true,'A verificar...');
-    try{
-      var taken=await isNicknameTaken(d.nickname);
-      if(taken){showError('Este nickname já está em uso. Escolhe outro.');setBtn('register-submit',false,'Criar Conta');return;}
-      setBtn('register-submit',true,'A criar conta...');
-      var cred=await createUserWithEmailAndPassword(auth,d.email,d.password);
-      await updateProfile(cred.user,{displayName:d.nickname});
-      await setDoc(doc(db,'users',cred.user.uid),{
-        name:d.name, nickname:d.nickname, nicknameLower:d.nickname.toLowerCase(),
-        email:d.email, country:d.country, avatarUrl:'',
-        stats:{jogos:0,vitorias:0,derrotas:0,mvp:0},
-        ageConfirmed:true, privacyAccepted:true, createdAt:new Date().toISOString()
+window._fbGuest=async function(nick){
+  setBtn('guest-btn',true,'A entrar...');
+  try{
+    await setPersistence(auth,browserSessionPersistence);
+    var cred=await signInAnonymously(auth);
+    var uid=cred.user.uid;
+    await setDoc(doc(db,'users',uid),{name:'Utilizador Convidado',nickname:nick,nicknameLower:nick.toLowerCase(),email:'',country:'',avatarUrl:'',isGuest:true,stats:{jogos:0,vitorias:0,derrotas:0,mvp:0},createdAt:new Date().toISOString()});
+    // Apagar documento do Firestore quando o browser fechar
+    window.addEventListener('beforeunload', function(){
+      var { deleteDoc: del, doc: d } = window._firestoreUtils || {};
+      if(del && d) del(d(db,'users',uid));
+      // Fallback: navigator.sendBeacon para garantir envio
+      navigator.sendBeacon && navigator.sendBeacon(
+        'https://firestore.googleapis.com/v1/projects/manygames-2f8a7/databases/(default)/documents/users/'+uid+'?key=AIzaSyBjlFFwXwU6m3_P-YhHOkn7lt8vnZeIs6w',
+        ''
+      );
+    });
+    window.location.href='perfil.html';
+  }catch(err){showError(translateError(err.code)||('Erro: '+err.message));setBtn('guest-btn',false,'Entrar como Convidado');}
+};
+
+window._fbLogout=function(){signOut(auth);};
+
+onAuthStateChanged(auth,function(user){
+  if(user){
+    document.getElementById('auth-forms').style.display='none';
+    document.getElementById('userbox').style.display='block';
+    document.getElementById('userbox-name').textContent=user.isAnonymous?'Convidado':(user.displayName||'Jogador');
+    document.getElementById('userbox-email').textContent=user.isAnonymous?'Sessão temporária':user.email;
+  }else{
+    document.getElementById('auth-forms').style.display='block';
+    document.getElementById('userbox').style.display='none';
+    // Limpar convidados expirados (> 1 hora)
+    getDocs(collection(db,'users')).then(function(snap){
+      var umaHora=60*60*1000;
+      snap.docs.forEach(function(d){
+        var data=d.data();
+        if(data.isGuest&&data.createdAt&&(Date.now()-new Date(data.createdAt).getTime())>umaHora){
+          deleteDoc(doc(db,'users',d.id)).catch(function(){});
+        }
       });
-      window.location.href='perfil.html';
-    }catch(err){
-      showError(translateError(err.code)||('Erro: '+err.message));
-      setBtn('register-submit',false,'Criar Conta');
-    }
-  };
+    }).catch(function(){});
+  }
+});
 
-  // Activar botão agora que o Firebase está pronto
-  (function(){
-    var btn=document.getElementById('register-submit');
-    if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.textContent='Criar Conta'; }
-  })();
-
-  window._fbLogout=function(){signOut(auth);};
-
-  onAuthStateChanged(auth,function(user){
-    if(user){
-      authForms.style.display='none'; userbox.style.display='block';
-      document.getElementById('userbox-name').textContent=user.displayName||'Jogador';
-      document.getElementById('userbox-email').textContent=user.email;
-    }else{
-      authForms.style.display='block'; userbox.style.display='none';
-    }
-  });
+// Activar botões quando Firebase carregou
+setBtn('register-submit',false,'Criar Conta');
+setBtn('guest-btn',false,'Entrar como Convidado');
 </script>
+
 <script type="module" src="nav-auth.js"></script>
 </body>
 </html>

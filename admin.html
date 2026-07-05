@@ -1096,6 +1096,17 @@ function setupRealtimeListeners() {
 
   onSnapshot(collection(db, 'users'), (snap) => {
     usersCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+    // Apagar automaticamente convidados com mais de 1 hora
+    var umaHora = 60 * 60 * 1000;
+    snap.docs.forEach(function(d) {
+      var data = d.data();
+      if (data.isGuest && data.createdAt) {
+        var idade = Date.now() - new Date(data.createdAt).getTime();
+        if (idade > umaHora) {
+          deleteDoc(doc(db, 'users', d.id)).catch(function(){});
+        }
+      }
+    });
     updateBadges();
     renderUtilizadores();
   }, (err) => console.error('Erro realtime users:', err));
@@ -1392,9 +1403,8 @@ function renderUtilizadores() {
       <td class="td-muted">${esc(u.name||'—')}</td>
       <td class="td-muted">${esc(u.email||'—')}</td>
       <td>${esc(pais)}</td>
-      <td style="display:flex;gap:6px;">
+      <td>
         <button class="btn-sm btn-export" onclick='showDetail("user",${JSON.stringify(u).replace(/'/g,"&#39;")})'>Ver</button>
-        <button class="btn-sm btn-del" onclick="deleteUtilizador('${u._id}')" title="Eliminar">🗑</button>
       </td>
     </tr>`;
   }).join('');

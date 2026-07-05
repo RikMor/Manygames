@@ -12,17 +12,19 @@ onAuthStateChanged(auth, async function(user) {
     return;
   }
 
-  let nick = user.displayName || 'Jogador';
+  let nick = user.isAnonymous ? 'Convidado' : (user.displayName || 'Jogador');
   let avatarUrl = 'https://api.dicebear.com/8.x/pixel-art/svg?seed=' + encodeURIComponent(nick);
 
-  try {
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    if (snap.exists()) {
-      const data = snap.data();
-      nick      = data.nickname || nick;
-      avatarUrl = data.avatarUrl || ('https://api.dicebear.com/8.x/pixel-art/svg?seed=' + encodeURIComponent(nick));
-    }
-  } catch(e) { /* falha silenciosa */ }
+  if (!user.isAnonymous) {
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists()) {
+        const data = snap.data();
+        nick      = data.nickname || nick;
+        avatarUrl = data.avatarUrl || ('https://api.dicebear.com/8.x/pixel-art/svg?seed=' + encodeURIComponent(nick));
+      }
+    } catch(e) { /* falha silenciosa */ }
+  }
 
   area.innerHTML =
     '<div class="nav-user-dd" id="nav-user-dd">' +
@@ -33,6 +35,7 @@ onAuthStateChanged(auth, async function(user) {
       '</button>' +
       '<div class="nav-user-menu">' +
         '<a href="perfil.html">👤 O meu Perfil</a>' +
+        (!user.isAnonymous ? '<a href="definicoes.html">⚙️ Definições</a>' : '') +
         '<button class="menu-logout" id="nav-logout-btn">⏻ Terminar Sessão</button>' +
       '</div>' +
     '</div>';
